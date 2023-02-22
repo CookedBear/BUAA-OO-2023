@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.math.BigInteger;
 
 public class Parser {
@@ -9,14 +11,19 @@ public class Parser {
 
     public Expr parseExpr() {
         Expr expr =new Expr();
-        expr.addTerm(parseTerm());
+
+        String status = lexer.peek();
+        if (status.equals("+") || status.equals("-")) {
+            lexer.next();
+        }
+        Boolean ss = !status.equals("-");
+
+        expr.addTerm(parseTerm(),ss);
         //System.out.println(lexer.peek());
         while (lexer.peek().equals("+") || lexer.peek().equals("-")) {
-            if (lexer.peek().equals("-")) {
-               expr.minus();
-            }
+            Boolean sss = !lexer.peek().equals("-");
             lexer.next();
-            expr.addTerm(parseTerm());
+            expr.addTerm(parseTerm(),sss);
         }
 
         return expr;
@@ -24,7 +31,15 @@ public class Parser {
 
     public Term parseTerm() {
         Term term = new Term();
-        term.addFactorInit(parseFactor());
+
+        String status = lexer.peek();
+        //System.out.println(status);
+        if (status.equals("+") || status.equals("-")) {
+            lexer.next();
+        }
+        Boolean ss = !status.equals("-");
+
+        term.addFactorInit(parseFactor(),ss);
 
         while (lexer.peek().equals("*")) {
             lexer.next();
@@ -35,8 +50,14 @@ public class Parser {
     }
 
     public Factor parseFactor() {
+        String status = lexer.peek();
+        if (status.equals("+") || status.equals("-")) {
+            lexer.next();
+        }
+        Boolean s = !status.equals("-");
         String symbol = lexer.peek();
-        System.out.println(symbol);
+        //System.out.println(symbol);
+
 //可以使用switch并优化为parse各部分的函数，简单调用
         if (symbol.equals("(")) {               //get ExprFunc now
             lexer.next();
@@ -53,9 +74,10 @@ public class Parser {
                 BigInteger pow = z.getInt();
                 expr.pow(pow);
                 lexer.next();
-                return expr;
+
+                return s ? expr : expr.reverse();
             } else {
-                return expr;
+                return s ? expr : expr.reverse();
             }
 
         } else if (symbol.equals("x") || symbol.equals("y") || symbol.equals("z")) {
@@ -65,11 +87,11 @@ public class Parser {
                 lexer.next();   //jump '**' to accept the pow (注意并没有处理'+'号情况)，大改！
                 lexer.next();
                 ZeroInt z = parseInt();
-                MiFunc mi = new MiFunc(symbol, z.getInt());//只能处理数字的指数
+                MiFunc mi = new MiFunc(symbol, z.getInt(), s);//只能处理数字的指数
                 lexer.next();
                 return mi;
             } else {
-                return new MiFunc(symbol, BigInteger.valueOf(1));
+                return new MiFunc(symbol, BigInteger.valueOf(1), s);
             }
 
         } else {                                //get ZeroInt now

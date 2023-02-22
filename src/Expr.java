@@ -13,18 +13,25 @@ public class Expr implements Factor{
         this.minus = false;
     }
 
-    public void addTerm(Term term) {
+    public void addTerm(Term term, Boolean status) {
         this.terms.add(term);
         //this.values.addAll(term.getValues());
         for (Values v2 : term.getValues()) {
             int flag = 1;
             for (Values v1 : values) {
                 if (samePow(v1, v2)) {  //成功合并同类项
-                    v1.setConstValue(v1.getConstValue().add(v2.getConstValue()));
+                    if (status) {
+                        v1.setConstValue(v1.getConstValue().add(v2.getConstValue()));
+                    } else {
+                        v1.setConstValue(v1.getConstValue().subtract(v2.getConstValue()));
+                    }
                     flag = 0;
                 }
             }
             if (flag == 1) {    //无法合并同类项
+                if (!status) {
+                    v2.setConstValue(BigInteger.valueOf(0).subtract(v2.getConstValue()));
+                }
                 values.add(v2);
             }
         }
@@ -76,8 +83,11 @@ public class Expr implements Factor{
         return b1 && b2 && b3;
     }
 
-    public void minus() {
-        this.minus = !this.minus;
+    public Expr reverse() {
+        for (Values v : values) {
+            v.setConstValue(BigInteger.valueOf(0).subtract(v.getConstValue()));
+        }
+        return this;
     }
 
     @Override

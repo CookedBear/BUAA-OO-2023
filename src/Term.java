@@ -24,9 +24,15 @@ public class Term {
         this.values = newValues;
     }
 
-    public void addFactorInit(Factor factor) {
+    public void addFactorInit(Factor factor, Boolean status) {
         this.factors.add(factor);
         this.values.addAll(factor.getValues());
+        if (!status) {
+            for (Values v : values) {
+                System.out.println(v.getConstValue());
+                v.setConstValue(BigInteger.valueOf(0).subtract(v.getConstValue()));
+            }
+        }
     }
 
     private Values multiValues(Values value1, Values value2) {
