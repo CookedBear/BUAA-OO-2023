@@ -13,15 +13,19 @@ public class Lexer {
             return;
         } else {
             char now =input.charAt(position);
+            while ((now = input.charAt(position)) == ' ' || (now = input.charAt(position)) == '\t') {
+                position++;
+            }
             if (Character.isDigit(now)) {
                 currentContent = this.getNumber();
-            } else if (now == '+' || now == '*' || now == '(' || now == ')' || now == 'x' || now == 'y' || now == 'z') {
+            } else if (now == '+' ||now == '-' || now == '*' || now == '(' || now == ')' || now == 'x' || now == 'y' || now == 'z') {
                 position++;
                 currentContent =String.valueOf(now);
             }
         }
     }
-
+//	(x+1)**3+1
+//2x1 1x2 + 2 +
     private String getNumber() {
         StringBuilder sb = new StringBuilder();
         while (position < input.length() && Character.isDigit(input.charAt(position))) {

@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="110b8b3a-be5c-4bc7-a932-75a6d04f5798" name="变更" comment="Project Init">
-      <change afterPath="$PROJECT_DIR$/src/Expr.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Factor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Lexer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MiFunc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Term.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Values.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ZeroInt.java" afterDir="false" />
+    <list default="true" id="110b8b3a-be5c-4bc7-a932-75a6d04f5798" name="变更" comment="Project Ver1: Without '-' space_char front_zero">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Expr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Lexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ZeroInt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ZeroInt.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +50,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1677050119387</updated>
-      <workItem from="1677050121216" duration="15439000" />
+      <workItem from="1677050121216" duration="21851000" />
     </task>
     <task id="LOCAL-00001" summary="Project Init">
       <created>1677050239068</created>
@@ -64,7 +59,21 @@
       <option name="project" value="LOCAL" />
       <updated>1677050239069</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Project Ver1: Without '-' Space_Char">
+      <created>1677067508838</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1677067508838</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Project Ver1: Without '-' space_char front_zero">
+      <created>1677067559530</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1677067559530</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -83,6 +92,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Project Init" />
-    <option name="LAST_COMMIT_MESSAGE" value="Project Init" />
+    <MESSAGE value="Project Ver1: Without '-' Space_Char" />
+    <MESSAGE value="Project Ver1: Without '-' space_char front_zero" />
+    <option name="LAST_COMMIT_MESSAGE" value="Project Ver1: Without '-' space_char front_zero" />
   </component>
 </project>

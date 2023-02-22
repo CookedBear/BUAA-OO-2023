@@ -11,7 +11,10 @@ public class Parser {
         Expr expr =new Expr();
         expr.addTerm(parseTerm());
         //System.out.println(lexer.peek());
-        while (lexer.peek().equals("+")) {
+        while (lexer.peek().equals("+") || lexer.peek().equals("-")) {
+            if (lexer.peek().equals("-")) {
+               expr.minus();
+            }
             lexer.next();
             expr.addTerm(parseTerm());
         }
@@ -33,7 +36,7 @@ public class Parser {
 
     public Factor parseFactor() {
         String symbol = lexer.peek();
-        //System.out.println(symbol);
+        System.out.println(symbol);
 //可以使用switch并优化为parse各部分的函数，简单调用
         if (symbol.equals("(")) {               //get ExprFunc now
             lexer.next();
@@ -46,7 +49,8 @@ public class Parser {
                 //System.out.println("has");
                 lexer.next();   //jump '**' to accept the pow (注意并没有处理'+'号情况)，大改！
                 lexer.next();
-                BigInteger pow = new BigInteger(lexer.peek());
+                ZeroInt z = parseInt();
+                BigInteger pow = z.getInt();
                 expr.pow(pow);
                 lexer.next();
                 return expr;
@@ -60,7 +64,8 @@ public class Parser {
             if (lexer.hasPow()) {
                 lexer.next();   //jump '**' to accept the pow (注意并没有处理'+'号情况)，大改！
                 lexer.next();
-                MiFunc mi = new MiFunc(symbol, new BigInteger(lexer.peek()));//只能处理数字的指数
+                ZeroInt z = parseInt();
+                MiFunc mi = new MiFunc(symbol, z.getInt());//只能处理数字的指数
                 lexer.next();
                 return mi;
             } else {
@@ -68,12 +73,48 @@ public class Parser {
             }
 
         } else {                                //get ZeroInt now
-            ZeroInt z = new ZeroInt(new BigInteger(lexer.peek()));
+            ZeroInt z = parseInt();
             lexer.next();
             return z;//在peek后忘记使用next
         }
+    }
+
+    public ZeroInt parseInt() {
+        String status = lexer.peek();
+        if (status.equals("+") || status.equals("-")) {
+            lexer.next();
+        }
+        return new ZeroInt(status.equals("-") ? new BigInteger("0").subtract(new BigInteger(lexer.peek())) :new BigInteger(lexer.peek()));
+
+
+//        if (lexer.peek().equals("+")) {
+//            System.out.println(lexer.peek());
+//            lexer.next();
+//
+//            return new ZeroInt(new BigInteger(lexer.peek()));
+//        } else if (lexer.peek().equals("-")) {
+//            lexer.next();
+//            System.out.println("yyy");
+//            return new ZeroInt(new BigInteger("0").subtract(new BigInteger(lexer.peek())));
+//        } else if (Character.isDigit(lexer.peek().charAt(0))) {
+//            System.out.println("zzz");
+//            return new ZeroInt(new BigInteger(lexer.peek()));
+//        }
+//        return new ZeroInt(BigInteger.valueOf(0));
     }
 }
 
 //parseFactor-可以使用switch并优化为parse各部分的函数，简单调用
 //parseFactor-MiFunc内没有处理指数的'+'号
+
+//借助parseInt()对正负号的处理办法，对Expr和Term也进行改写
+
+
+
+//if(符号){
+//    next
+//}
+//addterm(符号);
+//while(符号) {
+//    addterm(符号)
+//}

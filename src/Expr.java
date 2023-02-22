@@ -5,10 +5,12 @@ import java.util.Iterator;
 public class Expr implements Factor{
     private final HashSet<Term> terms;
     private HashSet<Values> values;
+    private Boolean minus;
 
     public Expr() {
         this.terms = new HashSet<Term>();
         this.values = new HashSet<Values>();
+        this.minus = false;
     }
 
     public void addTerm(Term term) {
@@ -34,12 +36,25 @@ public class Expr implements Factor{
         HashSet<Values> newValues = new HashSet<>();
         BigInteger z = BigInteger.valueOf(0);
         if (pow.equals(z)) {
-            newValues.add(new Values(z,z,z,BigInteger.valueOf(1)));
-        } else {
+            newValues.add(new Values(z, z, z, BigInteger.valueOf(1)));
+        } else if (pow.equals(BigInteger.valueOf(1))) {
+            newValues = values;
+        }else {
             for (Values v1 : values) {
                 for (Values v2 : this.getValues()) {
                     newValues.add(multiValues(v1, v2));
                 }
+            }
+            BigInteger ii = new BigInteger(pow.toString());
+            ii = ii.subtract(new BigInteger("2"));
+            for (;ii.compareTo(z)>0 ; ii = ii.subtract(new BigInteger("1"))) {
+                HashSet<Values> nnewValues = new HashSet<>();
+                for (Values v1 : values) {
+                    for (Values v2 : newValues) {
+                        nnewValues.add(multiValues(v1, v2));
+                    }
+                }
+                newValues = nnewValues;
             }
         }
         this.values = newValues;
@@ -59,6 +74,10 @@ public class Expr implements Factor{
         Boolean b2 = v1.getyPow().equals(v2.getyPow());
         Boolean b3 = v1.getzPow().equals(v2.getzPow());
         return b1 && b2 && b3;
+    }
+
+    public void minus() {
+        this.minus = !this.minus;
     }
 
     @Override
