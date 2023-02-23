@@ -27,7 +27,7 @@ public class Term {
         this.values.addAll(factor.getValues());
         if (!status) {
             for (Values v : values) {
-                System.out.println(v.getConstValue());
+                //System.out.println(v.getConstValue());
                 v.setConstValue(BigInteger.valueOf(0).subtract(v.getConstValue()));
             }
         }
