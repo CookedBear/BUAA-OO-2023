@@ -3,14 +3,14 @@ import java.util.HashSet;
 
 public class ZeroInt implements Factor {
     private HashSet<Values> values;
-    private BigInteger Int;
+    private BigInteger bigInt;
 
     public ZeroInt(BigInteger num) {
         this.values = new HashSet<Values>();
         BigInteger z = BigInteger.valueOf(0);
         Values value1 = new Values(z,z,z,num);
         //System.out.println(num);
-        Int = num;
+        bigInt = num;
         values.add(value1);
     }
 
@@ -20,6 +20,6 @@ public class ZeroInt implements Factor {
 
     public BigInteger getInt() {
 
-        return this.Int;
+        return this.bigInt;
     }
 }

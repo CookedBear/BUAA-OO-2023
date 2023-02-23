@@ -6,10 +6,10 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String inputLine = input.nextLine();
 
-        Lexer lexer =new Lexer(inputLine);
+        Lexer lexer = new Lexer(inputLine);
         Parser parser = new Parser(lexer);
 
-        Expr exprMain =parser.parseExpr();
+        Expr exprMain = parser.parseExpr();
         System.out.println(exprMain);
     }
 }

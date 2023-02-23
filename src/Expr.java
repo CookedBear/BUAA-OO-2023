@@ -2,7 +2,7 @@ import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class Expr implements Factor{
+public class Expr implements Factor {
     private final HashSet<Term> terms;
     private HashSet<Values> values;
     private Boolean minus;
@@ -46,7 +46,7 @@ public class Expr implements Factor{
             newValues.add(new Values(z, z, z, BigInteger.valueOf(1)));
         } else if (pow.equals(BigInteger.valueOf(1))) {
             newValues = values;
-        }else {
+        } else {
             for (Values v1 : values) {
                 for (Values v2 : this.getValues()) {
                     newValues.add(multiValues(v1, v2));
@@ -54,7 +54,7 @@ public class Expr implements Factor{
             }
             BigInteger ii = new BigInteger(pow.toString());
             ii = ii.subtract(new BigInteger("2"));
-            for (;ii.compareTo(z)>0 ; ii = ii.subtract(new BigInteger("1"))) {
+            for (; ii.compareTo(z) > 0; ii = ii.subtract(new BigInteger("1"))) {
                 HashSet<Values> nnewValues = new HashSet<>();
                 for (Values v1 : values) {
                     for (Values v2 : newValues) {
@@ -70,10 +70,10 @@ public class Expr implements Factor{
 
     private Values multiValues(Values value1, Values value2) {
         BigInteger constValue = value1.getConstValue().multiply(value2.getConstValue());
-        BigInteger xPow = value1.getxPow().add(value2.getxPow());
-        BigInteger yPow = value1.getyPow().add(value2.getyPow());
-        BigInteger zPow = value1.getzPow().add(value2.getzPow());
-        return new Values(xPow, yPow, zPow, constValue);
+        BigInteger xpow = value1.getxPow().add(value2.getxPow());
+        BigInteger ypow = value1.getyPow().add(value2.getyPow());
+        BigInteger zpow = value1.getzPow().add(value2.getzPow());
+        return new Values(xpow, ypow, zpow, constValue);
     }
 
     public Boolean samePow(Values v1, Values v2) {
@@ -102,16 +102,17 @@ public class Expr implements Factor{
         //System.out.println(values);
         sb.append(iter.next().toString());
         if (iter.hasNext()) {
-            sb.append(" ");
             sb.append(iter.next().toString());
-            sb.append(" +");
             while (iter.hasNext()) {
-                sb.append(" ");
                 sb.append(iter.next().toString());
-                sb.append(" +");
             }
         }
-        return sb.toString();
+        String s = sb.toString();
+        if (s.charAt(0) == '+') {
+            return s.substring(1);
+        } else {
+            return s;
+        }
     }
 }
 

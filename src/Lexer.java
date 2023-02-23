@@ -12,20 +12,28 @@ public class Lexer {
         if (position == this.input.length()) {
             return;
         } else {
-            char now =input.charAt(position);
-            while ((now = input.charAt(position)) == ' ' || (now = input.charAt(position)) == '\t') {
+            char now = input.charAt(position);
+            while ((now = input.charAt(position)) == ' ' ||
+                   (now = input.charAt(position)) == '\t') {
                 position++;
             }
             if (Character.isDigit(now)) {
                 currentContent = this.getNumber();
-            } else if (now == '+' ||now == '-' || now == '*' || now == '(' || now == ')' || now == 'x' || now == 'y' || now == 'z') {
+            } else if (isOp(now)) {
                 position++;
-                currentContent =String.valueOf(now);
+                currentContent = String.valueOf(now);
             }
         }
     }
-//	(x+1)**3+1
-//2x1 1x2 + 2 +
+
+    private Boolean isOp(char now) {
+        Boolean b1 = now == '+' || now == '-' || now == '*';
+        return b1 || now == '(' || now == ')'
+                  || now == 'x' || now == 'y' || now == 'z';
+    }
+    //(x+1)**3+1
+    //2x1 1x2 + 2 +
+
     private String getNumber() {
         StringBuilder sb = new StringBuilder();
         while (position < input.length() && Character.isDigit(input.charAt(position))) {

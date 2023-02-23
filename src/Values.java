@@ -1,32 +1,29 @@
 import java.math.BigInteger;
 
 public class Values {
-    private BigInteger xPow;
-    private BigInteger yPow;
-    private BigInteger zPow;
+    private BigInteger xpow;
+    private BigInteger ypow;
+    private BigInteger zpow;
     private BigInteger constValue;
 
-    public Values(BigInteger xPow, BigInteger yPow, BigInteger zPow, BigInteger constValue) {
-        this.xPow = xPow;
-        this.yPow = yPow;
-        this.zPow = zPow;
+    public Values(BigInteger xpow, BigInteger ypow, BigInteger zpow, BigInteger constValue) {
+        this.xpow = xpow;
+        this.ypow = ypow;
+        this.zpow = zpow;
         this.constValue = constValue;
     }
 
     public BigInteger getxPow() {
-        return xPow;
+        return xpow;
     }
-
 
     public BigInteger getyPow() {
-        return yPow;
+        return ypow;
     }
-
 
     public BigInteger getzPow() {
-        return zPow;
+        return zpow;
     }
-
 
     public BigInteger getConstValue() {
         return constValue;
@@ -39,18 +36,27 @@ public class Values {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        if (constValue.compareTo(BigInteger.valueOf(0)) > 0) {
+            sb.append('+');
+        }
         sb.append(constValue.toString());
-        if (!this.xPow.equals(BigInteger.valueOf(0))) {
-            sb.append("x");
-            sb.append(xPow);
+        if (!this.xpow.equals(BigInteger.valueOf(0))) {
+            sb.append("*x");
+            if (!xpow.equals(BigInteger.valueOf(1))) {
+                sb.append(xpow);
+            }
         }
-        if (!this.yPow.equals(BigInteger.valueOf(0))) {
-            sb.append("y");
-            sb.append(yPow);
+        if (!this.ypow.equals(BigInteger.valueOf(0))) {
+            sb.append("*y");
+            if (!ypow.equals(BigInteger.valueOf(1))) {
+                sb.append(ypow);
+            }
         }
-        if (!this.zPow.equals(BigInteger.valueOf(0))) {
-            sb.append("z");
-            sb.append(zPow);
+        if (!this.zpow.equals(BigInteger.valueOf(0))) {
+            sb.append("*z");
+            if (!zpow.equals(BigInteger.valueOf(1))) {
+                sb.append(zpow);
+            }
         }
         return sb.toString();
     }

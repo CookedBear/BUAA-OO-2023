@@ -1,7 +1,7 @@
 import java.math.BigInteger;
 import java.util.HashSet;
 
-public class MiFunc implements Factor{
+public class MiFunc implements Factor {
     private HashSet<Values> values;
 
     public MiFunc(String va, BigInteger pow, Boolean status) {

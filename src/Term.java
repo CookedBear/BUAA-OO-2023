@@ -1,5 +1,3 @@
-import jdk.internal.org.objectweb.asm.tree.analysis.Value;
-
 import java.math.BigInteger;
 import java.util.HashSet;
 
@@ -37,10 +35,10 @@ public class Term {
 
     private Values multiValues(Values value1, Values value2) {
         BigInteger constValue = value1.getConstValue().multiply(value2.getConstValue());
-        BigInteger xPow = value1.getxPow().add(value2.getxPow());
-        BigInteger yPow = value1.getyPow().add(value2.getyPow());
-        BigInteger zPow = value1.getzPow().add(value2.getzPow());
-        return new Values(xPow, yPow, zPow, constValue);
+        BigInteger xpow = value1.getxPow().add(value2.getxPow());
+        BigInteger ypow = value1.getyPow().add(value2.getyPow());
+        BigInteger zpow = value1.getzPow().add(value2.getzPow());
+        return new Values(xpow, ypow, zpow, constValue);
     }
 
     public HashSet<Values> getValues() {

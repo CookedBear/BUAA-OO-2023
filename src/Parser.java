@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.math.BigInteger;
 
 public class Parser {
@@ -10,7 +8,7 @@ public class Parser {
     }
 
     public Expr parseExpr() {
-        Expr expr =new Expr();
+        Expr expr = new Expr();
 
         String status = lexer.peek();
         if (status.equals("+") || status.equals("-")) {
@@ -58,7 +56,7 @@ public class Parser {
         String symbol = lexer.peek();
         //System.out.println(symbol);
 
-//可以使用switch并优化为parse各部分的函数，简单调用
+        //可以使用switch并优化为parse各部分的函数，简单调用
         if (symbol.equals("(")) {               //get ExprFunc now
             lexer.next();
             Expr expr = parseExpr();
@@ -81,7 +79,7 @@ public class Parser {
             }
 
         } else if (symbol.equals("x") || symbol.equals("y") || symbol.equals("z")) {
-                                                //get MiFunc now
+            //get MiFunc now
             lexer.next();
             if (lexer.hasPow()) {
                 lexer.next();   //jump '**' to accept the pow (注意并没有处理'+'号情况)，大改！
@@ -106,7 +104,9 @@ public class Parser {
         if (status.equals("+") || status.equals("-")) {
             lexer.next();
         }
-        return new ZeroInt(status.equals("-") ? new BigInteger("0").subtract(new BigInteger(lexer.peek())) :new BigInteger(lexer.peek()));
+        return new ZeroInt(status.equals("-") ?
+               new BigInteger("0").subtract(new BigInteger(lexer.peek())) :
+               new BigInteger(lexer.peek()));
 
 
 //        if (lexer.peek().equals("+")) {

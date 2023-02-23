@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="110b8b3a-be5c-4bc7-a932-75a6d04f5798" name="变更" comment="Project Ver2: operator error left">
+    <list default="true" id="110b8b3a-be5c-4bc7-a932-75a6d04f5798" name="变更" comment="Project Ver3: function settled">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Expr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MiFunc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MiFunc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Term.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Term.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Values.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Values.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +48,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1677050119387</updated>
-      <workItem from="1677050121216" duration="23627000" />
+      <workItem from="1677050121216" duration="25252000" />
     </task>
     <task id="LOCAL-00001" summary="Project Init">
       <created>1677050239068</created>
@@ -80,7 +78,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677073837034</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Project Ver3: function settled">
+      <created>1677075880352</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1677075880352</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -102,6 +107,7 @@
     <MESSAGE value="Project Ver1: Without '-' Space_Char" />
     <MESSAGE value="Project Ver1: Without '-' space_char front_zero" />
     <MESSAGE value="Project Ver2: operator error left" />
-    <option name="LAST_COMMIT_MESSAGE" value="Project Ver2: operator error left" />
+    <MESSAGE value="Project Ver3: function settled" />
+    <option name="LAST_COMMIT_MESSAGE" value="Project Ver3: function settled" />
   </component>
 </project>
