@@ -68,7 +68,7 @@ public class Values {
             }
         }
         if (!this.ypow.equals(BigInteger.valueOf(0))) {
-            if (!xishu1()) {
+            if (!xpow.equals(z)) {//x*y**2
                 sb.append("*");
             }
             sb.append("y");
@@ -78,7 +78,7 @@ public class Values {
             }
         }
         if (!this.zpow.equals(BigInteger.valueOf(0))) {
-            if (!xishu1()) {
+            if (!(xpow.equals(z)&&ypow.equals(z))) {
                 sb.append("*");
             }
             sb.append("z");
