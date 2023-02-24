@@ -49,9 +49,9 @@ public class Parser {
 
     public Factor parseFactor() {
         String status = lexer.peek();
-        if (status.equals("+") || status.equals("-")) {
-            lexer.next();
-        }
+        //if (status.equals("+") || status.equals("-")) {
+        //    lexer.next();
+        //}
         Boolean s = !status.equals("-");
         String symbol = lexer.peek();
         //System.out.println(symbol);
@@ -104,6 +104,7 @@ public class Parser {
         if (status.equals("+") || status.equals("-")) {
             lexer.next();
         }
+        System.out.println(lexer.peek());
         return new ZeroInt(status.equals("-") ?
                new BigInteger("0").subtract(new BigInteger(lexer.peek())) :
                new BigInteger(lexer.peek()));

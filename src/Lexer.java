@@ -12,7 +12,7 @@ public class Lexer {
         if (position == this.input.length()) {
             return;
         } else {
-            char now = input.charAt(position);
+            char now;
             while ((now = input.charAt(position)) == ' ' ||
                    (now = input.charAt(position)) == '\t') {
                 position++;

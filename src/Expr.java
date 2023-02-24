@@ -99,6 +99,9 @@ public class Expr implements Factor {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Iterator<Values> iter = values.iterator();
+        if (values.isEmpty()) { //expr sum is 0
+            return "0";
+        }
         //System.out.println(values);
         sb.append(iter.next().toString());
         if (iter.hasNext()) {

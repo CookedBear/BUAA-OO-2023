@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="110b8b3a-be5c-4bc7-a932-75a6d04f5798" name="变更" comment="Project Ver4: CheckStyle fixed">
+    <list default="true" id="110b8b3a-be5c-4bc7-a932-75a6d04f5798" name="变更" comment="Project Ver5: Output format fixed (Mainly about xishu 1 and -1 )">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Expr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Lexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Values.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Values.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,15 +33,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Bo/Desktop/config.xml&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.infernus.idea.checkstyle.CheckStyleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "F:/kill/hw1-1/src/Lexer.java",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "two.files.diff.last.used.file": "F:/kill/hw1-1/src/Lexer.java"
   }
-}</component>
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="hw1-1" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="应用程序.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -49,7 +67,12 @@
       <updated>1677050119387</updated>
       <workItem from="1677050121216" duration="25252000" />
       <workItem from="1677128821068" duration="690000" />
-      <workItem from="1677141755568" duration="1023000" />
+      <workItem from="1677141755568" duration="1955000" />
+      <workItem from="1677143768384" duration="283000" />
+      <workItem from="1677144064017" duration="1578000" />
+      <workItem from="1677201364186" duration="46000" />
+      <workItem from="1677205628896" duration="886000" />
+      <workItem from="1677208579368" duration="1259000" />
     </task>
     <task id="LOCAL-00001" summary="Project Init">
       <created>1677050239068</created>
@@ -93,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677129357727</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Project Ver5: Output format fixed (Mainly about xishu 1 and -1 )">
+      <created>1677143041388</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1677143041388</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +147,27 @@
     <MESSAGE value="Project Ver2: operator error left" />
     <MESSAGE value="Project Ver3: function settled" />
     <MESSAGE value="Project Ver4: CheckStyle fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Project Ver4: CheckStyle fixed" />
+    <MESSAGE value="Project Ver5: Output format fixed (Mainly about xishu 1 and -1 )" />
+    <option name="LAST_COMMIT_MESSAGE" value="Project Ver5: Output format fixed (Mainly about xishu 1 and -1 )" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Parser.java</url>
+          <line>107</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Parser.java</url>
+          <line>51</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

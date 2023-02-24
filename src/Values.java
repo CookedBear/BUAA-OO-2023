@@ -45,6 +45,11 @@ public class Values {
         if (constValue.compareTo(BigInteger.valueOf(0)) > 0) {
             sb.append('+');
         }
+        BigInteger z = BigInteger.valueOf(0);
+        if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z)) {
+            sb.append(constValue);
+            return sb.toString();
+        }
         if (!xishu1()) {
             sb.append(constValue);
         } else {
