@@ -45,7 +45,6 @@ public class Values {
 
     @Override
     public String toString() {  //+xxxxxx or +-yyyyyyyyy
-
         StringBuilder sb = new StringBuilder();
         if (print) {
             return sb.append("").toString();
@@ -77,9 +76,7 @@ public class Values {
                 } else {
                     sb.append("**");
                     sb.append(xpow);
-                }
-            }
-        }
+                } } }
         if (!this.ypow.equals(BigInteger.valueOf(0))) {
             if (!xpow.equals(z) || !xishu1()) { //x*y**2
                 sb.append("*");
@@ -91,9 +88,7 @@ public class Values {
                 } else {
                     sb.append("**");
                     sb.append(ypow);
-                }
-            }
-        }
+                } } }
         if (!this.zpow.equals(BigInteger.valueOf(0))) {
             if (!(xpow.equals(z) && ypow.equals(z)) || !xishu1()) {
                 sb.append("*");
@@ -105,9 +100,7 @@ public class Values {
                 } else {
                     sb.append("**");
                     sb.append(zpow);
-                }
-            }
-        }
+                } } }
         return sb.toString();
     }
 }
