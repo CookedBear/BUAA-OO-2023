@@ -5,12 +5,14 @@ public class Values {
     private BigInteger ypow;
     private BigInteger zpow;
     private BigInteger constValue;
+    private Boolean print;
 
     public Values(BigInteger xpow, BigInteger ypow, BigInteger zpow, BigInteger constValue) {
         this.xpow = xpow;
         this.ypow = ypow;
         this.zpow = zpow;
         this.constValue = constValue;
+        this.print = false;
     }
 
     public BigInteger getxPow() {
@@ -33,6 +35,8 @@ public class Values {
         this.constValue = constValue;
     }
 
+    public Boolean getPrint() { return print; }
+
     private Boolean xishu1() {
         Boolean b1 = constValue.equals(BigInteger.valueOf(-1));
         Boolean b2 = constValue.equals(BigInteger.valueOf(1));
@@ -40,8 +44,13 @@ public class Values {
     }
 
     @Override
-    public String toString() {
+    public String toString() {  //+xxxxxx or +-yyyyyyyyy
+
         StringBuilder sb = new StringBuilder();
+        if (print) {
+            return sb.append("").toString();
+        }
+        print = true;
         if (constValue.compareTo(BigInteger.valueOf(0)) > 0) {
             sb.append('+');
         }
@@ -63,8 +72,12 @@ public class Values {
             }
             sb.append("x");
             if (!xpow.equals(BigInteger.valueOf(1))) {
-                sb.append("**");
-                sb.append(xpow);
+                if (xpow.equals(BigInteger.valueOf(2))) {
+                    sb.append("*x");
+                } else {
+                    sb.append("**");
+                    sb.append(xpow);
+                }
             }
         }
         if (!this.ypow.equals(BigInteger.valueOf(0))) {
@@ -73,8 +86,12 @@ public class Values {
             }
             sb.append("y");
             if (!ypow.equals(BigInteger.valueOf(1))) {
-                sb.append("**");
-                sb.append(ypow);
+                if (ypow.equals(BigInteger.valueOf(2))) {
+                    sb.append("*y");
+                } else {
+                    sb.append("**");
+                    sb.append(ypow);
+                }
             }
         }
         if (!this.zpow.equals(BigInteger.valueOf(0))) {
@@ -83,8 +100,12 @@ public class Values {
             }
             sb.append("z");
             if (!zpow.equals(BigInteger.valueOf(1))) {
-                sb.append("**");
-                sb.append(zpow);
+                if (zpow.equals(BigInteger.valueOf(2))) {
+                    sb.append("*z");
+                } else {
+                    sb.append("**");
+                    sb.append(zpow);
+                }
             }
         }
         return sb.toString();
