@@ -5,6 +5,7 @@ public class Main {
         //System.out.println("Hello world!");
         Scanner input = new Scanner(System.in);
         String inputLine = input.nextLine();
+        inputLine = inputLine.replaceAll("[ \t]", "");
 
         Lexer lexer = new Lexer(inputLine);
         Parser parser = new Parser(lexer);
