@@ -1,23 +1,35 @@
 import java.math.BigInteger;
 import java.util.HashSet;
 
+//cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
 public class calculator {
 
     public HashSet<Values> addValue(HashSet<Values> v1, HashSet<Values> v2, Boolean status) {
         HashSet<Values> v3 = getClone(v1);
-        for (Values v : v2) {
-            Values vv = getClone(v);
+        for (Values vvv : v2) {
+            Values vv = getClone(vvv);
             int flag = 1;
 
-            for (Values vvv : v3) {
-                if (!status) {
-                    vv.setConstValue(BigInteger.valueOf(0).subtract(vv.getConstValue()));
-                }
+            if (!status) {
+                vv.setConstValue(BigInteger.valueOf(0).subtract(vv.getConstValue()));
+            }
 
-                if (samePow(vvv, vv)) {  //成功合并同类项
-                        vvv.setConstValue(vvv.getConstValue().add(vv.getConstValue()));
+            for (Values v : v3) {
+
+                if (samePow(v, vv)) {  //成功合并同类项
+                        v.setConstValue(v.getConstValue().add(vv.getConstValue()));
                     flag = 0;
                 }
+
+//                if (contrast(vvv, vv)) {                 //找到a * sin^2 + b * cos^2 = b + (a-b) * sin^2
+//                    BigInteger a = vvv.getConstValue();
+//                    BigInteger b = vv.getConstValue();
+////                    System.out.println(a);
+////                    System.out.println(b);
+//                    vvv.setConstValue(a.subtract(b));
+//                    v3.add(new Values(new ZeroInt(b)));
+//                    flag = 0;
+//                }
             }
             if (flag == 1) {    //无法合并同类项
                 v3.add(new calculator().getClone(vv));
@@ -25,6 +37,9 @@ public class calculator {
         }
 
         v3.removeIf(vx -> vx.getConstValue().equals(BigInteger.valueOf(0)));
+        for (Values v : v3) {
+            v.getSanFuncs().removeIf(s -> s.getPower().equals(BigInteger.ZERO));
+        }
         return v3;
     }
 
@@ -50,6 +65,7 @@ public class calculator {
                 sanFuncs.add(getClone(s2));
             }
         }
+        sanFuncs.removeIf(s -> s.getPower().equals(BigInteger.ZERO));   //幂为0即为常数
         return new Values(constValue, xpow, ypow, zpow, sanFuncs);
     }
 
@@ -115,6 +131,20 @@ public class calculator {
             b4 = true;
         } else {
             b4 = sameSan(v1.getSanFuncs(), v2.getSanFuncs());
+        }
+        //System.out.println(b4);
+        return b1 && b2 && b3 && b4;
+    }
+
+    public Boolean contrast(Values v1, Values v2) {
+        Boolean b1 = v1.getxPow().equals(v2.getxPow());
+        Boolean b2 = v1.getyPow().equals(v2.getyPow());
+        Boolean b3 = v1.getzPow().equals(v2.getzPow());
+        Boolean b4;
+        if (v1.getSanFuncs().isEmpty() && v2.getSanFuncs().isEmpty()) {
+            b4 = true;
+        } else {
+            b4 = !sameSan(v1.getSanFuncs(), v2.getSanFuncs());
         }
         //System.out.println(b4);
         return b1 && b2 && b3 && b4;

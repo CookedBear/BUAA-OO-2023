@@ -2,14 +2,21 @@ import java.math.BigInteger;
 import java.util.HashSet;
 
 public class SanFunc implements Factor{ //保留Factor元素做类型判断
-    private Boolean sin;
+    private final Boolean sin;
     private HashSet<Values> exprValues;
     private BigInteger power;
 
     public SanFunc(String type, Factor factor, ZeroInt zeroInt) {
-        this.sin = type.equals("sin");
-        this.exprValues = new calculator().getClone(factor.getValues());
-        this.power = zeroInt.getInt();
+        if (!zeroInt.equals(BigInteger.ZERO)) {
+            this.sin = type.equals("sin");
+            this.exprValues = new calculator().getClone(factor.getValues());
+            this.power = zeroInt.getInt();
+        } else {
+            this.sin = true;
+            this.exprValues = new HashSet<>();
+            this.power = BigInteger.ONE;
+            exprValues.add(new Values(new ZeroInt(BigInteger.ONE)));
+        }
     }
 
     public HashSet<Values> getValues() {
