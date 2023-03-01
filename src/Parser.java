@@ -81,7 +81,6 @@ public class Parser {
                 ZeroInt z = parseInt();
                 BigInteger pow = z.getInt();
                 expr.pow(pow);
-                lexer.next();
 
                 return s ? expr : expr.reverse();
             } else {
@@ -95,17 +94,29 @@ public class Parser {
                 lexer.next();   //jump '**' to accept the pow (注意并没有处理'+'号情况)，大改！
                 lexer.next();
                 ZeroInt z = parseInt();
-                MiFunc mi = new MiFunc(symbol, z.getInt(), s);//只能处理数字的指数
-                lexer.next();
-                return mi;
+                return new MiFunc(symbol, z.getInt(), s);
             } else {
                 return new MiFunc(symbol, BigInteger.valueOf(1), s);
             }
 
+        } else if (symbol.equals("sin") || symbol.equals("cos")) {  //sin( factor ) ** power
+            lexer.next();   // (
+            lexer.next();   // factor begin
+            Factor factor = parseFactor();  // )
+            lexer.next();   // * or fin
+            if (lexer.hasPow()) {
+                lexer.next();
+                lexer.next();   //power begin
+                ZeroInt power = parseInt();
+                return new SanFunc(symbol, factor, power);
+            } else {
+                return new SanFunc(symbol, factor, new ZeroInt(BigInteger.ONE));
+            }
+
+        } else if (symbol.equals("sum")) {
+                return null;
         } else {                                //get ZeroInt now
-            ZeroInt z = parseInt();
-            lexer.next();
-            return z;//在peek后忘记使用next
+            return parseInt();//在peek后忘记使用next
         }
     }
 
@@ -115,9 +126,11 @@ public class Parser {
             lexer.next();
         }
         //System.out.println(lexer.peek());
+        String peek = lexer.peek();
+        lexer.next();
         return new ZeroInt(status.equals("-") ?
-               new BigInteger("0").subtract(new BigInteger(lexer.peek())) :
-               new BigInteger(lexer.peek()));
+               new BigInteger("0").subtract(new BigInteger(peek)) :
+               new BigInteger(peek));
 
 
 //        if (lexer.peek().equals("+")) {

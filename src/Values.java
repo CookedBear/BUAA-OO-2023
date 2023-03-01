@@ -1,26 +1,51 @@
 import java.math.BigInteger;
 import java.util.HashSet;
 
-public class Values {
+public class Values {   // constValue * x ** xpow * y ** ypow * z ** zpow * sin/cos(exprValues) ** power
+    private BigInteger constValue;
     private BigInteger xpow;
     private BigInteger ypow;
     private BigInteger zpow;
-    private BigInteger constValue;
-    private Boolean print;
+    private HashSet<SanFunc> sanFuncs;
+    private Boolean print = false;
+
+    public Values(BigInteger constValue, BigInteger xpow, BigInteger ypow, BigInteger zpow, HashSet<SanFunc> sanFuncs) {
+        this.constValue = constValue;
+        this.xpow = xpow;
+        this.ypow = ypow;
+        this.zpow = zpow;
+        this.sanFuncs= sanFuncs;
+        this.print = false;
+    }
 
     public Values(BigInteger xpow, BigInteger ypow, BigInteger zpow, BigInteger constValue) {
         this.xpow = xpow;
         this.ypow = ypow;
         this.zpow = zpow;
         this.constValue = constValue;
+        sanFuncs= new HashSet<>();
         this.print = false;
     }
 
-    public Values() {
+    public Values(SanFunc sanFunc) {
+        BigInteger z = BigInteger.ZERO;
+        this.constValue = BigInteger.ONE;
+        this.xpow = z;
+        this.ypow = z;
+        this.zpow = z;
+        this.sanFuncs = new HashSet<>();
+        this.print = false;
+
+        this.sanFuncs.add(new calculator().getClone(sanFunc));
+    }
+
+    public Values(ZeroInt zeroInt) {
+        this.constValue = zeroInt.getInt();
         this.xpow = BigInteger.ZERO;
         this.ypow = BigInteger.ZERO;
         this.zpow = BigInteger.ZERO;
-        this.constValue = BigInteger.ZERO;
+        this.sanFuncs = new HashSet<>();
+        this.print = false;
     }
 
     public BigInteger getxPow() {
@@ -39,6 +64,8 @@ public class Values {
         return constValue;
     }
 
+    public HashSet<SanFunc> getSanFuncs() { return sanFuncs; }
+
     public void setConstValue(BigInteger constValue) {
         this.constValue = constValue;
     }
@@ -49,9 +76,10 @@ public class Values {
         return b1 || b2;
     }
 
-    @Override
-    public String toString() {  //+xxxxxx or +-yyyyyyyyy
+
+    public String tostring() {  //+xxxxxx or +-yyyyyyyyy
         StringBuilder sb = new StringBuilder();
+        //System.out.println(print+"here");
         if (print) {
             return sb.append("").toString();
         }
@@ -60,7 +88,7 @@ public class Values {
             sb.append('+');
         }
         BigInteger z = BigInteger.valueOf(0);
-        if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z)) {
+        if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z) && sanFuncs.isEmpty()) {
             sb.append(constValue);
             return sb.toString();
         }
@@ -107,6 +135,25 @@ public class Values {
                     sb.append("**");
                     sb.append(zpow);
                 } } }
+        if (!this.sanFuncs.isEmpty()) {
+            System.out.println("printing");
+            Boolean first = true;
+            for (SanFunc s : sanFuncs) {
+                if (!(xpow.equals(z) && ypow.equals(z) && zpow.equals(z)) || !xishu1() || !first) {
+                    sb.append("*");
+                }
+                first = false;
+                String type = s.getSin() ? "sin" : "cos";
+                if (s.getExprValues().size() == 1) {
+                    sb.append(type).append('(').append(new Expr(s.getExprValues()).tostring()).append(')');
+                } else {
+                    sb.append(type).append("((").append(new Expr(s.getExprValues()).tostring()).append("))");
+                }
+                if (!s.getPower().equals(BigInteger.ONE)) {
+                    sb.append("**").append(s.getPower());
+                }
+            }
+        }
         return sb.toString();
     }
 }

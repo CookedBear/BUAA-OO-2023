@@ -22,6 +22,22 @@ public class Lexer {
             } else if (isOp(now)) {
                 position++;
                 currentContent = String.valueOf(now);
+            } else if (now == 'c' || now == 's') {
+                switch (input.substring(position, position + 3)) {
+                    case "sin":
+                        currentContent = "sin";
+                        break;
+                    case "cos":
+                        currentContent = "cos";
+                        break;
+                    case "sum":
+                        currentContent = "sum";
+                        break;
+                    default:
+                        currentContent = "jile";
+                }
+                position += 3;
+                System.out.println(currentContent);
             }
         }
     }
@@ -44,6 +60,7 @@ public class Lexer {
     }
 
     public String peek() {
+        //System.out.println(currentContent);
         return this.currentContent;
     }
 

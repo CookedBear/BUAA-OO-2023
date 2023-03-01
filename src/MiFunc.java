@@ -19,8 +19,8 @@ public class MiFunc implements Factor {
         } else {
             switch (var) {
                 case 'x':
-                    Values value1 = new Values(pow, z, z, big);
-                    values.add(value1);
+                    //Values value1 = new Values(pow, z, z, big);
+                    values.add(new Values(pow, z, z, big));
                     break;
                 case 'y':
                     Values value2 = new Values(z, pow, z, big);

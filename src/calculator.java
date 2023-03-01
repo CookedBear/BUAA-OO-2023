@@ -33,7 +33,24 @@ public class calculator {
         BigInteger xpow = value1.getxPow().add(value2.getxPow());
         BigInteger ypow = value1.getyPow().add(value2.getyPow());
         BigInteger zpow = value1.getzPow().add(value2.getzPow());
-        return new Values(xpow, ypow, zpow, constValue);
+        HashSet<SanFunc> sanFuncs = getSansClone(value1.getSanFuncs());
+        HashSet<SanFunc> sanFuncs2 = value2.getSanFuncs();
+//        sanFuncs.addAll(getSanClone(value2.getSanFuncs()));
+        for (SanFunc s2 : sanFuncs2) {
+            Boolean insert = false;
+            for (SanFunc s1 : sanFuncs) {
+                HashSet<Values> v2 = s2.getExprValues();
+                if (s1.getSin() == s2.getSin() && addValue(v2, s1.getExprValues(), false).isEmpty()) {    //合并同三角项
+                    s1.setPower(s1.getPower().add(s2.getPower()));
+                    insert = true;
+                    break;
+                }   //  错误判断会把同内容的sin和cos合并为s1的种类
+            }
+            if (!insert) {
+                sanFuncs.add(getClone(s2));
+            }
+        }
+        return new Values(constValue, xpow, ypow, zpow, sanFuncs);
     }
 
     public HashSet<Values> multiValue(HashSet<Values> v1, HashSet<Values> v2) {
@@ -66,7 +83,7 @@ public class calculator {
     }
 
     public Values getClone(Values v) {
-        return new Values(v.getxPow(), v.getyPow(), v.getzPow(), v.getConstValue());
+        return new Values(v.getConstValue(), v.getxPow(), v.getyPow(), v.getzPow(), getSansClone(v.getSanFuncs()));
     }
 
     public HashSet<Values> getClone(HashSet<Values> values) {
@@ -77,11 +94,56 @@ public class calculator {
         return newValues;
     }
 
+    public SanFunc getClone(SanFunc sanFunc) {  // clone 默认获得表达式类型
+        return new SanFunc(sanFunc.getSin() ? "sin" : "cos",new Expr(new calculator().getClone(sanFunc.getExprValues())),new ZeroInt(sanFunc.getPower()));
+    }
+
+    public HashSet<SanFunc> getSansClone(HashSet<SanFunc> sanFuncs) {
+        HashSet<SanFunc> newSanFuncs = new HashSet<>();
+        for (SanFunc s : sanFuncs) {
+            newSanFuncs.add(getClone(s));
+        }
+        return newSanFuncs;
+    }
+
     public Boolean samePow(Values v1, Values v2) {
         Boolean b1 = v1.getxPow().equals(v2.getxPow());
         Boolean b2 = v1.getyPow().equals(v2.getyPow());
         Boolean b3 = v1.getzPow().equals(v2.getzPow());
-        return b1 && b2 && b3;
+        Boolean b4;
+        if (v1.getSanFuncs().isEmpty() && v2.getSanFuncs().isEmpty()) {
+            b4 = true;
+        } else {
+            b4 = sameSan(v1.getSanFuncs(), v2.getSanFuncs());
+        }
+        //System.out.println(b4);
+        return b1 && b2 && b3 && b4;
     }
 
+    public Boolean sameSan(HashSet<SanFunc> sanFuncs1, HashSet<SanFunc> sanFuncs2) {    //三角函数集合相同（遍历）：类型一致 + 指数一致 + ExprValue一致
+        HashSet<SanFunc> sanFuncs3 = getSansClone(sanFuncs1);
+        for (SanFunc s2 : sanFuncs2) {
+            Boolean s2Sin = s2.getSin();
+            HashSet<Values> s2ExprValues = s2.getExprValues();
+            BigInteger s2Power = s2.getPower();
+            Boolean found = false;
+
+            for (SanFunc s1 : sanFuncs3) {
+                Boolean s1Sin = s1.getSin();
+                HashSet<Values> s1ExprValues = s1.getExprValues();
+                BigInteger s1Power = s1.getPower();
+                if (s1Sin == s2Sin && s1Power.equals(s2Power) && addValue(s1ExprValues, s2ExprValues, false).isEmpty()) {
+                    sanFuncs3.remove(s1);
+                    found = true;
+                    break;
+                }
+            }
+            // not found
+            if (!found) {
+                return false;
+            }
+        }
+        return sanFuncs3.isEmpty();
+
+    }
 }

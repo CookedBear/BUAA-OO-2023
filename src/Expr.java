@@ -37,8 +37,8 @@ public class Expr implements Factor {
         return values;
     }
 
-    @Override
-    public String toString() {
+
+    public String tostring() {
         StringBuilder sb = new StringBuilder();
         Iterator<Values> iter = values.iterator();
         if (values.isEmpty()) { //expr sum is 0
@@ -47,12 +47,12 @@ public class Expr implements Factor {
         //System.out.println(values);
         for (Values v : values) {
             if (v.getConstValue().compareTo(BigInteger.valueOf(0)) > 0) {
-                sb.append(v);
+                sb.append(v.tostring());
             }
         }
-        sb.append(iter.next().toString());
+        sb.append(iter.next().tostring());
         while (iter.hasNext()) {
-            sb.append(iter.next().toString());
+            sb.append(iter.next().tostring());
         }
         String s = sb.toString();
         if (s.charAt(0) == '+') {

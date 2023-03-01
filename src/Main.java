@@ -11,9 +11,27 @@ public class Main {
         Parser parser = new Parser(lexer);
 
         Expr exprMain = parser.parseExpr();
-        System.out.println(exprMain);
+        System.out.println(exprMain.tostring());
     }
 }
+
+//优化记录：
+//增加一个工具类，用于进行values计算与数据结构的深克隆              (√)
+//  深克隆方法：调用 new Type(new calculator().getClone(Type.getValues()));
+//改进lexer.next()，以支持更多输入类型                          (√)
+//  在parseFactor()中进行测试，保证功能的可行性，拆分各函数代码      (√)
+//重构values结构，并适配已有代码：重写clone和add和multi方法
+/*
+public class Values{
+
+}
+ */
+//添加三角函数因子SanFunc类，适配parseSanFunc()方法
+//含有三角函数的项的合并——cal类中编写equal方法
+//添加自定义函数ArtiFunc类，支持自定义函数输入，适配parseArtiFunc()方法——预计递归实现
+//输出优化
+
+//---------------------------------------------------------------------------------
 
 //错误记录：
 //向一个空白的Term中添加Factor时仍然使用乘法添加Values，导致所有Values归零，输出时报错
@@ -29,18 +47,3 @@ public class Main {
 //  忘记给Expr类Override的getValues()方法提供values作为返回值，导致在运行时getValues()时报错NullPointException
 //      修改getValues()方法返回值
 //表达式因子可以包含指数，没有设置相关方法
-
-//优化记录：
-//增加一个工具类，用于进行values计算与数据结构的深克隆
-//  深克隆方法：调用 new Type(new calculator().getClone(Type.getValues()));
-//改进lexer.next()，以支持更多输入类型
-//  在parseFactor()中进行测试，保证功能的可行性，拆分各函数代码
-//重构values结构，并适配已有代码
-/*
-public class Values{
-
-}
- */
-//添加三角函数因子SanFunc类，适配parseSanFunc()方法
-//添加自定义函数ArtiFunc类，支持自定义函数输入，适配parseArtiFunc()方法——预计递归实现
-//输出优化
