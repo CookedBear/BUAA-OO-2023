@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Values {   // constValue * x ** xpow * y ** ypow * z ** zpow * sin/cos(exprValues) ** power
     private BigInteger constValue;
@@ -8,6 +9,19 @@ public class Values {   // constValue * x ** xpow * y ** ypow * z ** zpow * sin/
     private BigInteger zpow;
     private HashSet<SanFunc> sanFuncs;
     private Boolean print = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Values values = (Values) o;
+        return Objects.equals(constValue, values.constValue) && Objects.equals(xpow, values.xpow) && Objects.equals(ypow, values.ypow) && Objects.equals(zpow, values.zpow) && Objects.equals(sanFuncs, values.sanFuncs) && Objects.equals(print, values.print);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(constValue, xpow, ypow, zpow, sanFuncs, print);
+    }
 
     public Values(BigInteger constValue, BigInteger xpow, BigInteger ypow, BigInteger zpow, HashSet<SanFunc> sanFuncs) {
         this.constValue = constValue;
@@ -89,11 +103,12 @@ public class Values {   // constValue * x ** xpow * y ** ypow * z ** zpow * sin/
         }
         BigInteger z = BigInteger.valueOf(0);
         if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z) && sanFuncs.isEmpty()) {
+
             sb.append(constValue);
             return sb.toString();
         }
         if (!xishu1()) {
-            sb.append(constValue);
+            //sb.append(constValue);System.out.println("zhiyin");
         } else {
             if (constValue.equals(BigInteger.valueOf(-1))) {
                 sb.append("-");
@@ -136,7 +151,7 @@ public class Values {   // constValue * x ** xpow * y ** ypow * z ** zpow * sin/
                     sb.append(zpow);
                 } } }
         if (!this.sanFuncs.isEmpty()) {
-            System.out.println("printing");
+            //System.out.println("printing");
             Boolean first = true;
             for (SanFunc s : sanFuncs) {
                 if (!(xpow.equals(z) && ypow.equals(z) && zpow.equals(z)) || !xishu1() || !first) {
@@ -145,7 +160,11 @@ public class Values {   // constValue * x ** xpow * y ** ypow * z ** zpow * sin/
                 first = false;
                 String type = s.getSin() ? "sin" : "cos";
                 if (s.getExprValues().size() == 1) {
-                    sb.append(type).append('(').append(new Expr(s.getExprValues()).tostring()).append(')');
+                    String exprString = new Expr(s.getExprValues()).tostring();
+                    exprString = exprString.replaceAll("x\\*x", "x**2");
+                    exprString = exprString.replaceAll("y\\*y", "y**2");
+                    exprString = exprString.replaceAll("z\\*z", "z**2");
+                    sb.append(type).append('(').append(exprString).append(')');
                 } else {
                     sb.append(type).append("((").append(new Expr(s.getExprValues()).tostring()).append("))");
                 }

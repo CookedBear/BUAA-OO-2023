@@ -1,4 +1,5 @@
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 //cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
@@ -20,8 +21,17 @@ public class calculator {
                         v.setConstValue(v.getConstValue().add(vv.getConstValue()));
                     flag = 0;
                 }
+//                SanFunc delete = shrinkSan(v, vv);
+//                if (delete != null) {
+//                    System.out.println(delete.getSin());
+//                    v.getSanFuncs().remove(delete);
+//                    delete.setSin(!delete.getSin());
+//                    vv.getSanFuncs().remove(delete);
+//
+//                    //flag = 0;
+//                }
 
-//                if (contrast(vvv, vv)) {                 //找到a * sin^2 + b * cos^2 = b + (a-b) * sin^2
+//                if (contrast(vvv, vv)) {                 //找到a * A * sin^2 + b * A * cos^2 = b * A + (a-b) * A * sin^2
 //                    BigInteger a = vvv.getConstValue();
 //                    BigInteger b = vv.getConstValue();
 ////                    System.out.println(a);
@@ -54,6 +64,7 @@ public class calculator {
         for (SanFunc s2 : sanFuncs2) {
             Boolean insert = false;
             for (SanFunc s1 : sanFuncs) {
+                s1.hashCode();
                 HashSet<Values> v2 = s2.getExprValues();
                 if (s1.getSin() == s2.getSin() && addValue(v2, s1.getExprValues(), false).isEmpty()) {    //合并同三角项
                     s1.setPower(s1.getPower().add(s2.getPower()));
@@ -130,30 +141,53 @@ public class calculator {
         if (v1.getSanFuncs().isEmpty() && v2.getSanFuncs().isEmpty()) {
             b4 = true;
         } else {
-            b4 = sameSan(v1.getSanFuncs(), v2.getSanFuncs());
+            b4 = sameSan(v1.getSanFuncs(), v2.getSanFuncs(), true);
         }
         //System.out.println(b4);
         return b1 && b2 && b3 && b4;
     }
 
-    public Boolean contrast(Values v1, Values v2) {
-        Boolean b1 = v1.getxPow().equals(v2.getxPow());
-        Boolean b2 = v1.getyPow().equals(v2.getyPow());
-        Boolean b3 = v1.getzPow().equals(v2.getzPow());
-        Boolean b4;
-        if (v1.getSanFuncs().isEmpty() && v2.getSanFuncs().isEmpty()) {
-            b4 = true;
-        } else {
-            b4 = !sameSan(v1.getSanFuncs(), v2.getSanFuncs());
+    public SanFunc shrinkSan(Values v1, Values v2) {
+        HashSet<SanFunc> sv1 = getSansClone(v1.getSanFuncs());
+        HashSet<SanFunc> sv2 = getSansClone(v2.getSanFuncs());
+        for (SanFunc s2 : sv2) {
+            Boolean s2Sin = s2.getSin();
+            HashSet<Values> s2ExprValues = s2.getExprValues();
+            BigInteger s2Power = s2.getPower();
+
+            for (SanFunc s1 : sv1) {
+                Boolean s1Sin = s1.getSin();
+                HashSet<Values> s1ExprValues = s1.getExprValues();
+                BigInteger s1Power = s1.getPower();
+                if (s1Sin == s2Sin && s1Power.equals(s2Power) && addValue(s1ExprValues, s2ExprValues, false).isEmpty()) {
+                    sv1.remove(s1);
+                    sv2.remove(s2);
+                    break;
+                }
+            }
+            // not found
         }
-        //System.out.println(b4);
-        return b1 && b2 && b3 && b4;
+        if (sv1.size()!=1 || sv2.size()!=1) {
+            return null;
+        }
+        for (SanFunc s1 : sv1) {
+            for (SanFunc s2 : sv2) {
+                Boolean b1 = s1.getSin()!=s2.getSin();
+                Boolean b2 = s1.getPower().equals(s2.getPower()) && s1.getPower().equals(BigInteger.valueOf(2));
+                Boolean b3 = addValue(s1.getExprValues(), s2.getExprValues(), false).isEmpty();
+                if (b1 && b2 && b3) {
+                    return s1;
+                }
+            }
+        }
+        return null;
     }
 
-    public Boolean sameSan(HashSet<SanFunc> sanFuncs1, HashSet<SanFunc> sanFuncs2) {    //三角函数集合相同（遍历）：类型一致 + 指数一致 + ExprValue一致
+
+    public Boolean sameSan(HashSet<SanFunc> sanFuncs1, HashSet<SanFunc> sanFuncs2, Boolean same) {    //三角函数集合相同（遍历）：类型一致 + 指数一致 + ExprValue一致
         HashSet<SanFunc> sanFuncs3 = getSansClone(sanFuncs1);
         for (SanFunc s2 : sanFuncs2) {
-            Boolean s2Sin = s2.getSin();
+            Boolean s2Sin = same == s2.getSin();
             HashSet<Values> s2ExprValues = s2.getExprValues();
             BigInteger s2Power = s2.getPower();
             Boolean found = false;

@@ -1,4 +1,7 @@
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Parser {
     private final Lexer lexer;
@@ -17,7 +20,7 @@ public class Parser {
     // 123658651321* 57955132*945646286 *z **+1 ++ +12275+ - --9713 * -274313321 *6601+ x
     // **4 +-+52611018347 + +z ** +4 + + +y) "
 
-    public Expr parseExpr() {
+    public Expr parseExpr(HashMap<Character, ArtiFunc> artiFunctions) {
         Expr expr = new Expr();
 
         String status = lexer.peek();
@@ -26,18 +29,18 @@ public class Parser {
         }
         Boolean ss = !status.equals("-");
 
-        expr.addTerm(parseTerm(),ss);
+        expr.addTerm(parseTerm(artiFunctions),ss);
         //System.out.println(lexer.peek());
         while (lexer.peek().equals("+") || lexer.peek().equals("-")) {
             Boolean sss = !lexer.peek().equals("-");
             lexer.next();
-            expr.addTerm(parseTerm(),sss);
+            expr.addTerm(parseTerm(artiFunctions),sss);
         }
 
         return expr;
     }
 
-    public Term parseTerm() {
+    public Term parseTerm(HashMap<Character, ArtiFunc> artiFunctions) {
         Term term = new Term();
 
         String status = lexer.peek();
@@ -47,17 +50,17 @@ public class Parser {
         }
         Boolean ss = !status.equals("-");
 
-        term.addFactorInit(parseFactor(),ss);
+        term.addFactorInit(parseFactor(artiFunctions),ss);
 
         while (lexer.peek().equals("*")) {
             lexer.next();
-            term.addFactor(parseFactor());
+            term.addFactor(parseFactor(artiFunctions));
         }
 
         return term;
     }
 
-    public Factor parseFactor() {
+    public Factor parseFactor(HashMap<Character, ArtiFunc> artiFunctions) {
         String status = lexer.peek();
         //if (status.equals("+") || status.equals("-")) {
         //    lexer.next();
@@ -69,7 +72,7 @@ public class Parser {
         //可以使用switch并优化为parse各部分的函数，简单调用
         if (symbol.equals("(")) {               //get ExprFunc now
             lexer.next();
-            Expr expr = parseExpr();
+            Expr expr = parseExpr(artiFunctions);
             lexer.next();//jump ')' to accept the correct Character
 
             //lexer.next();//simulate the MiFunc
@@ -102,7 +105,7 @@ public class Parser {
         } else if (symbol.equals("sin") || symbol.equals("cos")) {  //sin( factor ) ** power
             lexer.next();   // (
             lexer.next();   // factor begin
-            Factor factor = parseFactor();  // )
+            Factor factor = parseFactor(artiFunctions);  // )
             lexer.next();   // * or fin
             if (lexer.hasPow()) {
                 lexer.next();
@@ -114,7 +117,37 @@ public class Parser {
             }
 
         } else if (symbol.equals("sum")) {
-                return null;
+            return null;
+        } else if (symbol.equals("f") || symbol.equals("g") || symbol.equals("h")) {    // f(factor, factor, factor)
+            lexer.next();
+            lexer.next();
+            //Factor factor1 = parseFactor(artiFunctions);
+            ArtiFunc artiFunc = artiFunctions.get(symbol.charAt(0));
+            int varNumber = artiFunc.getVarNumber();
+            String var = artiFunc.getVar();
+            String artiFuncExpr = artiFunc.getExpr();
+
+            for (int i = 0; i < varNumber; i++) {
+                HashSet<Values> v = parseFactor(artiFunctions).getValues();
+                lexer.next();
+                Expr exprr = new Expr(new calculator().getClone(v));
+                String parse;
+                parse = "(" + exprr.tostring() + ")";
+                //System.out.println(var.charAt(i));
+                artiFuncExpr = artiFuncExpr.replaceAll(String.valueOf(var.charAt(i)), parse);
+                //System.out.println(artiFuncExpr);
+            }
+            if (lexer.hasPow()) {
+                lexer.next();
+                lexer.next();   //power begin
+                ZeroInt power = parseInt();
+                Expr e = new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions);
+                e.pow(power.getInt());
+                return e;
+            } else {
+                return new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions);
+            }
+            //return new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions);
         } else {                                //get ZeroInt now
             return parseInt();//在peek后忘记使用next
         }

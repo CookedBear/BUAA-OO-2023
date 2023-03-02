@@ -37,7 +37,13 @@ public class Lexer {
                         currentContent = "jile";
                 }
                 position += 3;
-                System.out.println(currentContent);
+                //System.out.println(currentContent);
+            } else if (now == 'f' || now == 'g' || now == 'h') {
+                currentContent = String.valueOf(now);
+                position++;
+            } else if (now == ',') {
+                currentContent = String.valueOf(now);
+                position++;
             }
         }
     }

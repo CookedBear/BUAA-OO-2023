@@ -1,17 +1,31 @@
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         //System.out.println("Hello world!");
         Scanner input = new Scanner(System.in);
+        int functionNumber = Integer.parseInt(input.nextLine());
+        HashMap<Character, ArtiFunc> artiFunctions = new HashMap<>();
+        for (int i = 0; i < functionNumber; i++) {
+            String artiFunction = input.nextLine();
+            artiFunction = artiFunction.replaceAll("[ \t]", "");
+            artiFunctions.put(artiFunction.charAt(0), new ArtiFunc(artiFunction));
+        }
         String inputLine = input.nextLine();
+
+        long startTime = System.nanoTime();
         inputLine = inputLine.replaceAll("[ \t]", "");
 
         Lexer lexer = new Lexer(inputLine);
         Parser parser = new Parser(lexer);
 
-        Expr exprMain = parser.parseExpr();
+        long overTime0 = System.nanoTime();
+        Expr exprMain = parser.parseExpr(artiFunctions);
+        long overTime1 = System.nanoTime();
         System.out.println(exprMain.tostring());
+        long overTime2 = System.nanoTime();      //获取结束时间
+        System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "+(overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
     }
 }
 
