@@ -7,15 +7,15 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
     private BigInteger power;
 
     public SanFunc(String type, Factor factor, ZeroInt zeroInt) {
-        if (!zeroInt.equals(BigInteger.ZERO)) {
+        if (!zeroInt.getInt().equals(BigInteger.ZERO)) {
             this.sin = type.equals("sin");
             this.exprValues = new Calculator().getClone(factor.getValues());
             this.power = zeroInt.getInt();
         } else {
             this.sin = true;
             this.exprValues = new HashSet<>();
-            this.power = BigInteger.ONE;
-            exprValues.add(new Values(new ZeroInt(BigInteger.ONE)));
+            this.power = BigInteger.ZERO;
+            exprValues.add(new Values(new ZeroInt(BigInteger.ZERO)));
         }
     }
 

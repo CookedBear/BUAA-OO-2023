@@ -8,7 +8,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
     private BigInteger ypow;
     private BigInteger zpow;
     private HashSet<SanFunc> sanFuncs;
-    private Boolean print = false;
+    private Boolean print;
 
     @Override
     public boolean equals(Object o) {

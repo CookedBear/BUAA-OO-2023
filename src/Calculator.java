@@ -7,41 +7,30 @@ public class Calculator {
     public HashSet<Values> addValue(HashSet<Values> v1, HashSet<Values> v2, Boolean status) {
         HashSet<Values> v3 = getClone(v1);
         for (Values vvv : v2) {
-            Values vv = getClone(vvv);
+            //Values vv = getClone(vvv);  不合并/add，就不需要深克隆
             int flag = 1;
 
-            if (!status) {
-                vv.setConstValue(BigInteger.valueOf(0).subtract(vv.getConstValue()));
-            }
+//            if (!status) {
+//                vv.setConstValue(BigInteger.valueOf(0).subtract(vv.getConstValue()));
+//            }
 
             for (Values v : v3) {
 
-                if (samePow(v, vv)) {  //成功合并同类项
-                    v.setConstValue(v.getConstValue().add(vv.getConstValue()));
+                if (samePow(v, vvv)) {  //成功合并同类项
+                    if (!status) {
+                        v.setConstValue(v.getConstValue().subtract(vvv.getConstValue()));
+                    } else {
+                        v.setConstValue(v.getConstValue().add(vvv.getConstValue()));
+                    }
                     flag = 0;
                 }
-//                SanFunc delete = shrinkSan(v, vv);
-//                if (delete != null) {
-//                    System.out.println(delete.getSin());
-//                    v.getSanFuncs().remove(delete);
-//                    delete.setSin(!delete.getSin());
-//                    vv.getSanFuncs().remove(delete);
-//
-//                    //flag = 0;
-//                }
-
-//                if(contrast(vvv, vv)){找到a * A * sin^2 + b * A * cos^2 = b * A + (a-b) * A * sin^2
-//                    BigInteger a = vvv.getConstValue();
-//                    BigInteger b = vv.getConstValue();
-////                    System.out.println(a);
-////                    System.out.println(b);
-                //  vvv.setConstValue(a.subtract(b));
-                //  v3.add(new Values(new ZeroInt(b)));
-                //  flag = 0;
-                //}
             }
             if (flag == 1) {    //无法合并同类项
-                v3.add(new Calculator().getClone(vv));
+                Values vp = new Calculator().getClone(vvv);
+                if (!status) {
+                    vp.setConstValue(BigInteger.ZERO.subtract(vp.getConstValue()));
+                }
+                v3.add(vp);
             }
         }
 
@@ -63,7 +52,6 @@ public class Calculator {
         for (SanFunc s2 : sanFuncs2) {
             Boolean insert = false;
             for (SanFunc s1 : sanFuncs) {
-                s1.hashCode();
                 HashSet<Values> v2 = s2.getExprValues();
                 if (s1.getSin() == s2.getSin() && addValue(v2, s1.getExprValues(),
                         false).isEmpty()) {    //合并同三角项
@@ -96,7 +84,7 @@ public class Calculator {
         if (power.equals(z)) {
             newValues.add(new Values(z, z, z, BigInteger.valueOf(1)));
         } else if (power.equals(BigInteger.valueOf(1))) {
-            newValues = getClone(values);
+            newValues = values;
         } else {
             newValues = multiValue(values, values);
 
