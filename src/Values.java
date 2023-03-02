@@ -109,7 +109,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
             return sb.toString();
         }
         if (!xishu1()) {
-            //sb.append(constValue);System.out.println("zhiyin");
+            sb.append(constValue);//System.out.println("zhiyin");
         } else {
             if (constValue.equals(BigInteger.valueOf(-1))) {
                 sb.append("-");
