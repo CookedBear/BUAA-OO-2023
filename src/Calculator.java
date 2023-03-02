@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.util.HashSet;
+import java.util.Iterator;
 
 //cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
 public class Calculator {
@@ -34,7 +35,7 @@ public class Calculator {
             }
         }
 
-        v3.removeIf(vx -> vx.getConstValue().equals(BigInteger.valueOf(0)));
+        //v3.removeIf(vx -> vx.getConstValue().equals(BigInteger.valueOf(0)));
         for (Values v : v3) {
             v.getSanFuncs().removeIf(s -> s.getPower().equals(BigInteger.ZERO));
         }

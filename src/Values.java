@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/cos(exprValue) ** pow
@@ -21,10 +22,6 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 && Objects.equals(print, values.print);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(constValue, xpow, ypow, zpow, sanFuncs, print);
-    }
 
     public Values(BigInteger constValue, BigInteger xpow, BigInteger ypow,
                   BigInteger zpow, HashSet<SanFunc> sanFuncs) {
@@ -166,7 +163,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
             }
             first = false;
             String type = s.getSin() ? "sin" : "cos";
-            if (s.getExprValues().size() == 1) {
+            if (onlyOneFactor(s.getExprValues())) {
                 String exprString = new Expr(s.getExprValues()).tostring();
                 exprString = exprString.replaceAll("x\\*x", "x**2");
                 exprString = exprString.replaceAll("y\\*y", "y**2");
@@ -181,6 +178,31 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
             }
         }
         return sb;
+    }
+
+    private Boolean onlyOneFactor(HashSet<Values> values) {
+        if (values.size() != 1) {
+            return false;
+        } else {
+            int count = 0;
+            for (Values v : values) {
+                BigInteger z = BigInteger.ZERO;
+                if (!v.xpow.equals(z)) {
+                    count++;
+                }
+                if (!v.ypow.equals(z)) {
+                    count++;
+                }
+                if (!v.zpow.equals(z)) {
+                    count++;
+                }
+                if (!v.sanFuncs.isEmpty()) {
+                    count++;
+                }
+                return count == 1;
+            }
+        }
+        return false;
     }
 }
 
