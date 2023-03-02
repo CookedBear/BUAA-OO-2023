@@ -1,9 +1,8 @@
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 //cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
-public class calculator {
+public class Calculator {
 
     public HashSet<Values> addValue(HashSet<Values> v1, HashSet<Values> v2, Boolean status) {
         HashSet<Values> v3 = getClone(v1);
@@ -18,7 +17,7 @@ public class calculator {
             for (Values v : v3) {
 
                 if (samePow(v, vv)) {  //成功合并同类项
-                        v.setConstValue(v.getConstValue().add(vv.getConstValue()));
+                    v.setConstValue(v.getConstValue().add(vv.getConstValue()));
                     flag = 0;
                 }
 //                SanFunc delete = shrinkSan(v, vv);
@@ -31,18 +30,18 @@ public class calculator {
 //                    //flag = 0;
 //                }
 
-//                if (contrast(vvv, vv)) {                 //找到a * A * sin^2 + b * A * cos^2 = b * A + (a-b) * A * sin^2
+//                if(contrast(vvv, vv)){找到a * A * sin^2 + b * A * cos^2 = b * A + (a-b) * A * sin^2
 //                    BigInteger a = vvv.getConstValue();
 //                    BigInteger b = vv.getConstValue();
 ////                    System.out.println(a);
 ////                    System.out.println(b);
-//                    vvv.setConstValue(a.subtract(b));
-//                    v3.add(new Values(new ZeroInt(b)));
-//                    flag = 0;
-//                }
+                //  vvv.setConstValue(a.subtract(b));
+                //  v3.add(new Values(new ZeroInt(b)));
+                //  flag = 0;
+                //}
             }
             if (flag == 1) {    //无法合并同类项
-                v3.add(new calculator().getClone(vv));
+                v3.add(new Calculator().getClone(vv));
             }
         }
 
@@ -66,7 +65,8 @@ public class calculator {
             for (SanFunc s1 : sanFuncs) {
                 s1.hashCode();
                 HashSet<Values> v2 = s2.getExprValues();
-                if (s1.getSin() == s2.getSin() && addValue(v2, s1.getExprValues(), false).isEmpty()) {    //合并同三角项
+                if (s1.getSin() == s2.getSin() && addValue(v2, s1.getExprValues(),
+                        false).isEmpty()) {    //合并同三角项
                     s1.setPower(s1.getPower().add(s2.getPower()));
                     insert = true;
                     break;
@@ -110,7 +110,8 @@ public class calculator {
     }
 
     public Values getClone(Values v) {
-        return new Values(v.getConstValue(), v.getxPow(), v.getyPow(), v.getzPow(), getSansClone(v.getSanFuncs()));
+        return new Values(v.getConstValue(), v.getxPow(), v.getyPow(),
+                v.getzPow(), getSansClone(v.getSanFuncs()));
     }
 
     public HashSet<Values> getClone(HashSet<Values> values) {
@@ -122,7 +123,8 @@ public class calculator {
     }
 
     public SanFunc getClone(SanFunc sanFunc) {  // clone 默认获得表达式类型
-        return new SanFunc(sanFunc.getSin() ? "sin" : "cos",new Expr(new calculator().getClone(sanFunc.getExprValues())),new ZeroInt(sanFunc.getPower()));
+        return new SanFunc(sanFunc.getSin() ? "sin" : "cos",new Expr(new Calculator().
+                getClone(sanFunc.getExprValues())),new ZeroInt(sanFunc.getPower()));
     }
 
     public HashSet<SanFunc> getSansClone(HashSet<SanFunc> sanFuncs) {
@@ -159,7 +161,8 @@ public class calculator {
                 Boolean s1Sin = s1.getSin();
                 HashSet<Values> s1ExprValues = s1.getExprValues();
                 BigInteger s1Power = s1.getPower();
-                if (s1Sin == s2Sin && s1Power.equals(s2Power) && addValue(s1ExprValues, s2ExprValues, false).isEmpty()) {
+                if (s1Sin == s2Sin && s1Power.equals(s2Power) &&
+                        addValue(s1ExprValues, s2ExprValues, false).isEmpty()) {
                     sv1.remove(s1);
                     sv2.remove(s2);
                     break;
@@ -167,13 +170,14 @@ public class calculator {
             }
             // not found
         }
-        if (sv1.size()!=1 || sv2.size()!=1) {
+        if (sv1.size() != 1 || sv2.size() != 1) {
             return null;
         }
         for (SanFunc s1 : sv1) {
             for (SanFunc s2 : sv2) {
-                Boolean b1 = s1.getSin()!=s2.getSin();
-                Boolean b2 = s1.getPower().equals(s2.getPower()) && s1.getPower().equals(BigInteger.valueOf(2));
+                Boolean b1 = s1.getSin() != s2.getSin();
+                Boolean b2 = s1.getPower().equals(s2.getPower())
+                        && s1.getPower().equals(BigInteger.valueOf(2));
                 Boolean b3 = addValue(s1.getExprValues(), s2.getExprValues(), false).isEmpty();
                 if (b1 && b2 && b3) {
                     return s1;
@@ -183,8 +187,9 @@ public class calculator {
         return null;
     }
 
-
-    public Boolean sameSan(HashSet<SanFunc> sanFuncs1, HashSet<SanFunc> sanFuncs2, Boolean same) {    //三角函数集合相同（遍历）：类型一致 + 指数一致 + ExprValue一致
+    public Boolean sameSan(HashSet<SanFunc> sanFuncs1, HashSet<SanFunc> sanFuncs2,
+                           Boolean same) {
+        //三角函数集合相同（遍历）：类型一致 + 指数一致 + ExprValue一致
         HashSet<SanFunc> sanFuncs3 = getSansClone(sanFuncs1);
         for (SanFunc s2 : sanFuncs2) {
             Boolean s2Sin = same == s2.getSin();
@@ -196,7 +201,8 @@ public class calculator {
                 Boolean s1Sin = s1.getSin();
                 HashSet<Values> s1ExprValues = s1.getExprValues();
                 BigInteger s1Power = s1.getPower();
-                if (s1Sin == s2Sin && s1Power.equals(s2Power) && addValue(s1ExprValues, s2ExprValues, false).isEmpty()) {
+                if (s1Sin == s2Sin && s1Power.equals(s2Power)
+                        && addValue(s1ExprValues, s2ExprValues, false).isEmpty()) {
                     sanFuncs3.remove(s1);
                     found = true;
                     break;

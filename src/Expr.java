@@ -18,11 +18,11 @@ public class Expr implements Factor {
     public void addTerm(Term term, Boolean status) {
         this.terms.add(term);
         //this.values.addAll(term.getValues());
-        this.values = new calculator().addValue(values, term.getValues(), status);
+        this.values = new Calculator().addValue(values, term.getValues(), status);
     }
 
     public void pow(BigInteger pow) {
-        values = new calculator().powerValue(values, pow);
+        values = new Calculator().powerValue(values, pow);
     }
 
     public Expr reverse() {
@@ -36,7 +36,6 @@ public class Expr implements Factor {
     public HashSet<Values> getValues() {
         return values;
     }
-
 
     public String tostring() {
         StringBuilder sb = new StringBuilder();

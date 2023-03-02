@@ -18,12 +18,12 @@ public class Term {
     public void addFactor(Factor factor) {
         this.factors.add(factor);
         //this.values.addAll(factor.getValues());
-        this.values = new calculator().multiValue(this.values, factor.getValues());
+        this.values = new Calculator().multiValue(this.values, factor.getValues());
     }
 
     public void addFactorInit(Factor factor, Boolean status) {
         this.factors.add(factor);
-        this.values = new calculator().getClone(factor.getValues());
+        this.values = new Calculator().getClone(factor.getValues());
 
         if (!status) {
             for (Values v : values) {
