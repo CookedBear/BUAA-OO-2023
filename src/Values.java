@@ -1,28 +1,16 @@
 import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.TreeMap;
 
 public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/cos(exprValue) ** pow
     private BigInteger constValue;
     private BigInteger xpow;
     private BigInteger ypow;
     private BigInteger zpow;
-    private HashSet<SanFunc> sanFuncs;
+    private TreeMap<String, SanFunc> sanFuncs;
     private Boolean print;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-        Values values = (Values) o;
-        return Objects.equals(constValue, values.constValue)
-                && Objects.equals(xpow, values.xpow) && Objects.equals(ypow, values.ypow)
-                && Objects.equals(zpow, values.zpow) && Objects.equals(sanFuncs, values.sanFuncs)
-                && Objects.equals(print, values.print);
-    }
-
     public Values(BigInteger constValue, BigInteger xpow, BigInteger ypow,
-                  BigInteger zpow, HashSet<SanFunc> sanFuncs) {
+                  BigInteger zpow, TreeMap<String, SanFunc> sanFuncs) {
         this.constValue = constValue;
         this.xpow = xpow;
         this.ypow = ypow;
@@ -36,7 +24,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         this.ypow = ypow;
         this.zpow = zpow;
         this.constValue = constValue;
-        sanFuncs = new HashSet<>();
+        sanFuncs = new TreeMap<>();
         this.print = false;
     }
 
@@ -46,10 +34,9 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         this.xpow = z;
         this.ypow = z;
         this.zpow = z;
-        this.sanFuncs = new HashSet<>();
+        this.sanFuncs = new TreeMap<>();
         this.print = false;
-
-        this.sanFuncs.add(new Calculator().getClone(sanFunc));
+        this.sanFuncs.put(sanFunc.hashString(), new Calculator().getClone(sanFunc));
     }
 
     public Values(ZeroInt zeroInt) {
@@ -57,7 +44,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         this.xpow = BigInteger.ZERO;
         this.ypow = BigInteger.ZERO;
         this.zpow = BigInteger.ZERO;
-        this.sanFuncs = new HashSet<>();
+        this.sanFuncs = new TreeMap<>();
         this.print = false;
     }
 
@@ -77,7 +64,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         return constValue;
     }
 
-    public HashSet<SanFunc> getSanFuncs() { return sanFuncs; }
+    public TreeMap<String, SanFunc> getSanFuncs() { return sanFuncs; }
 
     public void setConstValue(BigInteger constValue) {
         this.constValue = constValue;
@@ -89,14 +76,30 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         return b1 || b2;
     }
 
-    public String tostring() {  //+xxxxxx or +-yyyyyyyyy
+    public String hashString() {
         StringBuilder sb = new StringBuilder();
-        if (print) {
-            return sb.append("").toString();
+        sb.append(xpow);
+        sb.append(',');
+        sb.append(ypow);
+        sb.append(',');
+        sb.append(zpow);
+        sb.append(',');
+        if (!sanFuncs.isEmpty()) {
+            for (SanFunc s : sanFuncs.values()) {
+                sb.append(s.hashString());
+                sb.append(',');
+            }
         }
+        return sb.toString();
+    }
+
+    public String ttostring() {  //+xxxxxx or +-yyyyyyyyy
+        StringBuilder sb = new StringBuilder();
+        if (print) { return sb.append("").toString(); }
         print = true;
         if (constValue.compareTo(BigInteger.valueOf(0)) > 0) {
-            sb.append('+'); }
+            sb.append('+');
+        }
         BigInteger z = BigInteger.valueOf(0);
         if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z) && sanFuncs.isEmpty()) {
             sb.append(constValue);
@@ -154,21 +157,22 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
     public StringBuilder printSanFuncs(StringBuilder sb) {
         Boolean first = true;
         BigInteger z = BigInteger.ZERO;
-        for (SanFunc s : sanFuncs) {
+        for (String ss : sanFuncs.keySet()) {
+            SanFunc s = sanFuncs.get(ss);
             if (!(xpow.equals(z) && ypow.equals(z) && zpow.equals(z)) || !xishu1() || !first) {
                 sb.append("*");
             }
             first = false;
             String type = s.getSin() ? "sin" : "cos";
             if (onlyOneFactor(s.getExprValues())) {
-                String exprString = new Expr(s.getExprValues()).tostring();
+                String exprString = new Expr(s.getExprValues()).ttostring();
                 exprString = exprString.replaceAll("x\\*x", "x**2");
                 exprString = exprString.replaceAll("y\\*y", "y**2");
                 exprString = exprString.replaceAll("z\\*z", "z**2");
-                sb.append(type).append("(").append(exprString).append(")");
+                sb.append(type).append('(').append(exprString).append(')');
             } else {
                 sb.append(type).append("((").append(new Expr(s.getExprValues()).
-                        tostring()).append("))");
+                        ttostring()).append("))");
             }
             if (!s.getPower().equals(BigInteger.ONE)) {
                 sb.append("**").append(s.getPower());
@@ -177,16 +181,14 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         return sb;
     }
 
-    private Boolean onlyOneFactor(HashSet<Values> values) {
+    private Boolean onlyOneFactor(TreeMap<String, Values> values) {
         if (values.size() != 1) {
             return false;
         } else {
             int count = 0;
-            for (Values v : values) {
+            for (String s : values.keySet()) {
+                Values v = values.get(s);
                 BigInteger z = BigInteger.ZERO;
-                if (!v.constValue.equals(BigInteger.ONE)) {
-                    count++;
-                }
                 if (!v.xpow.equals(z)) {
                     count++;
                 }
@@ -196,7 +198,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 if (!v.zpow.equals(z)) {
                     count++;
                 }
-                if (v.sanFuncs.size() == 1) {
+                if (!v.sanFuncs.isEmpty()) {
                     count++;
                 }
                 return count == 1;
@@ -204,6 +206,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         }
         return false;
     }
+
 }
 
 

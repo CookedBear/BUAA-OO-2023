@@ -23,10 +23,10 @@ public class Main {
         long overTime0 = System.nanoTime();
         Expr exprMain = parser.parseExpr(artiFunctions);
         long overTime1 = System.nanoTime();
-        System.out.println(exprMain.tostring());
+        System.out.println(exprMain.ttostring());
         long overTime2 = System.nanoTime();      //获取结束时间
-        //System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "+
-        // (overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
+        //System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "
+        // +(overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
     }
 }
 
@@ -62,3 +62,10 @@ public class Values{
 //  忘记给Expr类Override的getValues()方法提供values作为返回值，导致在运行时getValues()时报错NullPointException
 //      修改getValues()方法返回值
 //表达式因子可以包含指数，没有设置相关方法
+
+
+
+//重构问题：
+//'+'报错
+//0报错
+//sin(x)*cos(x)=sin(x)**2

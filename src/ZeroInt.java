@@ -1,24 +1,24 @@
 import java.math.BigInteger;
-import java.util.HashSet;
+import java.util.TreeMap;
 
 public class ZeroInt implements Factor {
-    private HashSet<Values> values;
+    private TreeMap<String, Values> values;
     private BigInteger bigInt;
 
     public ZeroInt(BigInteger num) {
-        this.values = new HashSet<Values>();
+        this.values = new TreeMap<>();
         BigInteger z = BigInteger.valueOf(0);
         Values value1 = new Values(z,z,z,num);
         //System.out.println(num);
         bigInt = num;
-        values.add(value1);
+        values.put("0,0,0,", value1);
     }
 
-    public ZeroInt(HashSet<Values> values) {
+    public ZeroInt(TreeMap<String, Values> values) {
         this.values = values;
     }
 
-    public HashSet<Values> getValues() {
+    public TreeMap<String, Values> getValues() {
         return this.values;
     }
 

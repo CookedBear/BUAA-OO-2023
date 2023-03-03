@@ -1,6 +1,6 @@
 import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.TreeMap;
 
 public class Parser {
     private final Lexer lexer;
@@ -35,7 +35,7 @@ public class Parser {
             lexer.next();
             expr.addTerm(parseTerm(artiFunctions), sss);
         }
-
+        expr.merge();
         return expr;
     }
 
@@ -100,11 +100,11 @@ public class Parser {
             String var = artiFunc.getVar();
             String artiFuncExpr = artiFunc.getExpr();
             for (int i = 0; i < varNumber; i++) {
-                HashSet<Values> v = parseFactor(artiFunctions).getValues();
+                TreeMap<String, Values> v = parseFactor(artiFunctions).getValues();
                 lexer.next();
                 Expr exprr = new Expr(new Calculator().getClone(v));
                 String parse;
-                parse = "(" + exprr.tostring() + ")";
+                parse = "(" + exprr.ttostring() + ")";
                 artiFuncExpr = artiFuncExpr.replaceAll(String.valueOf(var.charAt(i)), parse);
                 //System.out.println(artiFuncExpr);               System.out.println(var.charAt(i));
             }

@@ -1,6 +1,6 @@
-import java.util.HashSet;
+import java.util.TreeMap;
 
 public interface Factor {
 
-    public HashSet<Values> getValues();
+    public TreeMap<String, Values> getValues();
 }

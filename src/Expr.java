@@ -1,17 +1,17 @@
 import java.math.BigInteger;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.TreeMap;
 
 public class Expr implements Factor {
     private HashSet<Term> terms = null;
-    private HashSet<Values> values;
+    private TreeMap<String, Values> values;
 
     public Expr() {
         this.terms = new HashSet<Term>();
-        this.values = new HashSet<Values>();
+        this.values = new TreeMap<>();
     }
 
-    public Expr(HashSet<Values> values) {
+    public Expr(TreeMap<String, Values> values) {
         this.values = values;
     }
 
@@ -26,32 +26,44 @@ public class Expr implements Factor {
     }
 
     public Expr reverse() {
-        for (Values v : values) {
+        for (Values v : values.values()) {
             v.setConstValue(BigInteger.valueOf(0).subtract(v.getConstValue()));
         }
         return this;
     }
 
+    public void merge() {
+        values.entrySet().removeIf(stringValuesEntry -> stringValuesEntry.
+                getValue().getConstValue().equals(BigInteger.ZERO));
+    }
+
     @Override
-    public HashSet<Values> getValues() {
+    public TreeMap<String, Values> getValues() {
         return values;
     }
 
-    public String tostring() {
+    public String hashString() {
         StringBuilder sb = new StringBuilder();
-        Iterator<Values> iter = values.iterator();
+        for (Values v : values.values()) {
+            sb.append(v.hashString());
+            sb.append("+");
+        }
+        return sb.toString();
+    }
+
+    public String ttostring() {
+        StringBuilder sb = new StringBuilder();
         if (values.isEmpty()) { //expr sum is 0
             return "0";
         }
         //System.out.println(values);
-        for (Values v : values) {
+        for (Values v : values.values()) {
             if (v.getConstValue().compareTo(BigInteger.valueOf(0)) > 0) {
-                sb.append(v.tostring());
+                sb.append(v.ttostring());
             }
         }
-        sb.append(iter.next().tostring());
-        while (iter.hasNext()) {
-            sb.append(iter.next().tostring());
+        for (Values v : values.values()) {
+            sb.append(v.ttostring());
         }
         String s = sb.toString();
         if (s.charAt(0) == '+') {
