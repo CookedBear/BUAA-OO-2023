@@ -35,7 +35,7 @@ public class Calculator {
             }
         }
 
-        //v3.removeIf(vx -> vx.getConstValue().equals(BigInteger.valueOf(0)));
+        v3.removeIf(vx -> vx.getConstValue().equals(BigInteger.valueOf(0)));
         for (Values v : v3) {
             v.getSanFuncs().removeIf(s -> s.getPower().equals(BigInteger.ZERO));
         }
