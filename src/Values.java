@@ -193,7 +193,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 if (!v.zpow.equals(z)) {
                     count++;
                 }
-                if (!v.sanFuncs.isEmpty()) {
+                if (v.sanFuncs.size() == 1) {
                     count++;
                 }
                 return count == 1;
