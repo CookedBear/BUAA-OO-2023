@@ -184,6 +184,9 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
             int count = 0;
             for (Values v : values) {
                 BigInteger z = BigInteger.ZERO;
+                if (!v.constValue.equals(BigInteger.ONE)) {
+                    count++;
+                }
                 if (!v.xpow.equals(z)) {
                     count++;
                 }
