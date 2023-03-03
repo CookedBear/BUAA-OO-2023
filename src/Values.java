@@ -185,26 +185,39 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         if (values.size() != 1) {
             return false;
         } else {
-            int count = 0;
+            int count1 = 0;
+            int count2 = 0;
             for (String s : values.keySet()) {
                 Values v = values.get(s);
                 BigInteger z = BigInteger.ZERO;
                 if (!v.constValue.equals(BigInteger.ONE)) {
-                    count++;
+                    count1++;
+                }
+                if (!v.constValue.equals(BigInteger.ZERO)) {
+                    count2++;
                 }
                 if (!v.xpow.equals(z)) {
-                    count++;
+                    count1++;
+                } else {
+                    count2++;
                 }
                 if (!v.ypow.equals(z)) {
-                    count++;
+                    count1++;
+                } else {
+                    count2++;
                 }
                 if (!v.zpow.equals(z)) {
-                    count++;
+                    count1++;
+                } else {
+                    count2++;
                 }
-                if (v.sanFuncs.size() == 1) {
-                    count++;
+                if (v.sanFuncs.size() >= 1) {
+                    count1++;
+                } else {
+                    count2++;
                 }
-                return count == 1;
+
+                return ((count1 == 1) || (count2 == 5));
             }
         }
         return false;
