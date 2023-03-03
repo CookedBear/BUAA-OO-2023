@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.util.HashSet;
-import java.util.Iterator;
 
 //cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
 public class Calculator {
@@ -11,9 +10,6 @@ public class Calculator {
             //Values vv = getClone(vvv);  不合并/add，就不需要深克隆
             int flag = 1;
 
-//            if (!status) {
-//                vv.setConstValue(BigInteger.valueOf(0).subtract(vv.getConstValue()));
-//            }
 
             for (Values v : v3) {
 
@@ -49,7 +45,6 @@ public class Calculator {
         BigInteger zpow = value1.getzPow().add(value2.getzPow());
         HashSet<SanFunc> sanFuncs = getSansClone(value1.getSanFuncs());
         HashSet<SanFunc> sanFuncs2 = value2.getSanFuncs();
-//        sanFuncs.addAll(getSanClone(value2.getSanFuncs()));
         for (SanFunc s2 : sanFuncs2) {
             Boolean insert = false;
             for (SanFunc s1 : sanFuncs) {
@@ -112,8 +107,8 @@ public class Calculator {
     }
 
     public SanFunc getClone(SanFunc sanFunc) {  // clone 默认获得表达式类型
-        return new SanFunc(sanFunc.getSin() ? "sin" : "cos",new Expr(new Calculator().
-                getClone(sanFunc.getExprValues())),new ZeroInt(sanFunc.getPower()));
+        return new SanFunc(sanFunc.getSin() ? "sin" : "cos", new Expr(new Calculator().
+                getClone(sanFunc.getExprValues())), new ZeroInt(sanFunc.getPower()));
     }
 
     public HashSet<SanFunc> getSansClone(HashSet<SanFunc> sanFuncs) {

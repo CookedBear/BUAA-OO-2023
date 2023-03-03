@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 
 public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/cos(exprValue) ** pow
@@ -21,7 +20,6 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 && Objects.equals(zpow, values.zpow) && Objects.equals(sanFuncs, values.sanFuncs)
                 && Objects.equals(print, values.print);
     }
-
 
     public Values(BigInteger constValue, BigInteger xpow, BigInteger ypow,
                   BigInteger zpow, HashSet<SanFunc> sanFuncs) {
@@ -98,8 +96,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         }
         print = true;
         if (constValue.compareTo(BigInteger.valueOf(0)) > 0) {
-            sb.append('+');
-        }
+            sb.append('+'); }
         BigInteger z = BigInteger.valueOf(0);
         if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z) && sanFuncs.isEmpty()) {
             sb.append(constValue);
@@ -168,7 +165,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 exprString = exprString.replaceAll("x\\*x", "x**2");
                 exprString = exprString.replaceAll("y\\*y", "y**2");
                 exprString = exprString.replaceAll("z\\*z", "z**2");
-                sb.append(type).append("((").append(exprString).append("))");
+                sb.append(type).append("(").append(exprString).append(")");
             } else {
                 sb.append(type).append("((").append(new Expr(s.getExprValues()).
                         tostring()).append("))");
