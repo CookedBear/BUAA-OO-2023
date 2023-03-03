@@ -168,7 +168,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 exprString = exprString.replaceAll("x\\*x", "x**2");
                 exprString = exprString.replaceAll("y\\*y", "y**2");
                 exprString = exprString.replaceAll("z\\*z", "z**2");
-                sb.append(type).append('(').append(exprString).append(')');
+                sb.append(type).append("((").append(exprString).append("))");
             } else {
                 sb.append(type).append("((").append(new Expr(s.getExprValues()).
                         tostring()).append("))");
