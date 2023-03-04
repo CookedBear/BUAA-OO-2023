@@ -1,5 +1,7 @@
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 public class Expr implements Factor {
@@ -35,6 +37,71 @@ public class Expr implements Factor {
     public void merge() {
         values.entrySet().removeIf(stringValuesEntry -> stringValuesEntry.
                 getValue().getConstValue().equals(BigInteger.ZERO));
+    }
+
+    public void doubleCos() {
+        //遍历二次方三角函数
+        //取出values、去掉这一项、换成另一个三角项
+        //用新values.hashString查询整个expr
+        //如果有（指数、三角函数均相等）匹配，取出两项再比较系数
+        //  相等 -> 平方和，存入临时集合
+        //  相反 -> 二倍角，也存
+        //  ELSE p都不做
+        TreeMap<String, Values> tempValues = new TreeMap<>();
+        ArrayList<String> remove = new ArrayList<>();
+        Iterator<String> it = values.keySet().iterator();
+        while (it.hasNext()) {
+            String s0 = it.next();
+            Values v0 = values.get(s0);
+            for (String s1 : v0.getSanFuncs().keySet()) {
+                if (v0.getSanFuncs().get(s1).getPower().equals(BigInteger.valueOf(2))) {    //只对 [2] 次方，进行 [移除] 操作
+                    Values v1 = new Calculator().getClone(v0);
+                    SanFunc sf1 = new Calculator().getClone(v0.getSanFuncs().get(s1));
+
+                    Values vRenew = new Calculator().getClone(v0);                  // 保存剩余部分
+                    vRenew.getSanFuncs().remove(sf1.hashString());
+
+
+                    sf1.setSin(!sf1.getSin());                                      // 反转后存入
+                    v1.getSanFuncs().remove(s1);//sin(x)**2*cos(x)**2+sin(x)**2
+                    if (v1.getSanFuncs().containsKey(sf1.hashString())) {
+                        SanFunc p = v1.getSanFuncs().get(sf1.hashString());
+                        p.setPower(p.getPower().add(sf1.getPower()));
+                    } else {
+                        v1.getSanFuncs().put(sf1.hashString(), sf1);
+                    }
+                    if (values.containsKey(v1.hashString())) {                      // 还真能找到
+                        Values v2 = values.get(v1.hashString());
+                        if(v1.getConstValue().equals(v2.getConstValue())) {         // 平方和，放回去除后的项
+                            remove.add(v1.hashString());
+                            tempValues.put(vRenew.hashString(), vRenew);
+                            it.remove();
+                        } else if (v1.getConstValue().add(v2.getConstValue()).equals(BigInteger.ZERO)) {
+                            remove.add(v1.hashString());
+                            Boolean sin = !sf1.getSin(); //反转过一次
+                            sf1.getDouble(false);
+                            vRenew.getSanFuncs().put(sf1.hashString(), sf1);
+                            if (sin) {  // 反着的二倍角
+                                vRenew.setConstValue(BigInteger.ZERO.subtract(vRenew.getConstValue()));
+                            }
+                            tempValues.put(vRenew.hashString(), vRenew);
+                            it.remove();
+                        }
+                    }
+                }
+            }
+        }
+        for (String s : remove) {
+            values.remove(s);
+        }
+        for (String s : tempValues.keySet()) {
+            if (values.containsKey(s)) {
+                Values v = values.get(s);
+                v.setConstValue(v.getConstValue().add(tempValues.get(s).getConstValue()));
+            } else {
+                values.put(s, tempValues.get(s));
+            }
+        }
     }
 
     @Override

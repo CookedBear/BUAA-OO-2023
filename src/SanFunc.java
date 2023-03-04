@@ -19,6 +19,23 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
         }
     }
 
+    public void getDouble(Boolean sin) {
+        TreeMap<String, Values> newValues = new TreeMap<>();
+        for (Values v : this.exprValues.values()) {
+            Values vv = new Calculator().getClone(v);
+            vv.setConstValue(vv.getConstValue().multiply(BigInteger.valueOf(2)));
+            newValues.put(vv.hashString(), vv);
+        }
+        this.exprValues = newValues;
+
+        if (sin) {
+            this.sin = true;
+        } else {
+            this.sin = false;
+            this.power = this.power.divide(BigInteger.valueOf(2));
+        }
+    }
+
     public String hashString() {
         StringBuilder sb = new StringBuilder();
         sb.append(sin ? "s" : "c");
@@ -66,6 +83,7 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
     public TreeMap<String, Values> getExprValues() { return this.exprValues; }
 
     public BigInteger getPower() { return this.power; }
+
 
     public void setSin(Boolean sin) { this.sin = sin; }
 

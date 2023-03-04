@@ -36,6 +36,7 @@ public class Parser {
             expr.addTerm(parseTerm(artiFunctions), sss);
         }
         expr.merge();
+        expr.doubleCos();
         return expr;
     }
 
@@ -56,6 +57,8 @@ public class Parser {
             term.addFactor(parseFactor(artiFunctions));
         }
         term.mergeInduction();
+        term.doubleSin();
+        term.doubleSin();
         return term;
     }
 

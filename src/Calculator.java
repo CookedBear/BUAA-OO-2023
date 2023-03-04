@@ -1,4 +1,6 @@
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 //cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
@@ -8,41 +10,43 @@ public class Calculator {
                                             TreeMap<String, Values> v2, Boolean status) {
         for (String ss : v2.keySet()) {
             Values vv = getClone(v2.get(ss));
-            if (v1.containsKey(ss)) {
-                Values v = v1.get(ss);
+            String newS = vv.hashString();
+            if (v1.containsKey(newS)) {
+                Values v = v1.get(newS);
                 if (status) {
-                    v.setConstValue(v1.get(ss).getConstValue().add(vv.getConstValue()));
+                    v.setConstValue(v1.get(newS).getConstValue().add(vv.getConstValue()));
                 } else {
-                    v.setConstValue(v1.get(ss).getConstValue().subtract(vv.getConstValue()));
+                    v.setConstValue(v1.get(newS).getConstValue().subtract(vv.getConstValue()));
                 }
-                v1.put(ss, v);
+                v1.put(newS, v);
             } else {
                 if (status) {
                     vv.setConstValue(vv.getConstValue());
                 } else {
                     vv.setConstValue(BigInteger.ZERO.subtract(vv.getConstValue()));
                 }
-                v1.put(ss, vv);
+                v1.put(newS, vv);
             }
         }
         return v1;
     }
 
     public Values multiValue(Values value1, Values value2) {
+
         BigInteger constValue = value1.getConstValue().multiply(value2.getConstValue());
         BigInteger xpow = value1.getxPow().add(value2.getxPow());
         BigInteger ypow = value1.getyPow().add(value2.getyPow());
         BigInteger zpow = value1.getzPow().add(value2.getzPow());
-        TreeMap<String, SanFunc> sanFuncs = getSansClone(value1.getSanFuncs());
-        TreeMap<String, SanFunc> sanFuncs2 = value2.getSanFuncs();
-
-        for (String s : sanFuncs2.keySet()) {   //生成来源相同，格式一致，用String查也问题不大（？
-            SanFunc sf2 = sanFuncs2.get(s);
-            if (sanFuncs.containsKey(s)) {
-                SanFunc sf = sanFuncs.get(s);
-                sf.setPower(sf.getPower().add(sf2.getPower()));
+        TreeMap<String, SanFunc> sanFuncs2 = new Calculator().getSansClone(value2.getSanFuncs());
+        TreeMap<String, SanFunc> sanFuncs1 = new Calculator().getSansClone(value1.getSanFuncs());
+        for (SanFunc v2 : sanFuncs2.values()) {
+            String s2 = v2.hashString();
+            if (sanFuncs1.keySet().contains(s2)) {
+                v2.setPower(v2.getPower().add(sanFuncs1.get(s2).getPower()));
+                sanFuncs1.remove(s2);
+                sanFuncs1.put(v2.hashString(), v2);
             } else {
-                sanFuncs.put(s, getClone(sf2));
+                sanFuncs1.put(s2, v2);
             }
         }
         //迭代器删除SanFunc，待补
@@ -52,22 +56,22 @@ public class Calculator {
         //            }
         //        }
         //sanFuncs.removeIf(s -> s.getPower().equals(BigInteger.ZERO));   //幂为0即为常数
-        return new Values(constValue, xpow, ypow, zpow, sanFuncs);
+        return new Values(constValue, xpow, ypow, zpow, sanFuncs1);
     }
 
     public TreeMap<String, Values> multiValue(TreeMap<String, Values> v1,
                                               TreeMap<String, Values> v2) {
         TreeMap<String, Values> v3 = new TreeMap<>();
-        for (String s : v1.keySet()) {
-            Values v = v1.get(s);
-            for (String ss : v2.keySet()) {
-                Values vv = v2.get(ss);
+        for (Values v : v1.values()) {
+            for (Values vv : v2.values()) {
                 Values vvv = multiValue(v, vv);
                 String key = vvv.hashString();
                 if (v3.containsKey(key)) {
+                    Values vTemp = v3.get(key);
                     vvv.setConstValue(v3.get(key).getConstValue().add(vvv.getConstValue()));
+                    v3.remove(key);
                 }
-                v3.put(key, vvv);
+                v3.put(vvv.hashString(), vvv);
             }
         }
         return v3;
@@ -77,7 +81,8 @@ public class Calculator {
         BigInteger z = BigInteger.valueOf(0);
         TreeMap<String, Values> newValues = new TreeMap<>();
         if (power.equals(z)) {
-            newValues.put("0,0,0,", new Values(z, z, z, BigInteger.valueOf(1)));
+            Values zz = new Values(z, z, z, BigInteger.valueOf(1));
+            newValues.put(zz.hashString(), zz);
         } else if (power.equals(BigInteger.valueOf(1))) {
             newValues = values;
         } else {
