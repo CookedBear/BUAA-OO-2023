@@ -65,7 +65,7 @@ public class Calculator {
                 Values vvv = multiValue(v, vv);
                 String key = vvv.hashString();
                 if (v3.containsKey(key)) {
-                    vvv.setConstValue(v3.get(key).getConstValue().add(vv.getConstValue()));
+                    vvv.setConstValue(v3.get(key).getConstValue().add(vvv.getConstValue()));
                 }
                 v3.put(key, vvv);
             }
