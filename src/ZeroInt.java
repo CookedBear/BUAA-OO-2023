@@ -11,7 +11,7 @@ public class ZeroInt implements Factor {
         Values value1 = new Values(z,z,z,num);
         //System.out.println(num);
         bigInt = num;
-        values.put("0,0,0,", value1);
+        values.put(value1.hashString(), value1);
     }
 
     public ZeroInt(TreeMap<String, Values> values) {

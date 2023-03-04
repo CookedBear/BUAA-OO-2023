@@ -28,9 +28,12 @@ public class Expr implements Factor {
     }
 
     public Expr reverse() {
+        TreeMap<String, Values> newMap = new TreeMap<>();
         for (Values v : values.values()) {
             v.setConstValue(BigInteger.valueOf(0).subtract(v.getConstValue()));
+            newMap.put(v.hashString(), v);
         }
+        this.values = newMap;
         return this;
     }
 
@@ -54,37 +57,40 @@ public class Expr implements Factor {
             String s0 = it.next();
             Values v0 = values.get(s0);
             for (String s1 : v0.getSanFuncs().keySet()) {
-                if (v0.getSanFuncs().get(s1).getPower().equals(BigInteger.valueOf(2))) {    //只对 [2] 次方，进行 [移除] 操作
+                if (v0.getSanFuncs().get(s1).getPower().
+                        equals(BigInteger.valueOf(2))) {    //只对 [2] 次方，进行 [移除] 操作
                     Values v1 = new Calculator().getClone(v0);
                     SanFunc sf1 = new Calculator().getClone(v0.getSanFuncs().get(s1));
 
-                    Values vRenew = new Calculator().getClone(v0);                  // 保存剩余部分
-                    vRenew.getSanFuncs().remove(sf1.hashString());
+                    Values vrenew = new Calculator().getClone(v0);                  // 保存剩余部分
+                    vrenew.getSanFuncs().remove(sf1.hashStringInValues());
 
 
                     sf1.setSin(!sf1.getSin());                                      // 反转后存入
                     v1.getSanFuncs().remove(s1);//sin(x)**2*cos(x)**2+sin(x)**2
-                    if (v1.getSanFuncs().containsKey(sf1.hashString())) {
-                        SanFunc p = v1.getSanFuncs().get(sf1.hashString());
+                    if (v1.getSanFuncs().containsKey(sf1.hashStringInValues())) {
+                        SanFunc p = v1.getSanFuncs().get(sf1.hashStringInValues());
                         p.setPower(p.getPower().add(sf1.getPower()));
                     } else {
-                        v1.getSanFuncs().put(sf1.hashString(), sf1);
+                        v1.getSanFuncs().put(sf1.hashStringInValues(), sf1);
                     }
                     if (values.containsKey(v1.hashString())) {                      // 还真能找到
                         Values v2 = values.get(v1.hashString());
-                        if(v1.getConstValue().equals(v2.getConstValue())) {         // 平方和，放回去除后的项
+                        if (v1.getConstValue().equals(v2.getConstValue())) {         // 平方和，放回去除后的项
                             remove.add(v1.hashString());
-                            tempValues.put(vRenew.hashString(), vRenew);
+                            tempValues.put(vrenew.hashString(), vrenew);
                             it.remove();
-                        } else if (v1.getConstValue().add(v2.getConstValue()).equals(BigInteger.ZERO)) {
+                        } else if (v1.getConstValue().add(v2.getConstValue()).
+                                equals(BigInteger.ZERO)) {
                             remove.add(v1.hashString());
                             Boolean sin = !sf1.getSin(); //反转过一次
                             sf1.getDouble(false);
-                            vRenew.getSanFuncs().put(sf1.hashString(), sf1);
+                            vrenew.getSanFuncs().put(sf1.hashStringInValues(), sf1);
                             if (sin) {  // 反着的二倍角
-                                vRenew.setConstValue(BigInteger.ZERO.subtract(vRenew.getConstValue()));
+                                vrenew.setConstValue(BigInteger.ZERO.
+                                        subtract(vrenew.getConstValue()));
                             }
-                            tempValues.put(vRenew.hashString(), vRenew);
+                            tempValues.put(vrenew.hashString(), vrenew);
                             it.remove();
                         }
                     }

@@ -1,6 +1,4 @@
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.TreeMap;
 
 //cos((cos(x)**2-sin(x**2)**0+sin(x)**2))
@@ -25,7 +23,7 @@ public class Calculator {
                 } else {
                     vv.setConstValue(BigInteger.ZERO.subtract(vv.getConstValue()));
                 }
-                v1.put(newS, vv);
+                v1.put(vv.hashString(), vv);
             }
         }
         return v1;
@@ -40,11 +38,11 @@ public class Calculator {
         TreeMap<String, SanFunc> sanFuncs2 = new Calculator().getSansClone(value2.getSanFuncs());
         TreeMap<String, SanFunc> sanFuncs1 = new Calculator().getSansClone(value1.getSanFuncs());
         for (SanFunc v2 : sanFuncs2.values()) {
-            String s2 = v2.hashString();
+            String s2 = v2.hashStringInValues();
             if (sanFuncs1.keySet().contains(s2)) {
                 v2.setPower(v2.getPower().add(sanFuncs1.get(s2).getPower()));
                 sanFuncs1.remove(s2);
-                sanFuncs1.put(v2.hashString(), v2);
+                sanFuncs1.put(v2.hashStringInValues(), v2);
             } else {
                 sanFuncs1.put(s2, v2);
             }
@@ -67,7 +65,6 @@ public class Calculator {
                 Values vvv = multiValue(v, vv);
                 String key = vvv.hashString();
                 if (v3.containsKey(key)) {
-                    Values vTemp = v3.get(key);
                     vvv.setConstValue(v3.get(key).getConstValue().add(vvv.getConstValue()));
                     v3.remove(key);
                 }

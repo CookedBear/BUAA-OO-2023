@@ -125,7 +125,7 @@ public class Parser {
         } else {                                //get ZeroInt now
             return parseInt();//在peek后忘记使用next
         }
-    }
+    } //
 
     public ZeroInt parseInt() {
         String status = lexer.peek();

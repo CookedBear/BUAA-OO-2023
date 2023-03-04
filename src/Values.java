@@ -36,7 +36,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         this.zpow = z;
         this.sanFuncs = new TreeMap<>();
         this.print = false;
-        this.sanFuncs.put(sanFunc.hashString(), new Calculator().getClone(sanFunc));
+        this.sanFuncs.put(sanFunc.hashStringInValues(), new Calculator().getClone(sanFunc));
     }
 
     public Values(ZeroInt zeroInt) {
