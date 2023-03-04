@@ -78,16 +78,23 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
 
     public String hashString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(xpow);
-        sb.append(',');
-        sb.append(ypow);
-        sb.append(',');
-        sb.append(zpow);
-        sb.append(',');
-        if (!sanFuncs.isEmpty()) {
-            for (SanFunc s : sanFuncs.values()) {
-                sb.append(s.hashString());
-                sb.append(',');
+        BigInteger z = BigInteger.ZERO;
+        if (xpow.equals(z) && ypow.equals(z) && zpow.equals(z) && sanFuncs.isEmpty()) {
+            sb.append("[");
+            sb.append(constValue);
+            sb.append("],");    // 区分仅常数时，项的不同
+        } else {
+            sb.append(xpow);
+            sb.append(',');
+            sb.append(ypow);
+            sb.append(',');
+            sb.append(zpow);
+            sb.append(',');
+            if (!sanFuncs.isEmpty()) {
+                for (SanFunc s : sanFuncs.values()) {
+                    sb.append(s.hashString());
+                    sb.append(',');
+                }
             }
         }
         return sb.toString();

@@ -55,7 +55,7 @@ public class Parser {
             lexer.next();
             term.addFactor(parseFactor(artiFunctions));
         }
-
+        term.mergeInduction();
         return term;
     }
 

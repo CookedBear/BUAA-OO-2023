@@ -51,6 +51,18 @@ public class Expr implements Factor {
         return sb.toString();
     }
 
+    public String hashStringInSan() {
+        StringBuilder sb = new StringBuilder();
+        for (Values v : values.values()) {
+            sb.append("[");
+            sb.append(v.getConstValue());
+            sb.append("]");
+            sb.append(v.hashString());
+            sb.append("+");
+        }
+        return sb.toString();
+    }
+
     public String ttostring() {
         StringBuilder sb = new StringBuilder();
         if (values.isEmpty()) { //expr sum is 0

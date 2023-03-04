@@ -25,8 +25,8 @@ public class Main {
         long overTime1 = System.nanoTime();
         System.out.println(exprMain.ttostring());
         long overTime2 = System.nanoTime();      //获取结束时间
-        //System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "
-        // +(overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
+        System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "
+         +(overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
     }
 }
 
@@ -45,6 +45,11 @@ public class Values{
 //含有三角函数的项的合并——cal类中编写equal方法
 //添加自定义函数ArtiFunc类，支持自定义函数输入，适配parseArtiFunc()方法——预计递归实现
 //输出优化
+//诱导公式：term返回时，遍历每个三角函数，使得treemap第一项constValue为正，保证内部格式一致   (√)
+//  sin二倍角：term返回时对每个Values的每个三角进行遍历（迭代器），如
+//      系数%2==0 + s->c、c->s后string是contain的；取出两项生成二倍角并立即检查系数条件+查询合成后的角（需要while
+//平方和=1：expr返回时，遍历Values，取出并替换每个二次方的三角函数，通过string回查expr能否合并，while合并项有二次三角函数，递归
+//cos二倍角：和上一步同步完成
 
 //---------------------------------------------------------------------------------
 

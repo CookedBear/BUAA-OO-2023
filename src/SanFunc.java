@@ -24,7 +24,7 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
         sb.append(sin ? "s" : "c");
         sb.append(power);
         sb.append("(");
-        sb.append(new Expr(exprValues).hashString());
+        sb.append(new Expr(exprValues).hashStringInSan());
         sb.append(")");
         return sb.toString();
     }
