@@ -7,15 +7,21 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
     private BigInteger power;
 
     public SanFunc(String type, Factor factor, ZeroInt zeroInt) {
+        exprValues = new TreeMap<>();
         if (!zeroInt.getInt().equals(BigInteger.ZERO)) {
             this.sin = type.equals("sin");
-            this.exprValues = new Calculator().getClone(factor.getValues());
+            if (factor.getValues().isEmpty()) {
+                Values nv = new Values(new ZeroInt(BigInteger.ZERO));
+                exprValues.put(nv.hashString(), nv);
+            } else {
+                this.exprValues = new Calculator().getClone(factor.getValues());
+            }
             this.power = zeroInt.getInt();
         } else {
-            this.sin = true;
-            this.exprValues = new TreeMap<>();
+            this.sin = type.equals("sin");
             this.power = BigInteger.ZERO;
-            exprValues.put("0,0,0,", new Values(new ZeroInt(BigInteger.ZERO)));
+            Values nv = new Values(new ZeroInt(BigInteger.ZERO));
+            exprValues.put(nv.hashString(), nv);
         }
     }
 
@@ -61,14 +67,22 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
         //HashSet<Values> tempExprValues = new calculator().getClone(exprValues);
         TreeMap<String, Values> zero = new TreeMap<>();
         zero.put("0,0,0,", new Values(new ZeroInt(BigInteger.ZERO)));
-        if (!sin && !power.equals(BigInteger.ZERO) && (exprValues.containsKey("0,0,0,")
-                && exprValues.get("0,0,0,").getConstValue().equals(BigInteger.ZERO)
-                && exprValues.size() == 1)) {
-            values.put("0,0,0,", new Values(new ZeroInt(BigInteger.ONE)));
-        } else if (sin && !power.equals(BigInteger.ZERO) && (exprValues.containsKey("0,0,0,")
-                && exprValues.get("0,0,0,").getConstValue().equals(BigInteger.ZERO)
-                && exprValues.size() == 1)) {
-            values.put("0,0,0,", new Values(new ZeroInt(BigInteger.ZERO)));
+
+        Boolean flag = false;
+        for (String s : exprValues.keySet()) {
+            flag = exprValues.get(s).getConstValue().equals(BigInteger.ZERO);
+            break;
+        }
+
+        if (!sin && exprValues.size() <= 1 && !power.equals(BigInteger.ZERO) && flag) {
+            Values nv = new Values(new ZeroInt(BigInteger.ONE));
+            values.put(nv.hashString(), nv);
+        } else if (sin && exprValues.size() <= 1 && !power.equals(BigInteger.ZERO) && flag) {
+            Values nv = new Values(new ZeroInt(BigInteger.ZERO));
+            values.put(nv.hashString(), nv);
+        } else if (power.equals(BigInteger.ZERO)) {
+            Values nv = new Values(new ZeroInt(BigInteger.ONE));
+            values.put(nv.hashString(), nv);
         } else {
 
             StringBuilder sb = new StringBuilder();
@@ -91,6 +105,8 @@ public class SanFunc implements Factor { //保留Factor元素做类型判断
     public Boolean getSin() { return this.sin; }
 
     public TreeMap<String, Values> getExprValues() { return this.exprValues; }
+
+    public void setExprValues(TreeMap<String, Values> exprValues) { this.exprValues = exprValues; }
 
     public BigInteger getPower() { return this.power; }
 

@@ -46,15 +46,23 @@ public class Term {
             String s0 = it.next();
             Values v = values.get(s0);
             Boolean reverse = false;
-            for (SanFunc s : v.getSanFuncs().values()) {    //单项式的每个三角函数
+            TreeMap<String, SanFunc> smap = new TreeMap<>();
+            Iterator<SanFunc> it2 = v.getSanFuncs().values().iterator();
+            while (it2.hasNext()) {
+                SanFunc s = it2.next();   //单项式的每个三角函数
                 TreeMap<String, Values> expr = s.getExprValues();
                 for (Values vv : expr.values()) {   //三角函数内第一个单项式
                     if (vv.getConstValue().compareTo(BigInteger.ZERO) < 0) {
-                        for (Values vvv : expr.values()) {
+                        TreeMap<String, Values> newExprValues = new TreeMap<>();
+                        for (Values vvv : expr.values()) {  //更新三角函数hashString
                             vvv.setConstValue(BigInteger.ZERO.subtract(vvv.getConstValue()));
+                            newExprValues.put(vvv.hashString(), vvv);
                         }   //内部全部系数取反，更新单项式的键值对
                         //expr在三角函数中作为一部分时需要带系数，避免合并函数
                         //expr在内部键值对没必要带系数，便于其他项化简
+                        s.setExprValues(newExprValues);
+                        smap.put(s.hashStringInValues(), s);
+                        it2.remove();
                         if (!s.getSin()) {
                             break;
                         }
@@ -67,7 +75,18 @@ public class Term {
                 }
                 //if (s.getExprValues())
             }
+            for (String s : smap.keySet()) {
+                if (v.getSanFuncs().containsKey(s)) {
+                    smap.get(s).setPower(smap.get(s).getPower().
+                            add(v.getSanFuncs().get(s).getPower()));
+                    v.getSanFuncs().remove(s);
+                    v.getSanFuncs().put(smap.get(s).hashStringInValues(), smap.get(s));
+                } else {
+                    v.getSanFuncs().put(s, smap.get(s));
+                }
+            }
             if (reverse) {
+
                 v.setConstValue(BigInteger.ZERO.subtract(v.getConstValue()));
             }
             tempValues.put(v.hashString(), new Calculator().getClone(v));
