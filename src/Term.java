@@ -135,8 +135,10 @@ public class Term {
                     if (sans.get(c).getPower().compareTo(BigInteger.ONE) > 0) {
                         SanFunc returnSanc = new Calculator().getClone(sans.get(c));
                         returnSanc.setPower(returnSanc.getPower().subtract(BigInteger.ONE));
-                        if (addSans.containsKey(returnSanc.hashStringInValues())) { //加回的数据在回写Map中，指数更新
-                            SanFunc rreturnSanc = new Calculator().getClone(addSans.get(returnSanc.hashStringInValues()));
+                        if (addSans.containsKey(returnSanc.hashStringInValues())) {
+                            //加回的数据在回写Map中，指数更新
+                            SanFunc rreturnSanc = new Calculator().getClone(addSans.
+                                    get(returnSanc.hashStringInValues()));
                             addSans.remove(returnSanc.hashStringInValues());
                             rreturnSanc.setPower(rreturnSanc.getPower().add(returnSanc.getPower()));
                             addSans.put(rreturnSanc.hashStringInValues(), rreturnSanc);

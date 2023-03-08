@@ -10,7 +10,7 @@ public class Main {
         for (int i = 0; i < functionNumber; i++) {
             String artiFunction = input.nextLine();
             artiFunction = artiFunction.replaceAll("[ \t]", "");
-            artiFunctions.put(artiFunction.charAt(0), new ArtiFunc(artiFunction));
+            artiFunctions.put(artiFunction.charAt(0), new ArtiFunc(artiFunction, artiFunctions));
         }
         String inputLine = input.nextLine();
 

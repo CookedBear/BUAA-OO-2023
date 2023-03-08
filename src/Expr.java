@@ -36,7 +36,7 @@ public class Expr implements Factor {
         this.values = newMap;
         return this;
     }
-//
+
     public void merge() {
         values.entrySet().removeIf(stringValuesEntry -> stringValuesEntry.
                 getValue().getConstValue().equals(BigInteger.ZERO));

@@ -1,9 +1,11 @@
+import java.util.HashMap;
+
 public class ArtiFunc {
     private String expr;
     private String var;
     private int varNumber = 0;
 
-    public ArtiFunc(String expr) {
+    public ArtiFunc(String expr, HashMap<Character, ArtiFunc> artifunctions) {
         var = "";
         String expr0 = expr.split("=")[0];
         int x = expr0.length();
@@ -18,7 +20,7 @@ public class ArtiFunc {
                     varNumber++;
                     break;
                 case 'z':
-                    var += "d";
+                    var += "e";
                     varNumber++;
                     break;
                 default:
@@ -26,7 +28,8 @@ public class ArtiFunc {
             }
         }
         String expr1 = expr.split("=")[1];
-        this.expr = expr1.replaceAll("x", "a").replaceAll("y", "b").replaceAll("z", "d");
+        String expr2 = new Parser(new Lexer(expr1)).parseExpr(artifunctions).ttostring();
+        this.expr = expr2.replaceAll("x", "a").replaceAll("y", "b").replaceAll("z", "e");
     }
 
     public int getVarNumber() {

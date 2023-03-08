@@ -221,7 +221,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
                 if (v.sanFuncs.size() == 1) {
                     count1++;
                 }
-                if (v.sanFuncs.size() == 0){
+                if (v.sanFuncs.size() == 0) {
                     count2++;
                 }
 
