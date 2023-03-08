@@ -25,8 +25,8 @@ public class Main {
         long overTime1 = System.nanoTime();
         System.out.println(exprMain.ttostring());
         long overTime2 = System.nanoTime();      //获取结束时间
-        //System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "
-        //+(overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
+        System.out.println("Time is: "+(overTime0-startTime)+"(Initialization)  "
+        +(overTime1-startTime)+"(Parse)  "+(overTime2-startTime)+"(PrintOut)");
     }
 }
 //0

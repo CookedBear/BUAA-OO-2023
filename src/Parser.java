@@ -96,7 +96,9 @@ public class Parser {
             lexer.next();
             Character daoVar = lexer.peek().charAt(0);
             lexer.next();
+            lexer.next();
             Expr daoExpr = parseExpr(artiFunctions);
+            lexer.next();
             return new Expr(new Calculator().getDao(daoExpr, daoVar));
         } else if (symbol.equals("f") || symbol.equals("g") || symbol.equals("h")) {    // f(f,f,f)
             lexer.next();
