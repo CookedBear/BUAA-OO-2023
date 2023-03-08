@@ -41,7 +41,7 @@ public class Lexer {
             } else if (now == 'f' || now == 'g' || now == 'h') {
                 currentContent = String.valueOf(now);
                 position++;
-            } else if (now == ',') {
+            } else if (now == ',' || now == 'd') {
                 currentContent = String.valueOf(now);
                 position++;
             }

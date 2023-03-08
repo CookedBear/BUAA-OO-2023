@@ -1,3 +1,6 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import sun.reflect.generics.tree.Tree;
+
 import java.math.BigInteger;
 import java.util.TreeMap;
 
@@ -118,5 +121,126 @@ public class Calculator {
             newSanFuncs.put(exprString, getClone(sanFunc));
         });
         return newSanFuncs;
+    }
+
+    public TreeMap<String, Values> getDao(Expr daoExpr, Character daoVar) {
+        TreeMap<String, Values> exprValues = daoExpr.getValues();
+        TreeMap<String, Values> daoExprValues = new TreeMap<>();
+        for (Values values : exprValues.values()) {
+            TreeMap<String, Values> daoValues = qiuDao(values, daoVar);
+            for (String s : daoValues.keySet()) {   // put-in all
+                if (daoExprValues.containsKey(s)) {
+                    Values v = daoExprValues.get(s);
+                    v.setConstValue(v.getConstValue().add(daoValues.get(s).getConstValue()));
+                } else {
+                    daoExprValues.put(s, daoValues.get(s));
+                }
+            }
+        }
+        return daoExprValues;
+    }
+
+    public TreeMap<String, Values> qiuDao(Values values, Character daoVar) {
+        TreeMap<String, Values> daoValues = new TreeMap<>();
+        boolean hasCharacter = !values.getCharPow(daoVar).equals(BigInteger.ZERO);
+        boolean hasSanFunc = !values.getSanFuncs().isEmpty();
+        boolean sanFuncSize = values.getSanFuncs().size() > 1;
+        if (hasCharacter && !hasSanFunc) {  // 2
+            Values v = getClone(values);
+            v.setConstValue(v.getConstValue().multiply(v.getCharPow(daoVar)));
+            v.setCharPow(daoVar, v.getCharPow(daoVar).subtract(BigInteger.ONE));
+            daoValues.put(v.hashString(), v);
+        } else if (hasCharacter) {  // 6
+            BigInteger pow = values.getCharPow(daoVar);
+            Values values1 = getClone(values);
+            values.setCharPow(daoVar, BigInteger.ZERO);
+            values1.setCharPow(daoVar, pow.subtract(BigInteger.ONE));
+            values1.setConstValue(values1.getConstValue().multiply(pow));
+            daoValues.put(values1.hashString(), values1);
+            TreeMap<String, Values> halfValues = qiuDao(values, daoVar);
+            for (Values v : halfValues.values()) {
+                v.setCharPow(daoVar, pow);
+                String s = v.hashString();
+                if (daoValues.containsKey(s)) {
+                    daoValues.get(s).setConstValue(daoValues.get(s).getConstValue().add(v.getConstValue()));
+                } else {
+                    daoValues.put(s, v);
+                }
+            }
+        } else if (hasSanFunc && !sanFuncSize) {    // 3 + 4
+            SanFunc sf1 = null;
+            for (SanFunc sf : values.getSanFuncs().values()) {
+                sf1 = getClone(sf);
+            }
+            if (sf1.getPower().compareTo(BigInteger.ONE) <= 0) { // 3
+                boolean sin = sf1.getSin();
+                sf1.setSin(!sin);
+                TreeMap<String, Values> newDaoValues = getDao(new Expr(sf1.getExprValues()), daoVar);
+                for (Values v : newDaoValues.values()) {
+                    if (v.getSanFuncs().containsKey(sf1.hashStringInValues())) {
+                        v.getSanFuncs().get(sf1.hashStringInValues()).setPower(v.getSanFuncs().get(sf1.hashStringInValues()).getPower().add(sf1.getPower()));
+                    } else {
+                        v.getSanFuncs().put(sf1.hashStringInValues(), sf1);
+                    }
+                    if (!sin) {
+                        v.setConstValue(BigInteger.ZERO.subtract(v.getConstValue()));
+                    }
+                    daoValues.put(v.hashString(), v);
+                }
+            } else {    // 4
+                SanFunc sf2 = getClone(sf1);
+                boolean sin = sf1.getSin();
+                sf1.setSin(!sin);
+                sf1.setPower(BigInteger.ONE);
+                BigInteger constV = sf2.getPower();
+                sf2.setPower(sf2.getPower().subtract(BigInteger.ONE));
+                TreeMap<String, Values> newDaoValues = getDao(new Expr(sf1.getExprValues()), daoVar);
+                for (Values v : newDaoValues.values()) {
+                    if (v.getSanFuncs().containsKey(sf1.hashStringInValues())) {
+                        v.getSanFuncs().get(sf1.hashStringInValues()).setPower(v.getSanFuncs().get(sf1.hashStringInValues()).getPower().add(sf1.getPower()));
+                    } else {
+                        v.getSanFuncs().put(sf1.hashStringInValues(), sf1);
+                    }
+                    if (v.getSanFuncs().containsKey(sf2.hashStringInValues())) {
+                        v.getSanFuncs().get(sf2.hashStringInValues()).setPower(v.getSanFuncs().get(sf2.hashStringInValues()).getPower().add(sf2.getPower()));
+                    } else {
+                        v.getSanFuncs().put(sf2.hashStringInValues(), sf2);
+                    }
+                    if (!sin) {
+                        v.setConstValue(BigInteger.ZERO.subtract(v.getConstValue()));
+                    }
+                    v.setConstValue(v.getConstValue().multiply(constV));
+                    daoValues.put(v.hashString(), v);
+                }
+            }
+        } else if (sanFuncSize) {   // 5
+            for (SanFunc sf : values.getSanFuncs().values()) {
+                Values values0 = new Values(sf);
+                Values values1 = getClone(values);
+                values1.getSanFuncs().remove(sf.hashStringInValues());  // 其他三角函数项的集合
+                TreeMap<String, Values> halfValues0 = qiuDao(values0, daoVar);
+                TreeMap<String, Values> halfValues1 = qiuDao(values1, daoVar);
+                for (Values v : halfValues0.values()) { //前导后不导
+                    for (SanFunc sf1 : values1.getSanFuncs().values()) {
+                        String s1 = sf1.hashStringInValues();
+                        if (v.getSanFuncs().containsKey(s1)) {  // 更新指数
+                            v.getSanFuncs().get(s1).setPower(v.getSanFuncs().get(s1).getPower().add(sf1.getPower()));
+                        } else {
+                            v.getSanFuncs().put(s1, sf1);
+                        }
+                    }
+                    if (daoValues.containsKey(v.hashString())) {
+                        daoValues.get(v.hashString()).setConstValue(daoValues.get(v.hashString()).getConstValue().add(v.getConstValue()));
+                    } else {
+                        daoValues.put(v.hashString(), v);
+                    }
+                }
+            }
+        } else {    // 1
+            Values v = new Values(new ZeroInt(BigInteger.ZERO));
+            daoValues.put(v.hashString(), v);
+        }
+
+        return daoValues;
     }
 }

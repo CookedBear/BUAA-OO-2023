@@ -60,6 +60,34 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         return zpow;
     }
 
+    public BigInteger getCharPow(Character var) {
+        switch (var) {
+            case 'x':
+                return xpow;
+            case 'y':
+                return ypow;
+            case 'z':
+                return zpow;
+            default:
+                return BigInteger.ZERO;
+        }
+    }
+
+    public void setCharPow(Character var, BigInteger pow) {
+        switch (var) {
+            case 'x':
+                xpow = pow;
+                break;
+            case 'y':
+                ypow = pow;
+                break;
+            case 'z':
+                zpow = pow;
+                break;
+            default:
+        }
+    }
+
     public BigInteger getConstValue() {
         return constValue;
     }

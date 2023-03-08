@@ -92,8 +92,12 @@ public class Parser {
 
         } else if (symbol.equals("sin") || symbol.equals("cos")) {  //sin( factor ) ** power
             return parseSanfunc(artiFunctions, symbol);
-        } else if (symbol.equals("sum")) {
-            return null;
+        } else if (symbol.equals("d")) {
+            lexer.next();
+            Character daoVar = lexer.peek().charAt(0);
+            lexer.next();
+            Expr daoExpr = parseExpr(artiFunctions);
+            return new Expr(new Calculator().getDao(daoExpr, daoVar));
         } else if (symbol.equals("f") || symbol.equals("g") || symbol.equals("h")) {    // f(f,f,f)
             lexer.next();
             lexer.next();
