@@ -156,7 +156,7 @@ public class Calculator {
             daoValues.put(values1.hashString(), values1);
             TreeMap<String, Values> halfValues = qiuDao(values, daoVar);
             for (Values v : halfValues.values()) {
-                v.setCharPow(daoVar, pow);
+                v.setCharPow(daoVar, pow.add(v.getCharPow(daoVar)));
                 String s = v.hashString();
                 if (daoValues.containsKey(s)) {
                     daoValues.get(s).setConstValue(daoValues.get(s).

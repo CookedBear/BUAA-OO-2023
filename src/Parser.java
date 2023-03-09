@@ -86,10 +86,7 @@ public class Parser {
                 lexer.next();
                 ZeroInt z = parseInt();
                 return new MiFunc(symbol, z.getInt(), s);
-            } else {
-                return new MiFunc(symbol, BigInteger.valueOf(1), s);
-            }
-
+            } else { return new MiFunc(symbol, BigInteger.valueOf(1), s); }
         } else if (symbol.equals("sin") || symbol.equals("cos")) {  //sin( factor ) ** power
             return parseSanfunc(artiFunctions, symbol);
         } else if (symbol.equals("d")) {
@@ -98,12 +95,12 @@ public class Parser {
             lexer.next();
             lexer.next();
             Expr daoExpr = parseExpr(artiFunctions);
+            Expr newExpr = new Expr(new Calculator().getDao(daoExpr, daoVar));
             lexer.next();
-            return new Expr(new Calculator().getDao(daoExpr, daoVar));
+            return newExpr;
         } else if (symbol.equals("f") || symbol.equals("g") || symbol.equals("h")) {    // f(f,f,f)
             lexer.next();
             lexer.next();
-            //Factor factor1 = parseFactor(artiFunctions);
             ArtiFunc artiFunc = artiFunctions.get(symbol.charAt(0));
             int varNumber = artiFunc.getVarNumber();
             String var = artiFunc.getVar();
@@ -115,7 +112,6 @@ public class Parser {
                 String parse;
                 parse = "(" + exprr.ttostring() + ")";
                 artiFuncExpr = artiFuncExpr.replaceAll(String.valueOf(var.charAt(i)), parse);
-                //System.out.println(artiFuncExpr);               System.out.println(var.charAt(i));
             }
             if (lexer.hasPow()) {
                 lexer.next();
@@ -124,13 +120,8 @@ public class Parser {
                 Expr e = new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions);
                 e.pow(power.getInt());
                 return e;
-            } else {
-                return new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions);
-            }
-            //return new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions);
-        } else {                                //get ZeroInt now
-            return parseInt();//在peek后忘记使用next
-        }
+            } else { return new Parser(new Lexer(artiFuncExpr)).parseExpr(artiFunctions); }
+        } else { return parseInt(); }
     } //
 
     public ZeroInt parseInt() {
