@@ -161,35 +161,35 @@ public class Calculator {
                 if (daoValues.containsKey(s)) {
                     daoValues.get(s).setConstValue(daoValues.get(s).
                             getConstValue().add(v.getConstValue()));
-                } else { daoValues.put(s, v); }
-            }
-        } else if (hasSanFunc && !sanFuncSize) {    // 3 + 4
+                } else { daoValues.put(s, v); } }
+        } else if (hasSanFunc && !sanFuncSize) {
             daoValues = qiuDao2(values, daoVar);
         } else if (sanFuncSize) {   // 5
+            BigInteger constValue = values.getConstValue();
             for (SanFunc sf : values.getSanFuncs().values()) {
                 Values values0 = new Values(sf);
                 Values values1 = getClone(values);
                 values1.getSanFuncs().remove(sf.hashStringInValues());  // 其他三角函数项的集合
                 TreeMap<String, Values> halfValues0 = qiuDao(values0, daoVar);
-                TreeMap<String, Values> halfValues1 = qiuDao(values1, daoVar);
                 for (Values v : halfValues0.values()) { //前导后不导
                     for (SanFunc sf1 : values1.getSanFuncs().values()) {
                         String s1 = sf1.hashStringInValues();
                         if (v.getSanFuncs().containsKey(s1)) {  // 更新指数
                             v.getSanFuncs().get(s1).setPower(v.getSanFuncs().
                                     get(s1).getPower().add(sf1.getPower()));
-                        } else {
-                            v.getSanFuncs().put(s1, sf1);
-                        }
-                    }
+                        } else { v.getSanFuncs().put(s1, sf1); } }
                     if (daoValues.containsKey(v.hashString())) {
                         daoValues.get(v.hashString()).setConstValue(daoValues.get(
                                 v.hashString()).getConstValue().add(v.getConstValue()));
-                    } else {
-                        daoValues.put(v.hashString(), v);
-                    }
+                    } else { daoValues.put(v.hashString(), v); }
                 }
             }
+            TreeMap<String, Values> returnValues = new TreeMap<>();
+            for (Values v : daoValues.values()) {
+                v.setConstValue(v.getConstValue().multiply(constValue));
+                returnValues.put(v.hashString(), v);
+            }
+            return returnValues;
         } else {    // 1
             Values v = new Values(new ZeroInt(BigInteger.ZERO));
             daoValues.put(v.hashString(), v);
@@ -199,10 +199,9 @@ public class Calculator {
 
     public TreeMap<String, Values> qiuDao2(Values values, Character daoVar) {
         TreeMap<String, Values> daoValues = new TreeMap<>();
+        BigInteger constValue = values.getConstValue();
         SanFunc sf1 = null;
-        for (SanFunc sf : values.getSanFuncs().values()) {
-            sf1 = getClone(sf);
-        }
+        for (SanFunc sf : values.getSanFuncs().values()) { sf1 = getClone(sf); }
         if (sf1.getPower().compareTo(BigInteger.ONE) <= 0) { // 3
             boolean sin = sf1.getSin();
             sf1.setSin(!sin);
@@ -213,9 +212,7 @@ public class Calculator {
                     v.getSanFuncs().get(sf1.hashStringInValues()).setPower(
                             v.getSanFuncs().get(sf1.hashStringInValues())
                                     .getPower().add(sf1.getPower()));
-                } else {
-                    v.getSanFuncs().put(sf1.hashStringInValues(), sf1);
-                }
+                } else { v.getSanFuncs().put(sf1.hashStringInValues(), sf1); }
                 if (!sin) {
                     v.setConstValue(BigInteger.ZERO.subtract(v.getConstValue()));
                 }
@@ -252,6 +249,11 @@ public class Calculator {
                 daoValues.put(v.hashString(), v);
             }
         }
-        return daoValues;
+        TreeMap<String, Values> returnValues = new TreeMap<>();
+        for (Values v : daoValues.values()) {
+            v.setConstValue(v.getConstValue().multiply(constValue));
+            returnValues.put(v.hashString(), v);
+        }
+        return returnValues;
     }
 }

@@ -30,7 +30,9 @@ public class Main {
     }
 }
 //0
-//2*sin(x)*cos(x)**2
+//1
+//f(x)=cos(x)
+//dx(2*x*x**2*cos(x)*sin(x)**0*f(x))
 //优化记录：
 //增加一个工具类，用于进行values计算与数据结构的深克隆              (√)
 //  深克隆方法：调用 new Type(new calculator().getClone(Type.getValues()));
