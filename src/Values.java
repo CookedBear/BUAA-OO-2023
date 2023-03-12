@@ -88,6 +88,14 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
         }
     }
 
+    public void addConstPow(BigInteger constValue, BigInteger xpow,
+                            BigInteger ypow, BigInteger zpow) {
+        this.constValue = this.constValue.multiply(constValue);
+        this.xpow = this.xpow.add(xpow);
+        this.ypow = this.ypow.add(ypow);
+        this.zpow = this.zpow.add(zpow);
+    }
+
     public BigInteger getConstValue() {
         return constValue;
     }

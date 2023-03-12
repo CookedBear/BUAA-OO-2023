@@ -129,11 +129,7 @@ public class Calculator {
                 if (daoExprValues.containsKey(s)) {
                     Values v = daoExprValues.get(s);
                     v.setConstValue(v.getConstValue().add(daoValues.get(s).getConstValue()));
-                } else {
-                    daoExprValues.put(s, daoValues.get(s));
-                }
-            }
-        }
+                } else { daoExprValues.put(s, daoValues.get(s)); } } }
         return daoExprValues;
     }
 
@@ -142,12 +138,15 @@ public class Calculator {
         boolean hasCharacter = !values.getCharPow(daoVar).equals(BigInteger.ZERO);
         boolean hasSanFunc = !values.getSanFuncs().isEmpty();
         boolean sanFuncSize = values.getSanFuncs().size() > 1;
-        if (hasCharacter && !hasSanFunc) {  // 2
+        if (hasCharacter && !hasSanFunc) {  // x**b ok
             Values v = getClone(values);
             v.setConstValue(v.getConstValue().multiply(v.getCharPow(daoVar)));
             v.setCharPow(daoVar, v.getCharPow(daoVar).subtract(BigInteger.ONE));
             daoValues.put(v.hashString(), v);
-        } else if (hasCharacter) {  // 6
+        } else if (hasCharacter) {  // x**b*cos(x)*sin(x)   ok
+            BigInteger xpow = values.getxPow();
+            BigInteger ypow = values.getyPow();
+            BigInteger zpow = values.getzPow();
             BigInteger pow = values.getCharPow(daoVar);
             Values values1 = getClone(values);
             values.setCharPow(daoVar, BigInteger.ZERO);
@@ -156,16 +155,19 @@ public class Calculator {
             daoValues.put(values1.hashString(), values1);
             TreeMap<String, Values> halfValues = qiuDao(values, daoVar);
             for (Values v : halfValues.values()) {
-                v.setCharPow(daoVar, pow.add(v.getCharPow(daoVar)));
+                v.setCharPow(daoVar, v.getCharPow(daoVar).add(pow));
                 String s = v.hashString();
                 if (daoValues.containsKey(s)) {
                     daoValues.get(s).setConstValue(daoValues.get(s).
                             getConstValue().add(v.getConstValue()));
                 } else { daoValues.put(s, v); } }
-        } else if (hasSanFunc && !sanFuncSize) {
+        } else if (hasSanFunc && !sanFuncSize) {    //  sin(x) + sin(x)**2  ok
             daoValues = qiuDao2(values, daoVar);
-        } else if (sanFuncSize) {   // 5
+        } else if (sanFuncSize) {   // sin(x)*cos(x)        ok
             BigInteger constValue = values.getConstValue();
+            BigInteger xpow = values.getxPow();
+            BigInteger ypow = values.getyPow();
+            BigInteger zpow = values.getzPow();
             for (SanFunc sf : values.getSanFuncs().values()) {
                 Values values0 = new Values(sf);
                 Values values1 = getClone(values);
@@ -181,32 +183,30 @@ public class Calculator {
                     if (daoValues.containsKey(v.hashString())) {
                         daoValues.get(v.hashString()).setConstValue(daoValues.get(
                                 v.hashString()).getConstValue().add(v.getConstValue()));
-                    } else { daoValues.put(v.hashString(), v); }
-                }
-            }
+                    } else { daoValues.put(v.hashString(), v); } } }
             TreeMap<String, Values> returnValues = new TreeMap<>();
             for (Values v : daoValues.values()) {
-                v.setConstValue(v.getConstValue().multiply(constValue));
-                returnValues.put(v.hashString(), v);
-            }
+                v.addConstPow(constValue, xpow, ypow, zpow);
+                returnValues.put(v.hashString(), v); }
             return returnValues;
-        } else {    // 1
+        } else {    // a    ok
             Values v = new Values(new ZeroInt(BigInteger.ZERO));
-            daoValues.put(v.hashString(), v);
-        }
-        return daoValues;
-    }
+            daoValues.put(v.hashString(), v); }
+        return daoValues; }
 
     public TreeMap<String, Values> qiuDao2(Values values, Character daoVar) {
         TreeMap<String, Values> daoValues = new TreeMap<>();
         BigInteger constValue = values.getConstValue();
+        BigInteger xpow = values.getxPow();
+        BigInteger ypow = values.getyPow();
+        BigInteger zpow = values.getzPow();
         SanFunc sf1 = null;
         for (SanFunc sf : values.getSanFuncs().values()) { sf1 = getClone(sf); }
-        if (sf1.getPower().compareTo(BigInteger.ONE) <= 0) { // 3
+        if (sf1.getPower().compareTo(BigInteger.ONE) <= 0) { // sin(x)
             boolean sin = sf1.getSin();
             sf1.setSin(!sin);
-            TreeMap<String, Values> newDaoValues = getDao(new Expr(sf1.
-                    getExprValues()), daoVar);
+            TreeMap<String, Values> newDaoValues = getDao(new Expr(getClone(sf1.
+                    getExprValues())), daoVar);
             for (Values v : newDaoValues.values()) {
                 if (v.getSanFuncs().containsKey(sf1.hashStringInValues())) {
                     v.getSanFuncs().get(sf1.hashStringInValues()).setPower(
@@ -214,11 +214,9 @@ public class Calculator {
                                     .getPower().add(sf1.getPower()));
                 } else { v.getSanFuncs().put(sf1.hashStringInValues(), sf1); }
                 if (!sin) {
-                    v.setConstValue(BigInteger.ZERO.subtract(v.getConstValue()));
-                }
-                daoValues.put(v.hashString(), v);
-            }
-        } else {    // 4
+                    v.setConstValue(BigInteger.ZERO.subtract(v.getConstValue())); }
+                daoValues.put(v.hashString(), v); }
+        } else {    // sin(x)**2
             SanFunc sf2 = getClone(sf1);
             boolean sin = sf1.getSin();
             sf1.setSin(!sin);
@@ -238,8 +236,7 @@ public class Calculator {
                 if (v.getSanFuncs().containsKey(sf2.hashStringInValues())) {
                     v.getSanFuncs().get(sf2.hashStringInValues()).setPower(v.
                             getSanFuncs().get(sf2.hashStringInValues()).
-                            getPower().add(sf2.getPower()));
-                } else {
+                            getPower().add(sf2.getPower())); } else {
                     v.getSanFuncs().put(sf2.hashStringInValues(), sf2);
                 }
                 if (!sin) {
@@ -251,7 +248,7 @@ public class Calculator {
         }
         TreeMap<String, Values> returnValues = new TreeMap<>();
         for (Values v : daoValues.values()) {
-            v.setConstValue(v.getConstValue().multiply(constValue));
+            v.addConstPow(constValue, xpow, ypow, zpow);
             returnValues.put(v.hashString(), v);
         }
         return returnValues;
