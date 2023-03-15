@@ -223,8 +223,8 @@ public class Calculator {
             sf1.setPower(BigInteger.ONE);
             BigInteger constV = sf2.getPower();
             sf2.setPower(sf2.getPower().subtract(BigInteger.ONE));
-            TreeMap<String, Values> newDaoValues = getDao(new Expr(sf1.
-                    getExprValues()), daoVar);
+            TreeMap<String, Values> newDaoValues = getDao(new Expr(getClone(sf1.
+                    getExprValues())), daoVar);
             for (Values v : newDaoValues.values()) {
                 if (v.getSanFuncs().containsKey(sf1.hashStringInValues())) {
                     v.getSanFuncs().get(sf1.hashStringInValues()).setPower(v.

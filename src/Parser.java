@@ -36,7 +36,7 @@ public class Parser {
             expr.addTerm(parseTerm(artiFunctions), sss);
         }
         expr.merge();
-        expr.doubleCos();
+        //expr.doubleCos();
         return expr;
     }
 

@@ -207,7 +207,7 @@ public class Values { // constValue * x ** xpow * y ** ypow * z ** zpow * sin/co
             }
             first = false;
             String type = s.getSin() ? "sin" : "cos";
-            if (onlyOneFactor(s.getExprValues())) {
+            if (false) {
                 String exprString = new Expr(s.getExprValues()).ttostring();
                 exprString = exprString.replaceAll("x\\*x", "x**2");
                 exprString = exprString.replaceAll("y\\*y", "y**2");
