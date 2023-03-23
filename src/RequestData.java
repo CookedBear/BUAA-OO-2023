@@ -28,5 +28,5 @@ public class RequestData {
         OutputFormat.out(id, to, elevatorId);
     }
 
-    public boolean isUp() { return (to - from) > 0;}
+    public boolean isUp() { return (to - from) > 0; }
 }

@@ -106,23 +106,27 @@ public class Elevator extends Thread {
         // reachingDown = publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown();
         // System.out.println(publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp());
         // System.out.println(publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown());
-        if(currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp() && isUp) {                // reach top, turning down
+        if (currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp() && isUp) {                // reach top, turning down
             publicManager.getElevatorInformation().get(currentThread().getId()).setReachingUp(1);
             isUp = false;
+            publicManager.flushSaturateList(currentThread().getId());
             return;
         } else if (currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown() && !isUp) {     // reach bottom, turning up
             publicManager.getElevatorInformation().get(currentThread().getId()).setReachingDown(11);
             isUp = true;
+            publicManager.flushSaturateList(currentThread().getId());
             return;
         }
         // System.out.println("\tElevator"+elevatorId+", at"+ currentFloor+"go"+((isUp)?"UP":"DOWN"));
         if (currentFloor == 11 && isUp) {   // top floor: force
             isUp = false;
+            publicManager.flushSaturateList(currentThread().getId());
             return;
         }
         if (currentFloor == 1 && !isUp) {   // base floor: force
             //System.out.println("Elevator"+elevatorId+", at"+ currentFloor+"go"+((isUp)?"UP":"DOWN\n"));
             isUp = true;
+            publicManager.flushSaturateList(currentThread().getId());
         }
 //        if (currentRequest.isEmpty() && currentFloor != 1 && currentFloor != 11) {
 //

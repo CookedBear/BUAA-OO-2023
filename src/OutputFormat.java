@@ -3,6 +3,7 @@ import com.oocourse.elevator1.TimableOutput;
 public class OutputFormat {
 
     public static void start() { TimableOutput.initStartTimestamp(); }
+
     public static void open(int currentFloor, int elevatorId) {
         TimableOutput.println(String.format("OPEN-%d层-电梯%d",currentFloor, elevatorId));
     }

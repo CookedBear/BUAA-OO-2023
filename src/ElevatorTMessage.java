@@ -12,6 +12,7 @@ public class ElevatorTMessage {
 
     private List<Integer> upList;
     private List<Integer> downList; // [in,out)
+
     ElevatorTMessage(Elevator elevator) {
         this.elevator = elevator;
         this.id = elevator.getId();
