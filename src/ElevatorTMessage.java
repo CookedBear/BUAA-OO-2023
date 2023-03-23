@@ -10,8 +10,8 @@ public class ElevatorTMessage {
     private int reachingUp;       // farthest floor of the elevator can reach this turn
     private int reachingDown;
 
-    private List<Integer> upList;
-    private List<Integer> downList; // [in,out)
+    private int[] upList = new int[12];
+    private int[] downList = new int[12]; // [in,out)
 
     ElevatorTMessage(Elevator elevator) {
         this.elevator = elevator;
@@ -27,6 +27,10 @@ public class ElevatorTMessage {
     public Elevator getElevator() { return this.elevator; }
 
     public long getId() { return this.id; }
+
+    public int[] getUpList() { return this.upList; }
+
+    public int[] getDownList() { return this.downList; }
 
     public boolean getWorking() { return this.working; }
 

@@ -109,23 +109,27 @@ public class Elevator extends Thread {
         if (currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp() && isUp) {                // reach top, turning down
             publicManager.getElevatorInformation().get(currentThread().getId()).setReachingUp(1);
             isUp = false;
+            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
             return;
         } else if (currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown() && !isUp) {     // reach bottom, turning up
             publicManager.getElevatorInformation().get(currentThread().getId()).setReachingDown(11);
             isUp = true;
+            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
             return;
         }
         // System.out.println("\tElevator"+elevatorId+", at"+ currentFloor+"go"+((isUp)?"UP":"DOWN"));
         if (currentFloor == 11 && isUp) {   // top floor: force
             isUp = false;
+            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
             return;
         }
         if (currentFloor == 1 && !isUp) {   // base floor: force
             //System.out.println("Elevator"+elevatorId+", at"+ currentFloor+"go"+((isUp)?"UP":"DOWN\n"));
             isUp = true;
+            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
         }
 //        if (currentRequest.isEmpty() && currentFloor != 1 && currentFloor != 11) {
@@ -136,6 +140,7 @@ public class Elevator extends Thread {
 //
 //            isUp = !isUp;
 //        }
+        publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
     }
 
     private void checkRequest() {
