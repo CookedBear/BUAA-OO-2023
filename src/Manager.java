@@ -1,5 +1,3 @@
-import com.oocourse.elevator1.ElevatorInput;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,7 +5,8 @@ import java.util.HashMap;
 public class Manager {
     private static final ArrayList<RequestData> REQUESTLIST = new ArrayList<>();
     private static ArrayList<RequestData> saturateList = new ArrayList<>();         // request cannot process immediately
-    private final HashMap<Long, ElevatorTMessage> elevatorInformation = new HashMap<>();
+    private final HashMap<Long, ElevatorTMessage>
+            elevatorInformation = new HashMap<>();
     private boolean finish = false;
     private long notifyThreadId;
     private final long[] threadIdList = new long[6];
@@ -65,12 +64,6 @@ public class Manager {
             **     main arrange algorithm!     **
          */
 
-//        cnt++;
-//        if (cnt >= 6) {
-//            cnt = 0;
-//            // OutputFormat.say("cannot process Request: " + rd.getId());
-//            // return (long)-1;
-//        }
         int to = rd.getTo();
         int from = rd.getFrom();
         long threadId = -2;
@@ -149,10 +142,6 @@ public class Manager {
         }
 
 
-//        if (elevatorInformation.get(threadIdList[cnt]).getPeople() == 6) {
-//            OutputFormat.say("cannot process Request: " + rd.getId() + "!!");
-//            return (long)-1;
-//        }
         /*
             A到了，叫了flush函数处理数据，数据该给B，B还没到，处理失败，等着
          */
@@ -192,7 +181,8 @@ public class Manager {
         return threadId;
     }
 
-    public synchronized ArrayList<RequestData> getAbleRequest(Integer currentFloor, Boolean isUp, Long threadId) {
+    public synchronized ArrayList<RequestData> getAbleRequest(
+            Integer currentFloor, Boolean isUp, Long threadId) {
         ArrayList<RequestData> returnRequest = new ArrayList<>();
 
         for (int i = REQUESTLIST.size() - 1; i >= 0; i--) {
@@ -221,7 +211,9 @@ public class Manager {
         threadIdList[cnt++] = elevator.getId();
     }
 
-    public synchronized HashMap<Long, ElevatorTMessage> getElevatorInformation() { return this.elevatorInformation; }
+    public synchronized HashMap<Long, ElevatorTMessage> getElevatorInformation() {
+        return this.elevatorInformation;
+    }
 
     public synchronized void setFinish(Boolean finish) { this.finish = finish; }
 

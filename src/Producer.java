@@ -1,6 +1,5 @@
-import com.oocourse.elevator1.*;
-
-import java.util.ArrayList;
+import com.oocourse.elevator1.ElevatorInput;
+import com.oocourse.elevator1.PersonRequest;
 
 public class Producer extends Thread {
     private final Manager manager;

@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class ElevatorTMessage {
     private final Elevator elevator;
     private final long id;

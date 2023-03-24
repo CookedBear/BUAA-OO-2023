@@ -41,7 +41,9 @@ public class Elevator extends Thread {
             // still have requests
 
             while (true) {
-                if (publicManager.getFinish() && !publicManager.hasRequest(currentThread().getId()) && currentRequest.isEmpty()) {
+                if (publicManager.getFinish() &&
+                    !publicManager.hasRequest(currentThread().getId()) &&
+                    currentRequest.isEmpty()) {
                     // after inputFinish, no requests left
                     //OutputFormat.say(currentThread().getName() + " closed!");
                     synchronized (publicManager) {
@@ -52,12 +54,15 @@ public class Elevator extends Thread {
                     }
                 }
                 synchronized (publicManager) {
-                    if ((!publicManager.getFinish()) && !publicManager.hasRequest(currentThread().getId()) && currentRequest.isEmpty()) {
+                    if ((!publicManager.getFinish()) &&
+                        !publicManager.hasRequest(currentThread().getId()) &&
+                        currentRequest.isEmpty()) {
                         // resting before inputFinish
                         //OutputFormat.say(currentThread().getName() + " Resting!");
                         do {
                             publicManager.wait();
-                        } while (publicManager.getNotifyThreadId() != currentThread().getId() && publicManager.getNotifyThreadId() != -1);
+                        } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
+                                publicManager.getNotifyThreadId() != -1);
                         //OutputFormat.say(currentThread().getName() + " Restarting!");
                         if (publicManager.getNotifyThreadId() == -1 &&                  // last elevator stopped
                                 !publicManager.hasRequest(currentThread().getId()) &&   // no request in manager
@@ -106,13 +111,20 @@ public class Elevator extends Thread {
         // reachingDown = publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown();
         // System.out.println(publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp());
         // System.out.println(publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown());
-        if (currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp() && isUp) {                // reach top, turning down
+        if (currentFloor ==
+            publicManager.getElevatorInformation().
+            get(currentThread().getId()).getReachingUp() &&
+            isUp) {                // reach top, turning down
             publicManager.getElevatorInformation().get(currentThread().getId()).setReachingUp(1);
             isUp = false;
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
             return;
-        } else if (currentFloor == publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown() && !isUp) {     // reach bottom, turning up
+        } else if (currentFloor ==
+                   publicManager.getElevatorInformation().
+                   get(currentThread().getId()).
+                   getReachingDown() &&
+                    !isUp) {     // reach bottom, turning up
             publicManager.getElevatorInformation().get(currentThread().getId()).setReachingDown(11);
             isUp = true;
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
@@ -154,7 +166,8 @@ public class Elevator extends Thread {
         ArrayList<RequestData> outRequestList = getOutRequest();
         boolean hasOutRequest = !outRequestList.isEmpty();
 
-        ArrayList<RequestData> inRequestList = publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId());
+        ArrayList<RequestData> inRequestList =
+            publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId());
         boolean hasInRequest = !inRequestList.isEmpty();
 
         boolean opened = false;                     // flag of opened-or-not
@@ -189,7 +202,8 @@ public class Elevator extends Thread {
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
-            actionRequestList.addAll(publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));  // get total inRequestList
+            actionRequestList.addAll(
+                    publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));  // get total inRequestList
             for (RequestData rd : actionRequestList) {  // print request in data
                 rd.requestIn(elevatorId);
             }
