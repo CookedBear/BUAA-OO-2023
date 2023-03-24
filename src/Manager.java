@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Manager {
     private static final ArrayList<RequestData> REQUESTLIST = new ArrayList<>();
-    private static ArrayList<RequestData> saturateList = new ArrayList<>();         // request cannot process immediately
+    private static ArrayList<RequestData> saturateList = new ArrayList<>();
     private final HashMap<Long, ElevatorTMessage>
             elevatorInformation = new HashMap<>();
     private boolean finish = false;
@@ -28,7 +28,7 @@ public class Manager {
 
     }
 
-    public synchronized void flushSaturateList(Long threadId) {      // flush after every successful turn
+    public synchronized void flushSaturateList(Long threadId) {
         if (elevatorInformation.get(threadId).getIsUp()) {
             Arrays.fill(elevatorInformation.get(threadId).getDownList(), 0);
         } else {
@@ -50,20 +50,13 @@ public class Manager {
 
     }
 
-    public synchronized void renewEtmData(Long threadId, Integer floor, Boolean isUp) {           // renew after every turn(), a-short-ap
+    public synchronized void renewEtmData(Long threadId, Integer floor, Boolean isUp) {
         ElevatorTMessage etm = elevatorInformation.get(threadId);
         etm.setFloor(floor);
         etm.setIsUp(isUp);
     }
 
     private synchronized Long getThreadId(RequestData rd) {
-
-        /*
-            get the correct threadId(correct elevator) for RequestData rd
-            and store the threadId here
-            **     main arrange algorithm!     **
-         */
-
         int to = rd.getTo();
         int from = rd.getFrom();
         long threadId = -2;
@@ -76,109 +69,65 @@ public class Manager {
                 for (int i = from; i < to; i++) {
                     if (list[i] >= 6) {
                         b = true;
-                        break;              // if overweight then find next elevator
-                    }
-                }
-                if (b) {
-                    continue;
-                }
+                        break; } }
+                if (b) { continue; }
                 if (etm.getIsUp()) {
                     if (etm.getFloor() <= from) {       // 出现顺向截梯，终止寻找
                         threadId = etm.getElevator().getId();
                         break;
-                    } else {                            // 不保存顺向错位
-                        continue;
-                    }
+                    } else { continue; }
                 } else {                                // 反向电梯
                     int distance;
                     if (etm.getReachingDown() >= from) {
                         distance = from - etm.getFloor();
                     } else {
-                        distance = from + etm.getFloor() - 2 * etm.getReachingDown();
-                    }
+                        distance = from + etm.getFloor() - 2 * etm.getReachingDown(); }
                     if (distance < dis) {
                         threadId = etm.getElevator().getId();
-                        dis = distance;
-                    }
-                }
+                        dis = distance; } }
             } else {
                 list = etm.getDownList();
                 boolean b = false;
                 for (int i = from; i > to; i--) {
                     if (list[i] >= 6) {
                         b = true;
-                        break;              // overweight
-                    }
-                }
-                if (b) {
-                    continue;
-                }
+                        break; } }
+                if (b) { continue; }
                 if (!etm.getIsUp()) {
                     if (etm.getFloor() >= from) {       // 出现顺向截梯，终止寻找
                         threadId = etm.getElevator().getId();
-                        break;
-                    } else {                            // 不保存顺向错位
-                        continue;
-                    }
+                        break; }
                 } else {                                // 反向电梯
                     int distance;
                     if (etm.getReachingUp() <= from) {  // 延申
                         distance = from - etm.getFloor();
-                    } else {                            // 折返
-                        distance = etm.getReachingUp() * 2 - etm.getFloor() - from;
-                    }
-                    //System.out.println(distance);
+                    } else { distance = etm.getReachingUp() * 2 - etm.getFloor() - from; }
                     if (distance < dis) {
                         threadId = etm.getElevator().getId();
-                        dis = distance;
-                    }
-                }
-            }
-
-        }
-        if (threadId == -2) {                               // all full
-            //OutputFormat.say("cannot process Request: " + rd.getId() + "!!");
-            return threadId;
-        }
-
-
-        /*
-            A到了，叫了flush函数处理数据，数据该给B，B还没到，处理失败，等着
-         */
-
+                        dis = distance; } } } }
+        if (threadId == -2) { return threadId; }
         rd.setThreadId(threadId);
-        if (rd.isUp()) {    // renew Up-Down-Floor
-            if (to > elevatorInformation.get(threadId).getReachingUp()) {
-                elevatorInformation.get(threadId).setReachingUp(to);
-            }
-            if (from < elevatorInformation.get(threadId).getReachingDown()) {
-                elevatorInformation.get(threadId).setReachingDown(from);
-            }
-        } else {
-            if (from > elevatorInformation.get(threadId).getReachingUp()) {
-                elevatorInformation.get(threadId).setReachingUp(from);
-            }
-            if (to < elevatorInformation.get(threadId).getReachingDown()) {
-                elevatorInformation.get(threadId).setReachingDown(to);
-            }
-        }
-
+        g(rd, to, from, threadId);
         if (rd.isUp()) {    // renew weight-List
             int[] list = elevatorInformation.get(threadId).getUpList();
-            for (int i = from; i < to; i++) {
-                list[i]++;
-            }
+            for (int i = from; i < to; i++) { list[i]++; }
         } else {
             int[] list = elevatorInformation.get(threadId).getDownList();
-            for (int i = from; i > to; i--) {
-                list[i]++;
-            }
-        }
-
-        // System.out.println(elevatorInformation.get(threadIdList[cnt]).getReachingUp());
-        // System.out.println(elevatorInformation.get(threadIdList[cnt]).getReachingDown());
-        // elevatorInformation.get(threadId).setPeople(elevatorInformation.get(threadId).getPeople() + 1);
+            for (int i = from; i > to; i--) { list[i]++; } }
         return threadId;
+    }
+
+    public void g(RequestData rd, int to, int from, long threadId) {
+        if (rd.isUp()) {    // renew Up-Down-Floor
+            if (to > elevatorInformation.get(threadId).getReachingUp()) {
+                elevatorInformation.get(threadId).setReachingUp(to); }
+            if (from < elevatorInformation.get(threadId).getReachingDown()) {
+                elevatorInformation.get(threadId).setReachingDown(from); }
+        } else {
+            if (from > elevatorInformation.get(threadId).getReachingUp()) {
+                elevatorInformation.get(threadId).setReachingUp(from); }
+            if (to < elevatorInformation.get(threadId).getReachingDown()) {
+                elevatorInformation.get(threadId).setReachingDown(to); } }
     }
 
     public synchronized ArrayList<RequestData> getAbleRequest(

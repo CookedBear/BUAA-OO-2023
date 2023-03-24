@@ -64,13 +64,12 @@ public class Elevator extends Thread {
                         } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
                                 publicManager.getNotifyThreadId() != -1);
                         //OutputFormat.say(currentThread().getName() + " Restarting!");
-                        if (publicManager.getNotifyThreadId() == -1 &&                  // last elevator stopped
-                                !publicManager.hasRequest(currentThread().getId()) &&   // no request in manager
-                                currentRequest.isEmpty()) {                             // no request in elevator
-                                                                                        // called up by EOP
-                            //OutputFormat.say(currentThread().getName() + " closed by EOP!");
+                        if (publicManager.getNotifyThreadId() == -1 &&
+                                !publicManager.hasRequest(currentThread().getId()) &&
+                                currentRequest.isEmpty()) {
+
                             return;
-                        }                                                               // called up by new request
+                        }
                         // do we need turn?
                         turn();
                         // check people after restart
@@ -107,10 +106,6 @@ public class Elevator extends Thread {
 
     private void turn() {
 
-        // reachingUp = publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp();
-        // reachingDown = publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown();
-        // System.out.println(publicManager.getElevatorInformation().get(currentThread().getId()).getReachingUp());
-        // System.out.println(publicManager.getElevatorInformation().get(currentThread().getId()).getReachingDown());
         if (currentFloor ==
             publicManager.getElevatorInformation().
             get(currentThread().getId()).getReachingUp() &&
@@ -131,7 +126,7 @@ public class Elevator extends Thread {
             publicManager.flushSaturateList(currentThread().getId());
             return;
         }
-        // System.out.println("\tElevator"+elevatorId+", at"+ currentFloor+"go"+((isUp)?"UP":"DOWN"));
+
         if (currentFloor == 11 && isUp) {   // top floor: force
             isUp = false;
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
@@ -139,19 +134,12 @@ public class Elevator extends Thread {
             return;
         }
         if (currentFloor == 1 && !isUp) {   // base floor: force
-            //System.out.println("Elevator"+elevatorId+", at"+ currentFloor+"go"+((isUp)?"UP":"DOWN\n"));
+
             isUp = true;
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
         }
-//        if (currentRequest.isEmpty() && currentFloor != 1 && currentFloor != 11) {
-//
-//        /*
-//            LOOK algorithm: elevator clear and turn
-//        */
-//
-//            isUp = !isUp;
-//        }
+
         publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
     }
 
@@ -203,7 +191,7 @@ public class Elevator extends Thread {
                 ie.printStackTrace();
             }
             actionRequestList.addAll(
-                    publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));  // get total inRequestList
+                    publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));
             for (RequestData rd : actionRequestList) {  // print request in data
                 rd.requestIn(elevatorId);
             }
