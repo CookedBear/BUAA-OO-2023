@@ -74,6 +74,7 @@ public class Manager {
         int to = rd.getTo();
         int from = rd.getFrom();
         long threadId = -2;
+        int dis = 31;
         for (ElevatorTMessage etm : elevatorInformation.values()) {
             int[] list;
             if (rd.isUp()) {
@@ -88,11 +89,24 @@ public class Manager {
                 if (b) {
                     continue;
                 }
-                if (etm.getFloor() <= from) {               // 出现顺向截梯，终止寻找
-                    threadId = etm.getElevator().getId();
-                    break;
-                } else {                                    // 暂存顺向错位，保持数据
-                    threadId = etm.getElevator().getId();
+                if (etm.getIsUp()) {
+                    if (etm.getFloor() <= from) {       // 出现顺向截梯，终止寻找
+                        threadId = etm.getElevator().getId();
+                        break;
+                    } else {                            // 不保存顺向错位
+                        continue;
+                    }
+                } else {                                // 反向电梯
+                    int distance;
+                    if (etm.getReachingDown() >= from) {
+                        distance = from - etm.getFloor();
+                    } else {
+                        distance = from + etm.getFloor() - 2 * etm.getReachingDown();
+                    }
+                    if (distance < dis) {
+                        threadId = etm.getElevator().getId();
+                        dis = distance;
+                    }
                 }
             } else {
                 list = etm.getDownList();
@@ -106,11 +120,25 @@ public class Manager {
                 if (b) {
                     continue;
                 }
-                if (etm.getFloor() >= from) {               // 出现顺向截梯，终止寻找
-                    threadId = etm.getElevator().getId();
-                    break;
-                } else {                                    // 暂存错位顺向，保持数据
-                    threadId = etm.getElevator().getId();
+                if (!etm.getIsUp()) {
+                    if (etm.getFloor() >= from) {       // 出现顺向截梯，终止寻找
+                        threadId = etm.getElevator().getId();
+                        break;
+                    } else {                            // 不保存顺向错位
+                        continue;
+                    }
+                } else {                                // 反向电梯
+                    int distance;
+                    if (etm.getReachingUp() <= from) {  // 延申
+                        distance = from - etm.getFloor();
+                    } else {                            // 折返
+                        distance = etm.getReachingUp() * 2 - etm.getFloor() - from;
+                    }
+                    System.out.println(distance);
+                    if (distance < dis) {
+                        threadId = etm.getElevator().getId();
+                        dis = distance;
+                    }
                 }
             }
 
