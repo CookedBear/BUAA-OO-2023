@@ -32,9 +32,9 @@ public class Elevator extends Thread {
         try {
 
             synchronized (publicManager) {
-                OutputFormat.say(currentThread().getName() + " waiting!");
+                //OutputFormat.say(currentThread().getName() + " waiting!");
                 publicManager.wait();
-                OutputFormat.say(currentThread().getName() + " started!");
+                //OutputFormat.say(currentThread().getName() + " started!");
             }
             // check people out-and-in
             checkRequest();
@@ -43,27 +43,27 @@ public class Elevator extends Thread {
             while (true) {
                 if (publicManager.getFinish() && !publicManager.hasRequest(currentThread().getId()) && currentRequest.isEmpty()) {
                     // after inputFinish, no requests left
-                    OutputFormat.say(currentThread().getName() + " closed!");
+                    //OutputFormat.say(currentThread().getName() + " closed!");
                     synchronized (publicManager) {
                         publicManager.setNotifyThreadId(-1);
                         publicManager.notifyAll();
-                        OutputFormat.say("notifyAll called by " + currentThread().getName());
+                        //OutputFormat.say("notifyAll called by " + currentThread().getName());
                         return;
                     }
                 }
                 synchronized (publicManager) {
                     if ((!publicManager.getFinish()) && !publicManager.hasRequest(currentThread().getId()) && currentRequest.isEmpty()) {
                         // resting before inputFinish
-                        OutputFormat.say(currentThread().getName() + " Resting!");
+                        //OutputFormat.say(currentThread().getName() + " Resting!");
                         while (publicManager.getNotifyThreadId() != currentThread().getId() && publicManager.getNotifyThreadId() != -1) {
                             publicManager.wait();
                         }
-                        OutputFormat.say(currentThread().getName() + " Restarting!");
+                        //OutputFormat.say(currentThread().getName() + " Restarting!");
                         if (publicManager.getNotifyThreadId() == -1 &&                  // last elevator stopped
                                 !publicManager.hasRequest(currentThread().getId()) &&   // no request in manager
                                 currentRequest.isEmpty()) {                             // no request in elevator
                                                                                         // called up by EOP
-                            OutputFormat.say(currentThread().getName() + " closed by EOP!");
+                            //OutputFormat.say(currentThread().getName() + " closed by EOP!");
                             return;
                         }                                                               // called up by new request
                         // do we need turn?

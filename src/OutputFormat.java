@@ -24,7 +24,4 @@ public class OutputFormat {
         TimableOutput.println(String.format("ARRIVE-%d-%d", currentFloor, elevatorId));
     }
 
-    public static void say(String said) {
-        TimableOutput.println(said);
-    }
 }

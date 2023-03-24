@@ -23,7 +23,7 @@ public class Manager {
             saturateList.add(rd);
         } else {                        // can find the suitable elevator now
             REQUESTLIST.add(rd);
-            OutputFormat.say("notifyAll by Request " + rd.getId() + " !");
+            //OutputFormat.say("notifyAll by Request " + rd.getId() + " !");
             notifyAll();
         }
 
@@ -41,10 +41,10 @@ public class Manager {
             notifyThreadId = getThreadId(rd);
 
             if (notifyThreadId != -2) {                        // can find the suitable elevator now
-                OutputFormat.say("successfully re-put Request " + rd.getId() + " !");
+                //OutputFormat.say("successfully re-put Request " + rd.getId() + " !");
                 REQUESTLIST.add(rd);
                 saturateList.remove(rd);
-                OutputFormat.say("normally notifyAll by Request " + rd.getId() + " !");
+                //OutputFormat.say("normally notifyAll by Request " + rd.getId() + " !");
                 notifyAll();
             }
         }
@@ -134,7 +134,7 @@ public class Manager {
                     } else {                            // 折返
                         distance = etm.getReachingUp() * 2 - etm.getFloor() - from;
                     }
-                    System.out.println(distance);
+                    //System.out.println(distance);
                     if (distance < dis) {
                         threadId = etm.getElevator().getId();
                         dis = distance;
@@ -144,7 +144,7 @@ public class Manager {
 
         }
         if (threadId == -2) {                               // all full
-            OutputFormat.say("cannot process Request: " + rd.getId() + "!!");
+            //OutputFormat.say("cannot process Request: " + rd.getId() + "!!");
             return threadId;
         }
 

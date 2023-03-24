@@ -20,6 +20,6 @@ public class Producer extends Thread {
         }
         manager.setFinish(true);
         // procedure finished here
-        OutputFormat.say(currentThread().getName() + " finished!");
+        //OutputFormat.say(currentThread().getName() + " finished!");
     }
 }
