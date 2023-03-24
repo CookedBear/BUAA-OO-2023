@@ -55,9 +55,9 @@ public class Elevator extends Thread {
                     if ((!publicManager.getFinish()) && !publicManager.hasRequest(currentThread().getId()) && currentRequest.isEmpty()) {
                         // resting before inputFinish
                         //OutputFormat.say(currentThread().getName() + " Resting!");
-                        while (publicManager.getNotifyThreadId() != currentThread().getId() && publicManager.getNotifyThreadId() != -1) {
+                        do {
                             publicManager.wait();
-                        }
+                        } while (publicManager.getNotifyThreadId() != currentThread().getId() && publicManager.getNotifyThreadId() != -1);
                         //OutputFormat.say(currentThread().getName() + " Restarting!");
                         if (publicManager.getNotifyThreadId() == -1 &&                  // last elevator stopped
                                 !publicManager.hasRequest(currentThread().getId()) &&   // no request in manager
