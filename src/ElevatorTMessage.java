@@ -26,15 +26,15 @@ public class ElevatorTMessage {
 
     public long getId() { return this.id; }
 
-    public int[] getUpList() { return this.upList; }
+    public synchronized int[] getUpList() { return this.upList; }
 
-    public int[] getDownList() { return this.downList; }
+    public synchronized int[] getDownList() { return this.downList; }
 
     public boolean getWorking() { return this.working; }
 
-    public boolean getIsUp() { return this.isUp; }
+    public synchronized boolean getIsUp() { return this.isUp; }
 
-    public int getFloor() { return this.floor; }
+    public synchronized int getFloor() { return this.floor; }
 
     public int getPeople() { return this.people; }
 
@@ -47,7 +47,7 @@ public class ElevatorTMessage {
 
     public void setIsUp(boolean isUp) { this.isUp = isUp; }
 
-    public void setFloor(int floor) { this.floor = floor; }
+    public synchronized void setFloor(int floor) { this.floor = floor; }
 
     public void setPeople(int people) { this.people = people; }
 

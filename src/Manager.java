@@ -38,9 +38,7 @@ public class Manager {
             RequestData rd = saturateList.get(i);
             // this.putRequest(rd);
             notifyThreadId = getThreadId(rd);
-
             if (notifyThreadId != -2) {                        // can find the suitable elevator now
-                //OutputFormat.say("successfully re-put Request " + rd.getId() + " !");
                 REQUESTLIST.add(rd);
                 saturateList.remove(rd);
                 //OutputFormat.say("normally notifyAll by Request " + rd.getId() + " !");
@@ -72,10 +70,9 @@ public class Manager {
                         break; } }
                 if (b) { continue; }
                 if (etm.getIsUp()) {
-                    if (etm.getFloor() <= from) {       // 出现顺向截梯，终止寻找
+                    if (etm.getFloor() < from || (etm.getFloor() <= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
-                        break;
-                    } else { continue; }
+                        break; }
                 } else {                                // 反向电梯
                     int distance;
                     if (etm.getReachingDown() >= from) {
@@ -89,12 +86,15 @@ public class Manager {
                 list = etm.getDownList();
                 boolean b = false;
                 for (int i = from; i > to; i--) {
+                    //System.out.print(list[i]+" ");
                     if (list[i] >= 6) {
                         b = true;
+                        //System.out.println("f");
                         break; } }
                 if (b) { continue; }
+                //System.out.println(",");
                 if (!etm.getIsUp()) {
-                    if (etm.getFloor() >= from) {       // 出现顺向截梯，终止寻找
+                    if (etm.getFloor() > from || (etm.getFloor() >= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break; }
                 } else {                                // 反向电梯
@@ -104,16 +104,18 @@ public class Manager {
                     } else { distance = etm.getReachingUp() * 2 - etm.getFloor() - from; }
                     if (distance < dis) {
                         threadId = etm.getElevator().getId();
-                        dis = distance; } } } }
+                        dis = distance; } } } //System.out.println(" ");
+        }
         if (threadId == -2) { return threadId; }
         rd.setThreadId(threadId);
         g(rd, to, from, threadId);
         if (rd.isUp()) {    // renew weight-List
             int[] list = elevatorInformation.get(threadId).getUpList();
-            for (int i = from; i < to; i++) { list[i]++; }
+            for (int i = from; i < to; i++) { list[i] = list[i] + 1; }
         } else {
             int[] list = elevatorInformation.get(threadId).getDownList();
-            for (int i = from; i > to; i--) { list[i]++; } }
+            for (int i = from; i > to; i--) { list[i] = list[i] + 1; } }
+        //System.out.println("choose elevator" + threadId);
         return threadId;
     }
 
@@ -171,4 +173,9 @@ public class Manager {
     public synchronized long getNotifyThreadId() { return this.notifyThreadId; }
 
     public synchronized void setNotifyThreadId(long threadId) { this.notifyThreadId = threadId; }
+
+    public synchronized void setStopped(long threadId, boolean stopped) {
+        ElevatorTMessage etm = elevatorInformation.get(threadId);
+        etm.setWorking(!stopped);
+    }
 }

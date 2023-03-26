@@ -12,6 +12,8 @@ public class Elevator extends Thread {
     private int reachingUp;
     private int reachingDown;
     private boolean isClosed;
+    private long time = 0;
+    private boolean stopped = true;
 
     Elevator(int id, Manager manager) {
         this.currentFloor = 1;  // initialize to climb from floor-1
@@ -33,7 +35,9 @@ public class Elevator extends Thread {
 
             synchronized (publicManager) {
                 //OutputFormat.say(currentThread().getName() + " waiting!");
+                publicManager.setStopped(currentThread().getId(), true);
                 publicManager.wait();
+                publicManager.setStopped(currentThread().getId(), false);
                 //OutputFormat.say(currentThread().getName() + " started!");
             }
             // check people out-and-in
@@ -60,16 +64,18 @@ public class Elevator extends Thread {
                         // resting before inputFinish
                         //OutputFormat.say(currentThread().getName() + " Resting!");
                         do {
+                            publicManager.setStopped(currentThread().getId(), true);
                             publicManager.wait();
+                            publicManager.setStopped(currentThread().getId(), false);
                         } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
                                 publicManager.getNotifyThreadId() != -1);
                         //OutputFormat.say(currentThread().getName() + " Restarting!");
                         if (publicManager.getNotifyThreadId() == -1 &&
                                 !publicManager.hasRequest(currentThread().getId()) &&
                                 currentRequest.isEmpty()) {
-
                             return;
                         }
+                        checkRequest();
                         // do we need turn?
                         turn();
                         // check people after restart
@@ -91,7 +97,11 @@ public class Elevator extends Thread {
 
     private void climbOneFloor() {
         try {
-            Thread.sleep(moveTime);
+            if ((moveTime + time - System.currentTimeMillis()) < 405) {
+                Thread.sleep(400);
+            } else {
+                Thread.sleep(moveTime + time - System.currentTimeMillis());
+            }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
@@ -101,6 +111,7 @@ public class Elevator extends Thread {
             currentFloor--;
         }
         OutputFormat.arrive(currentFloor, elevatorId);
+        time = System.currentTimeMillis();
         // TimableOutput.println(String.format("ARRIVE-%d-%s", currentFloor, elevatorId));
     }
 
@@ -159,37 +170,38 @@ public class Elevator extends Thread {
         boolean hasInRequest = !inRequestList.isEmpty();
 
         boolean opened = false;                     // flag of opened-or-not
+        long t1 = 0;
 
         if (hasInRequest || hasOutRequest) {        // need to OPEN
-            openClosed(true, outRequestList); // OPEN
+            t1 = openClosed(true, outRequestList, (long)0); // OPEN
             opened = true;                          // flag for CLOSE
         }
 
         if (opened) {                               // use flag to CLOSE
-            openClosed(false, inRequestList); // CLOSE
+            time = openClosed(false, inRequestList, t1); // CLOSE
         }
     }
 
-    private void openClosed(boolean open, ArrayList<RequestData> actionRequestList) {
+    private long openClosed(boolean open, ArrayList<RequestData> actionRequestList, Long t1) {
+        long t0 = 0;
         if (open) {             // open -> sleep (-> out)
             this.isClosed = false;
             OutputFormat.open(currentFloor, elevatorId);
+            t0 = System.currentTimeMillis();
             // TimableOutput.println(String.format("OPEN-%d-%s",currentFloor, elevatorId));
-            try {
-                Thread.sleep(openTime);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
             for (RequestData rd : actionRequestList) {  // print request out data
                 rd.requestOut(elevatorId);
             }
+            return t0;
         } else {                // sleep -> (in) ->closed
             this.isClosed = true;
+            long t2 = System.currentTimeMillis();
             try {
-                Thread.sleep(openTime);
+                Thread.sleep(405 - t2 + t1);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
+            //OutputFormat.say("Try to collect 3563!");
             actionRequestList.addAll(
                     publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));
             for (RequestData rd : actionRequestList) {  // print request in data
@@ -198,7 +210,9 @@ public class Elevator extends Thread {
             currentRequest.addAll(actionRequestList);   // add in the request on-board
             OutputFormat.close(currentFloor, elevatorId);
             // TimableOutput.println(String.format("CLOSE-%d-%s",currentFloor, elevatorId));
+            return System.currentTimeMillis();
         }
+
     }
 
     private ArrayList<RequestData> getOutRequest() {
@@ -218,6 +232,8 @@ public class Elevator extends Thread {
 
         return returnRequest;
     }
+
+    public boolean stopped() { return this.stopped; }
 }
 
 /*
