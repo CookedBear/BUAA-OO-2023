@@ -40,14 +40,14 @@ public class ElevatorTMessage {
 
     public synchronized boolean getIsUp() { return this.isUp; }
 
-    public synchronized int getFloor() { return this.floor; }
+    public synchronized int getFl() { return this.floor; }
 
-    public double getMovingTime() { return this.movingTime; }
+    public double getMvTm() { return this.movingTime; }
 
     // public int getReaching() { return this.reaching; }
-    public synchronized int getReachingUp() { return this.reachingUp; }
+    public synchronized int getRcUp() { return this.reachingUp; }
 
-    public synchronized int getReachingDown() { return this.reachingDown; }
+    public synchronized int getRcDn() { return this.reachingDown; }
 
     public void setWorking(boolean working) { this.working = working; }
 

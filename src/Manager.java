@@ -85,6 +85,7 @@ public class Manager {
         int from = rd.getFrom();
         long threadId = -2;
         double dis = 191981000;
+        double totalTime;
         for (ElevatorTMessage etm : elevatorInformation.values()) {
             int[] list;
             if (rd.isUp()) {
@@ -99,20 +100,15 @@ public class Manager {
                     } else if (list[i] != list[i - 1]) {
                         stops++; } }
                 if (b) { continue; }
-                double totalTime;
                 if (etm.getIsUp()) {
-                    if (etm.getFloor() < from || (etm.getFloor() <= from && !etm.getWorking())) {
+                    if (etm.getFl() < from || (etm.getFl() <= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break;
-                        //totalTime = from - etm.getFloor();
                     } else { continue; }
                 } else {                                // 反向电梯
-                    if (etm.getReachingDown() >= from) {
-                        totalTime = (from - etm.getFloor())
-                                * etm.getMovingTime();
-                    } else {
-                        totalTime = (from + etm.getFloor() -
-                                2 * etm.getReachingDown()) * etm.getMovingTime(); } }
+                    if (etm.getRcDn() < from) {
+                        totalTime = (from + etm.getFl() - 2 * etm.getRcDn()) * etm.getMvTm();
+                    } else { totalTime = (from - etm.getFl()) * etm.getMvTm(); } }
                 if (totalTime < dis) {
                     threadId = etm.getElevator().getId();
                     dis = totalTime; }
@@ -127,46 +123,40 @@ public class Manager {
                         break; } else if (list[i] != list[i + 1]) {
                         stops++; } }
                 if (b) { continue; }
-                double totalTime;
                 if (!etm.getIsUp()) {
-                    if (etm.getFloor() > from || (etm.getFloor() >= from && !etm.getWorking())) {
+                    if (etm.getFl() > from || (etm.getFl() >= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break;
-                        //totalTime = - from + etm.getFloor();
                     } else { continue; }
                 } else {                                // 反向电梯
-                    if (etm.getReachingUp() <= from) {  // 延申
-                        totalTime = (from - etm.getFloor())
-                                * etm.getMovingTime();
-                    } else {
-                        totalTime = (etm.getReachingUp() * 2
-                            - etm.getFloor() - from) * etm.getMovingTime(); } }
+                    if (etm.getRcUp() > from) {  // 延申
+                        totalTime = (etm.getRcUp() * 2 - etm.getFl() - from) * etm.getMvTm();
+                    } else { totalTime = (from - etm.getFl()) * etm.getMvTm(); } }
                 if (totalTime < dis) {
                     threadId = etm.getElevator().getId();
                     dis = totalTime; } } }
         if (threadId == -2) { return threadId; }
-        rd.setThreadId(threadId);
         g(rd, to, from, threadId);
+        return threadId; }
+
+    public void g(RequestData rd, int to, int from, long threadId) {
+        rd.setThreadId(threadId);
+        if (rd.isUp()) {    // renew Up-Down-Floor
+            if (to > elevatorInformation.get(threadId).getRcUp()) {
+                elevatorInformation.get(threadId).setReachingUp(to); }
+            if (from < elevatorInformation.get(threadId).getRcDn()) {
+                elevatorInformation.get(threadId).setReachingDown(from); }
+        } else {
+            if (from > elevatorInformation.get(threadId).getRcUp()) {
+                elevatorInformation.get(threadId).setReachingUp(from); }
+            if (to < elevatorInformation.get(threadId).getRcDn()) {
+                elevatorInformation.get(threadId).setReachingDown(to); } }
         if (rd.isUp()) {    // renew weight-List
             int[] list = elevatorInformation.get(threadId).getUpList();
             for (int i = from; i < to; i++) { list[i] = list[i] + 1; }
         } else {
             int[] list = elevatorInformation.get(threadId).getDownList();
             for (int i = from; i > to; i--) { list[i] = list[i] + 1; } }
-        //System.out.println("choose elevator" + threadId);
-        return threadId; }
-
-    public void g(RequestData rd, int to, int from, long threadId) {
-        if (rd.isUp()) {    // renew Up-Down-Floor
-            if (to > elevatorInformation.get(threadId).getReachingUp()) {
-                elevatorInformation.get(threadId).setReachingUp(to); }
-            if (from < elevatorInformation.get(threadId).getReachingDown()) {
-                elevatorInformation.get(threadId).setReachingDown(from); }
-        } else {
-            if (from > elevatorInformation.get(threadId).getReachingUp()) {
-                elevatorInformation.get(threadId).setReachingUp(from); }
-            if (to < elevatorInformation.get(threadId).getReachingDown()) {
-                elevatorInformation.get(threadId).setReachingDown(to); } }
     }
 
     public synchronized ArrayList<RequestData> getAbleRequest(

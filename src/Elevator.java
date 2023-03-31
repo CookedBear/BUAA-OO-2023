@@ -134,7 +134,7 @@ public class Elevator extends Thread {
 
         if (currentFloor ==
             publicManager.getElevatorInformation().
-            get(currentThread().getId()).getReachingUp() &&
+            get(currentThread().getId()).getRcUp() &&
             isUp) {                // reach top, turning down
             publicManager.getElevatorInformation().get(
                     currentThread().getId()).setReachingUp(bottomFloor);
@@ -145,7 +145,7 @@ public class Elevator extends Thread {
         } else if (currentFloor ==
                    publicManager.getElevatorInformation().
                    get(currentThread().getId()).
-                   getReachingDown() &&
+                           getRcDn() &&
                    !isUp) {     // reach bottom, turning up
             publicManager.getElevatorInformation().get(
                     currentThread().getId()).setReachingDown(topFloor);
