@@ -33,14 +33,12 @@ public class Elevator extends Thread {
                 // OutputFormat.say(currentThread().getName() + " waiting!");
                 publicManager.setStopped(currentThread().getId(), true);
                 publicManager.wait();
-                publicManager.setStopped(currentThread().getId(), false);
-                // OutputFormat.say(currentThread().getName() + " started!");
-            }
+                publicManager.setStopped(currentThread().getId(), false); }
+            // OutputFormat.say(currentThread().getName() + " started!");
             if (checkMaintain()) {
                 OutputFormat.able(elevatorId);
                 // OutputFormat.say("Elevator "+ elevatorId + " maintained1!");
-                return;
-            }
+                return; }
             turn();
             // check people out-and-in
             checkRequest();
@@ -138,7 +136,8 @@ public class Elevator extends Thread {
             publicManager.getElevatorInformation().
             get(currentThread().getId()).getReachingUp() &&
             isUp) {                // reach top, turning down
-            publicManager.getElevatorInformation().get(currentThread().getId()).setReachingUp(bottomFloor);
+            publicManager.getElevatorInformation().get(
+                    currentThread().getId()).setReachingUp(bottomFloor);
             isUp = false;
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
@@ -148,7 +147,8 @@ public class Elevator extends Thread {
                    get(currentThread().getId()).
                    getReachingDown() &&
                    !isUp) {     // reach bottom, turning up
-            publicManager.getElevatorInformation().get(currentThread().getId()).setReachingDown(topFloor);
+            publicManager.getElevatorInformation().get(
+                    currentThread().getId()).setReachingDown(topFloor);
             isUp = true;
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());

@@ -30,7 +30,9 @@ public class RequestData {
         OutputFormat.out(id, to, elevatorId);
     }
 
-    public void requestOutTemp(int elevatorId, int currentFloor) {OutputFormat.out(id, currentFloor, elevatorId);}
+    public void requestOutTemp(int elevatorId, int currentFloor) {
+        OutputFormat.out(id, currentFloor, elevatorId);
+    }
 
     public boolean isUp() { return (to - from) > 0; }
 }

@@ -4,7 +4,6 @@ import com.oocourse.elevator2.MaintainRequest;
 import com.oocourse.elevator2.PersonRequest;
 import com.oocourse.elevator2.Request;
 
-
 public class Producer extends Thread {
     private final Manager manager;
 
@@ -19,7 +18,11 @@ public class Producer extends Thread {
         while ((request = input.nextRequest()) != null) {
             // still has requests!
             if (request instanceof PersonRequest) {
-                RequestData rd = new RequestData(((PersonRequest) request).getPersonId(), ((PersonRequest) request).getFromFloor(), ((PersonRequest) request).getToFloor());
+                RequestData rd = new RequestData(
+                        ((PersonRequest) request).getPersonId(),
+                        ((PersonRequest) request).getFromFloor(),
+                        ((PersonRequest) request).getToFloor()
+                );
                 manager.putRequest(rd);
             } else if (request instanceof ElevatorRequest) {
 
@@ -40,7 +43,8 @@ public class Producer extends Thread {
             }
         }
         manager.setEof(true);
-        if (manager.getAccepted() == 0 || manager.getAccepted() == manager.getAble()) {       // no maintain elevator + EOF = fin
+        if (manager.getAccepted() == 0 ||
+            manager.getAccepted() == manager.getAble()) {       // no maintain elevator + EOF = fin
             manager.setFinish(true);
             synchronized (manager) {
                 manager.setNotifyThreadId(-1);

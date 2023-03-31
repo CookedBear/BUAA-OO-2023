@@ -14,7 +14,8 @@ public class ElevatorTMessage {
     private int[] upList = new int[13];
     private int[] downList = new int[13]; // [in,out)
 
-    ElevatorTMessage(Elevator elevator, int elevatorId, int floor, int maxPeople, double movingTime) {
+    ElevatorTMessage(Elevator elevator, int elevatorId,
+                     int floor, int maxPeople, double movingTime) {
         this.elevator = elevator;
         this.elevatorId = elevatorId;
         this.working = false;

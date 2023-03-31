@@ -97,26 +97,22 @@ public class Manager {
                         b = true;
                         break;
                     } else if (list[i] != list[i - 1]) {
-                        stops++;
-                    }
-                }
+                        stops++; } }
                 if (b) { continue; }
-                double totalTime = 191981000;
+                double totalTime;
                 if (etm.getIsUp()) {
                     if (etm.getFloor() < from || (etm.getFloor() <= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break;
                         //totalTime = from - etm.getFloor();
-                    } else {
-                        continue;
-                    }
+                    } else { continue; }
                 } else {                                // 反向电梯
-
                     if (etm.getReachingDown() >= from) {
-                        totalTime = (from - etm.getFloor()) * etm.getMovingTime();
+                        totalTime = (from - etm.getFloor())
+                                * etm.getMovingTime();
                     } else {
-                        totalTime = (from + etm.getFloor() - 2 * etm.getReachingDown()) * etm.getMovingTime(); }
-                }
+                        totalTime = (from + etm.getFloor() -
+                                2 * etm.getReachingDown()) * etm.getMovingTime(); } }
                 if (totalTime < dis) {
                     threadId = etm.getElevator().getId();
                     dis = totalTime; }
@@ -128,26 +124,26 @@ public class Manager {
                     int max = etm.getMaxPeople();
                     if (list[i] >= max) {
                         b = true;
-                        break; } else if (list[i] != list[i + 1]) { stops++; } }
+                        break; } else if (list[i] != list[i + 1]) {
+                        stops++; } }
                 if (b) { continue; }
-                double totalTime = 191981000;
+                double totalTime;
                 if (!etm.getIsUp()) {
                     if (etm.getFloor() > from || (etm.getFloor() >= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break;
                         //totalTime = - from + etm.getFloor();
-                    } else {
-                        continue;
-                    }
+                    } else { continue; }
                 } else {                                // 反向电梯
                     if (etm.getReachingUp() <= from) {  // 延申
-                        totalTime = (from - etm.getFloor()) * etm.getMovingTime();
-                    } else { totalTime = (etm.getReachingUp() * 2 - etm.getFloor() - from) * etm.getMovingTime(); }
-                }
+                        totalTime = (from - etm.getFloor())
+                                * etm.getMovingTime();
+                    } else {
+                        totalTime = (etm.getReachingUp() * 2
+                            - etm.getFloor() - from) * etm.getMovingTime(); } }
                 if (totalTime < dis) {
                     threadId = etm.getElevator().getId();
-                    dis = totalTime; } } //System.out.println(" ");
-        }
+                    dis = totalTime; } } }
         if (threadId == -2) { return threadId; }
         rd.setThreadId(threadId);
         g(rd, to, from, threadId);
@@ -158,8 +154,7 @@ public class Manager {
             int[] list = elevatorInformation.get(threadId).getDownList();
             for (int i = from; i > to; i--) { list[i] = list[i] + 1; } }
         //System.out.println("choose elevator" + threadId);
-        return threadId;
-    }
+        return threadId; }
 
     public void g(RequestData rd, int to, int from, long threadId) {
         if (rd.isUp()) {    // renew Up-Down-Floor
@@ -200,7 +195,12 @@ public class Manager {
     }
 
     public synchronized void setElevatorInformation(int elevatorId, Elevator elevator) {
-        elevatorInformation.put(elevator.getId(), new ElevatorTMessage(elevator, elevatorId, elevator.getStartFloor(), elevator.getMaxPeople(), elevator.getMovingTime()));
+        elevatorInformation.put(elevator.getId(),
+                new ElevatorTMessage(
+                    elevator, elevatorId,
+                    elevator.getStartFloor(),
+                    elevator.getMaxPeople(),
+                    elevator.getMovingTime()));
     }
 
     public synchronized HashMap<Long, ElevatorTMessage> getElevatorInformation() {
@@ -239,7 +239,7 @@ public class Manager {
 
     public synchronized long getMaintainThreadId() { return this.maintainThreadId; }
 
-    public synchronized void setMaintainThreadId(long threadId) { this.maintainThreadId = threadId; }
+    public synchronized void setMaintainThreadId(long threadI) { this.maintainThreadId = threadI; }
 
     public synchronized void removeEtm(Long threadId) {
         elevatorInformation.remove(threadId);
