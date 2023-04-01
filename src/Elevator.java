@@ -45,6 +45,13 @@ public class Elevator extends Thread {
             // still have requests
 
             while (true) {
+                if (publicManager.getMaintain(currentThread().getId())) {
+                    if (checkMaintain()) {
+                        OutputFormat.able(elevatorId);
+                        // OutputFormat.say("Elevator "+ elevatorId + " maintained2!");
+                        return;
+                    }
+                }
                 if (publicManager.getFinish() &&
                     !publicManager.hasRequest(currentThread().getId()) &&
                     currentRequest.isEmpty()) {
@@ -66,16 +73,18 @@ public class Elevator extends Thread {
                         // OutputFormat.say(currentThread().getName() + " Resting!");
                         do {
                             publicManager.setStopped(currentThread().getId(), true);
+                            // OutputFormat.say(currentThread().getName() + " Waiting!");
                             publicManager.wait();
+                            // OutputFormat.say(currentThread().getName() + " Waking!");
                             publicManager.setStopped(currentThread().getId(), false);
                         } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
                                  publicManager.getNotifyThreadId() != -1 &&
-                                 publicManager.getMaintainThreadId() != currentThread().getId());
+                                 !publicManager.getMaintain(currentThread().getId()));
                         // OutputFormat.say(currentThread().getName() + " Restarting!");
                         if (publicManager.getNotifyThreadId() == -1 &&
                                 !publicManager.hasRequest(currentThread().getId()) &&
                                 currentRequest.isEmpty() &&
-                                (publicManager.getMaintainThreadId() != currentThread().getId())) {
+                                !publicManager.getMaintain(currentThread().getId())) {
                             // OutputFormat.say(currentThread().getName() + " closed!");
                             return;
                         }

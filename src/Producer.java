@@ -41,6 +41,11 @@ public class Producer extends Thread {
                 manager.setAccepted();
                 manager.pushMaintain(elevatorId);
             }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         manager.setEof(true);
         if (manager.getAccepted() == 0 ||
