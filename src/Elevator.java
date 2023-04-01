@@ -49,9 +49,7 @@ public class Elevator extends Thread {
                     if (checkMaintain()) {
                         OutputFormat.able(elevatorId);
                         // OutputFormat.say("Elevator "+ elevatorId + " maintained2!");
-                        return;
-                    }
-                }
+                        return; } }
                 if (publicManager.getFinish() &&
                     !publicManager.hasRequest(currentThread().getId()) &&
                     currentRequest.isEmpty()) {
@@ -62,9 +60,7 @@ public class Elevator extends Thread {
                         publicManager.setMaintainThreadId(-1);
                         publicManager.notifyAll();
                         // OutputFormat.say("notifyAll called by " + currentThread().getName());
-                        return;
-                    }
-                }
+                        return; } }
                 synchronized (publicManager) {
                     if ((!publicManager.getFinish()) &&
                         !publicManager.hasRequest(currentThread().getId()) &&
@@ -86,14 +82,12 @@ public class Elevator extends Thread {
                                 currentRequest.isEmpty() &&
                                 !publicManager.getMaintain(currentThread().getId())) {
                             // OutputFormat.say(currentThread().getName() + " closed!");
-                            return;
-                        }
+                            return; }
                         checkRequest();
                         // do we need turn?
                         turn();
                         // check people after restart
-                        checkRequest();
-                    }
+                        checkRequest(); }
                 }
                 // just jump out the synchronized range
                 if (checkMaintain()) {
