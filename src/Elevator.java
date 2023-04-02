@@ -34,7 +34,7 @@ public class Elevator extends Thread {
                 publicManager.setStopped(currentThread().getId(), true);
                 publicManager.wait();
                 // publicManager.setStopped(currentThread().getId(), false);
-                }
+            }
             // OutputFormat.say(currentThread().getName() + " started!");
             if (checkMaintain()) {
                 OutputFormat.able(elevatorId);
@@ -84,11 +84,11 @@ public class Elevator extends Thread {
                                 !publicManager.getMaintain(currentThread().getId())) {
                             // OutputFormat.say(currentThread().getName() + " closed!");
                             return; } } }
-                        checkRequest();
-                        // do we need turn?
-                        turn();
-                        // check people after restart
-                        checkRequest();
+                checkRequest();
+                // do we need turn?
+                turn();
+                // check people after restart
+                checkRequest();
 
                 // just jump out the synchronized range
                 if (checkMaintain()) {
