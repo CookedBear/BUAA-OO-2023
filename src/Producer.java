@@ -23,6 +23,7 @@ public class Producer extends Thread {
                         ((PersonRequest) request).getFromFloor(),
                         ((PersonRequest) request).getToFloor()
                 );
+                // OutputFormat.say("RD init!");
                 manager.putRequest(rd);
             } else if (request instanceof ElevatorRequest) {
 
@@ -41,6 +42,7 @@ public class Producer extends Thread {
                 manager.setAccepted();
                 manager.pushMaintain(elevatorId);
             }
+            // OutputFormat.say("One sentence!");
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -61,3 +63,19 @@ public class Producer extends Thread {
         //OutputFormat.say(currentThread().getName() + " finished!");
     }
 }
+
+
+
+
+/*
+1-FROM-1-TO-11
+2-FROM-1-TO-11
+3-FROM-1-TO-11
+4-FROM-1-TO-11
+5-FROM-1-TO-11
+6-FROM-1-TO-11
+7-FROM-1-TO-11
+8-FROM-1-TO-11
+9-FROM-1-TO-11
+10-FROM-1-TO-11
+ */

@@ -33,7 +33,8 @@ public class Elevator extends Thread {
                 // OutputFormat.say(currentThread().getName() + " waiting!");
                 publicManager.setStopped(currentThread().getId(), true);
                 publicManager.wait();
-                publicManager.setStopped(currentThread().getId(), false); }
+                // publicManager.setStopped(currentThread().getId(), false);
+                }
             // OutputFormat.say(currentThread().getName() + " started!");
             if (checkMaintain()) {
                 OutputFormat.able(elevatorId);
@@ -72,7 +73,7 @@ public class Elevator extends Thread {
                             // OutputFormat.say(currentThread().getName() + " Waiting!");
                             publicManager.wait();
                             // OutputFormat.say(currentThread().getName() + " Waking!");
-                            publicManager.setStopped(currentThread().getId(), false);
+                            // publicManager.setStopped(currentThread().getId(), false);
                         } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
                                  publicManager.getNotifyThreadId() != -1 &&
                                  !publicManager.getMaintain(currentThread().getId()));
@@ -82,13 +83,13 @@ public class Elevator extends Thread {
                                 currentRequest.isEmpty() &&
                                 !publicManager.getMaintain(currentThread().getId())) {
                             // OutputFormat.say(currentThread().getName() + " closed!");
-                            return; }
+                            return; } } }
                         checkRequest();
                         // do we need turn?
                         turn();
                         // check people after restart
-                        checkRequest(); }
-                }
+                        checkRequest();
+
                 // just jump out the synchronized range
                 if (checkMaintain()) {
                     OutputFormat.able(elevatorId);
@@ -114,6 +115,7 @@ public class Elevator extends Thread {
     }
 
     private void climbOneFloor() {
+        publicManager.setStopped(currentThread().getId(), false);
         try {
             if ((moveTime + time - System.currentTimeMillis()) < gapTime + moveTime) {
                 Thread.sleep(moveTime);
@@ -194,6 +196,7 @@ public class Elevator extends Thread {
 
         if (hasInRequest || hasOutRequest) {        // need to OPEN
             t1 = openClosed(true, outRequestList, (long)0); // OPEN
+            publicManager.setStopped(currentThread().getId(), true);
             opened = true;                          // flag for CLOSE
         }
 
@@ -248,7 +251,9 @@ public class Elevator extends Thread {
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
-            //OutputFormat.say("Try to collect 3563!");
+            // CLOSE 前标记为开始移动 (停止分配)
+            publicManager.setStopped(currentThread().getId(), false);
+            // OutputFormat.say("set false");
             actionRequestList.addAll(
                     publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));
             for (RequestData rd : actionRequestList) {  // print request in data

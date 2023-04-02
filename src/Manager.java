@@ -15,6 +15,7 @@ public class Manager {
     private int ableCount = 0;
 
     public synchronized void putRequest(RequestData rd) {
+        // OutputFormat.say("xxx");
 
         notifyThreadId = getThreadId(rd);
         maintainThreadId = -1;
