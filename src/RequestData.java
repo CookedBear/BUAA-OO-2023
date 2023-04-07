@@ -52,8 +52,8 @@ public class RequestData {
 
     public boolean isFinal() { return this.to == this.finalTo; }
 
-    public void reMake() {
-        this.from = this.to;
+    public void reMake(int currentFloor) {
+        this.from = currentFloor;
         this.to = this.finalTo;
         this.threadId = 0;
     }

@@ -276,7 +276,7 @@ public class Elevator extends Thread {
             for (RequestData rd : outRequestList) {  // print request out data - need to consider the reAdding requests!
                 rd.requestOutTemp(elevatorId, currentFloor);
                 if (!rd.isFinal()) {               // wait to reAdd directly to REQUESTLIST
-                    rd.reMake();
+                    rd.reMake(currentFloor);
                     publicManager.putRequest(rd);
                     // OutputFormat.say(String.format("%d-%d-%d", rd.getId(), rd.getFrom(), rd.getTo()));
                 } else {
@@ -310,11 +310,12 @@ public class Elevator extends Thread {
         for (int i = currentRequest.size() - 1; i >= 0; i--) {
             RequestData rd = currentRequest.get(i);
             rd.requestOutTemp(elevatorId, currentFloor);
-            if (rd.isFinal()) {
+            if (rd.isFinal() && rd.getTo() == currentFloor) {
                 currentRequest.remove(i);
                 publicManager.finishedCount++;
             } else {
-                rd.reMake();
+                rd.reMake(currentFloor);
+                // System.out.println("remake id " + rd.getId());
             }
         }
         OutputFormat.close(currentFloor, elevatorId);
@@ -371,4 +372,8 @@ public class Elevator extends Thread {
 11-FROM-1-TO-15
 12-FROM-1-TO-15
 13-FROM-1-TO-15
+
+8-FROM-1-TO-11
+MAINTAIN-Elevator-1
+
  */
