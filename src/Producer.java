@@ -24,7 +24,7 @@ public class Producer extends Thread {
                         ((PersonRequest) request).getToFloor()
                 );
                 // OutputFormat.say("RD init!");
-                manager.requestCount++;
+                manager.addRequestCount();
                 manager.putRequest(rd);
             } else if (request instanceof ElevatorRequest) {
 
@@ -34,7 +34,8 @@ public class Producer extends Thread {
                 int movingTime = (int) (((ElevatorRequest) request).getSpeed() * 1000);
                 int floorCode = ((ElevatorRequest) request).getAccess();
                 // OutputFormat.say("Add a new elevator: "+elevatorId);
-                Elevator elevator = new Elevator(elevatorId, floor, maxPeople, movingTime, manager, floorCode);
+                Elevator elevator = new Elevator(elevatorId, floor, maxPeople,
+                                                 movingTime, manager, floorCode);
                 manager.setElevatorInformation(elevatorId, elevator);
                 elevator.start();
             } else if (request instanceof MaintainRequest) {

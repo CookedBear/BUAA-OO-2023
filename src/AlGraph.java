@@ -1,6 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Objects;
 
-public class ALGraph {
+public class AlGraph {
     private static final int MVNUM = 170;
     private HashMap<Integer, ArrayList<Node>> nodeMap = new HashMap<>();
     private ArrayList<Node> nodeList = new ArrayList<>();
@@ -36,7 +39,6 @@ public class ALGraph {
         nodeList = this.nodeMap.get(node2.getElevatorId());
         nodeList.add(node1);
     }
-
 
     // 输出邻接表
     public void showAL() {
@@ -101,11 +103,11 @@ public class ALGraph {
         for (Answer answer : answers) {
             int pause = -1;
 
-            if (answer.overTimes == 0) {
+            if (answer.getOverTimes() == 0) {
                 pause = fin;
             } else {
-                Integer[] floor1 = getNode(answer.overList.get(1)).getFloor();
-                Integer[] floor2 = getNode(answer.overList.get(2)).getFloor();
+                Integer[] floor1 = getNode(answer.getOverList().get(1)).getFloor();
+                Integer[] floor2 = getNode(answer.getOverList().get(2)).getFloor();
                 // OutputFormat.say("floor1 :" + Arrays.toString(floor1));
                 // OutputFormat.say("floor2 :" + Arrays.toString(floor2));
                 for (int i = start; i <= fin; i++) {
@@ -122,18 +124,16 @@ public class ALGraph {
                     }
                 }
             }
-            answer.getDownStation = pause;
+            answer.setGetDownStation(pause);
 
         }
         Collections.sort(answers);
         for (int i = answers.size() - 1; i >= 0; i--) {
-            if (answers.get(i).overTimes > answers.get(0).overTimes + 2 && answers.size() >= 5) {
+            if (answers.get(i).getOverTimes() > answers.get(0).getOverTimes() + 2 &&
+                answers.size() >= 5) {
                 answers.remove(i);
             }
         }
-//        for (Answer answer : answers) {
-//            System.out.println(answer.overTimes + ": pause at " + answer.getDownStation + " " + answer.overList);
-//        }
         return answers;
     }
 

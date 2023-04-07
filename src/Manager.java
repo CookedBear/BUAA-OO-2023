@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Manager {
     private static final ArrayList<RequestData> REQUESTLIST = new ArrayList<>();
@@ -14,11 +13,11 @@ public class Manager {
     private long maintainThreadId = -1;
     private int acceptedCount = 0;
     private int ableCount = 0;
-    int requestCount = 0;
-    int finishedCount = 0;
+    private int requestCount = 0;
+    private int finishedCount = 0;
     private int[] inIng = new int[12];
     private int[] working = new int[12];
-    private ALGraph eleGraph = new ALGraph();
+    private AlGraph eleGraph = new AlGraph();
 
     public synchronized void putRequest(RequestData rd) {
         // OutputFormat.say("xxx");
@@ -90,22 +89,22 @@ public class Manager {
     private synchronized Long getThreadId(RequestData rd) {
         eleGraph.startDfs(rd.getFrom(), rd.getTo());
         ArrayList<Answer> routes = eleGraph.printAns(rd.getFrom(), rd.getTo());
-        if (routes.get(0).overTimes == 0) {         // contain single-lines
+        if (routes.get(0).getOverTimes() == 0) {         // contain single-lines
             // OutputFormat.say("Has single route");
             Long threadId = getThreadIdSingle(rd);
             if (threadId != -2) {                   // try to use single-line
                 return threadId;
             }
-            while (!routes.isEmpty() && routes.get(0).overTimes == 0) {
+            while (!routes.isEmpty() && routes.get(0).getOverTimes() == 0) {
                 routes.remove(0);
             }
-                                                    // single-line failed
+        // single-line failed
         } else {                                    // need to change elevator
             int[] usedFloor = new int[12];
             for (Answer route : routes) {
-                if (usedFloor[route.getDownStation] == 0) {
-                    usedFloor[route.getDownStation] = 1;
-                    rd.setTo(route.getDownStation);
+                if (usedFloor[route.getGetDownStation()] == 0) {
+                    usedFloor[route.getGetDownStation()] = 1;
+                    rd.setTo(route.getGetDownStation());
                     Long threadId = getThreadIdSingle(rd);
                     if (threadId != -2) {                   // try to use this route
                         return threadId;
@@ -125,8 +124,7 @@ public class Manager {
         for (ElevatorTMessage etm : elevatorInformation.values()) {
             int[] list;
             if (etm.getAbleFloor()[from] != 1 || etm.getAbleFloor()[to] != 1) {
-                continue;
-            }
+                continue; }
             if (rd.isUp()) {
                 list = etm.getUpList();
                 boolean b = false;
@@ -240,7 +238,9 @@ public class Manager {
 
     public synchronized void setFinish(Boolean finish) { this.finish = finish; }
 
-    public synchronized boolean getFinish() { return this.finish && saturateList.isEmpty() && requestCount == finishedCount; }
+    public synchronized boolean getFinish() {
+        return this.finish && saturateList.isEmpty() && requestCount == finishedCount;
+    }
 
     public synchronized long getNotifyThreadId() { return this.notifyThreadId; }
 
@@ -323,6 +323,10 @@ public class Manager {
     public synchronized int getWorking(int currentFloor) {
         return this.working[currentFloor];
     }
+
+    public synchronized void addRequestCount() { requestCount++; }
+
+    public synchronized void addFinishCount() { finishedCount++; }
 }
 
 /*

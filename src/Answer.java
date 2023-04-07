@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Answer implements Comparable<Answer> {
-    int overTimes;
-    ArrayList<Integer> overList;
-    int getDownStation = -1;
+    private int overTimes;
+    private ArrayList<Integer> overList;
+    private int getDownStation = -1;
 
     Answer(int overTimes, ArrayList<Integer> overList) {
         this.overList = overList;
@@ -18,4 +18,16 @@ public class Answer implements Comparable<Answer> {
             return getDownStation - answer.getDownStation;
         }
     }
+
+    public int getOverTimes() { return this.overTimes; }
+
+    public void setOverTimes(int overTimes) { this.overTimes = overTimes; }
+
+    public ArrayList<Integer> getOverList() { return this.overList; }
+
+    public void setOverList(ArrayList<Integer> overList) { this.overList = overList; }
+
+    public int getGetDownStation() { return this.getDownStation; }
+
+    public void setGetDownStation(int getDownStation) { this.getDownStation = getDownStation; }
 }

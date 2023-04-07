@@ -12,10 +12,14 @@ class Node {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Node vNode = (Node) o;
-        return elevatorId == vNode.elevatorId && floor == vNode.floor;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Node node = (Node) o;
+        return elevatorId == node.elevatorId && floor == node.floor;
     }
 
     @Override

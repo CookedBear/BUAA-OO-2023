@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Elevator extends Thread {
     private int maxPeople = 6;
@@ -80,10 +79,6 @@ public class Elevator extends Thread {
                         } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
                                  publicManager.getNotifyThreadId() != -1 &&
                                  !publicManager.getMaintain(currentThread().getId()));
-                        //OutputFormat.say(String.format("%b", publicManager.getNotifyThreadId() != currentThread().getId()));
-                        //OutputFormat.say(String.format("%b", publicManager.getNotifyThreadId() != -1));
-                        //OutputFormat.say(String.format("%b", !publicManager.getMaintain(currentThread().getId())));
-                        // OutputFormat.say(currentThread().getName() + " Restarting!");
                         if (publicManager.getNotifyThreadId() == -1 &&
                                 !publicManager.hasRequest(currentThread().getId()) &&
                                 currentRequest.isEmpty() &&
@@ -207,7 +202,8 @@ public class Elevator extends Thread {
             outRequestList = getOutRequest();
             hasOutRequest = !outRequestList.isEmpty();
             time = openClosed(outRequestList, inRequestList,!hasOutRequest); // OPEN + CLOSE
-            inRequestList = publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId());
+            inRequestList = publicManager.getAbleRequest(
+                    currentFloor, isUp, currentThread().getId());
         }
     }
 
@@ -239,11 +235,13 @@ public class Elevator extends Thread {
         return false;
     }
 
-    private long openClosed(ArrayList<RequestData> outRequestList, ArrayList<RequestData> inRequestList, boolean inIng) throws InterruptedException {
+    private long openClosed(ArrayList<RequestData> outRequestList,
+                            ArrayList<RequestData> inRequestList, boolean inIng)
+            throws InterruptedException {
         publicManager.setStopped(currentThread().getId(), true);
         long t0 = 0;
-            // open -> sleep (-> out)
-            // no one need to out = inIng
+        // open -> sleep (-> out)
+        // no one need to out = inIng
         if (inIng) {
             while (publicManager.getIn(currentFloor) >= 2) {
                 Thread.sleep(465);
@@ -253,48 +251,48 @@ public class Elevator extends Thread {
                 Thread.sleep(465);
             }
         }
-            OutputFormat.open(currentFloor, elevatorId);
-            t0 = System.currentTimeMillis();
+        OutputFormat.open(currentFloor, elevatorId);
+        t0 = System.currentTimeMillis();
 
-            if (inIng) {
-                publicManager.addIn(currentFloor, true);
-            } else {
-                publicManager.addWorking(currentFloor, true);
-            }
+        if (inIng) {
+            publicManager.addIn(currentFloor, true);
+        } else {
+            publicManager.addWorking(currentFloor, true);
+        }
 
-            // TimableOutput.println(String.format("OPEN-%d-%s",currentFloor, elevatorId));
-            long t2 = System.currentTimeMillis();
-            try {
-                Thread.sleep(gapTime + 2 * openTime - t2 + t0);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-            publicManager.setStopped(currentThread().getId(), false);   // CLOSE 前标记为开始移动 (停止分配)
-            // OutputFormat.say("set false");
-            inRequestList.addAll(
-                    publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));
-            for (RequestData rd : outRequestList) {  // print request out data - need to consider the reAdding requests!
-                rd.requestOutTemp(elevatorId, currentFloor);
-                if (!rd.isFinal()) {               // wait to reAdd directly to REQUESTLIST
-                    rd.reMake(currentFloor);
-                    publicManager.putRequest(rd);
-                    // OutputFormat.say(String.format("%d-%d-%d", rd.getId(), rd.getFrom(), rd.getTo()));
-                } else {
-                    publicManager.finishedCount++;
-                }
-            }
-            for (RequestData rd : inRequestList) {  // print request in data
-                rd.requestIn(elevatorId);
-            }
-            currentRequest.addAll(inRequestList);   // add in the request on-board
-            OutputFormat.close(currentFloor, elevatorId);
-            // TimableOutput.println(String.format("CLOSE-%d-%s",currentFloor, elevatorId));
-            if (inIng) {
-                publicManager.addIn(currentFloor, false);
+        // TimableOutput.println(String.format("OPEN-%d-%s",currentFloor, elevatorId));
+        long t2 = System.currentTimeMillis();
+        try {
+            Thread.sleep(gapTime + 2 * openTime - t2 + t0);
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+        publicManager.setStopped(currentThread().getId(), false);   // CLOSE 前标记为开始移动 (停止分配)
+        // OutputFormat.say("set false");
+        inRequestList.addAll(
+                publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));
+        for (RequestData rd : outRequestList) {  // print request out-consider the reAdding requests
+            rd.requestOutTemp(elevatorId, currentFloor);
+            if (!rd.isFinal()) {               // wait to reAdd directly to REQUESTLIST
+                rd.reMake(currentFloor);
+                publicManager.putRequest(rd);
+                // OutputFormat.say(String.format("%d-%d-%d", rd.getId(), rd.getFrom(), rd.getTo()))
             } else {
-                publicManager.addWorking(currentFloor, false);
+                publicManager.addFinishCount();
             }
-            return System.currentTimeMillis();
+        }
+        for (RequestData rd : inRequestList) {  // print request in data
+            rd.requestIn(elevatorId);
+        }
+        currentRequest.addAll(inRequestList);   // add in the request on-board
+        OutputFormat.close(currentFloor, elevatorId);
+        // TimableOutput.println(String.format("CLOSE-%d-%s",currentFloor, elevatorId));
+        if (inIng) {
+            publicManager.addIn(currentFloor, false);
+        } else {
+            publicManager.addWorking(currentFloor, false);
+        }
+        return System.currentTimeMillis();
     }
 
     private void pourRequestOut() throws InterruptedException {
@@ -312,7 +310,7 @@ public class Elevator extends Thread {
             rd.requestOutTemp(elevatorId, currentFloor);
             if (rd.isFinal() && rd.getTo() == currentFloor) {
                 currentRequest.remove(i);
-                publicManager.finishedCount++;
+                publicManager.addFinishCount();
             } else {
                 rd.reMake(currentFloor);
                 // System.out.println("remake id " + rd.getId());
@@ -340,8 +338,8 @@ public class Elevator extends Thread {
         return returnRequest;
     }
 
-    private Integer[] decodeFloors(int floorCode) {
-        floorCode *= 2;
+    private Integer[] decodeFloors(int floorCodes) {
+        int floorCode = 2 * floorCodes;
         Integer[] floors = new Integer[12];
         int k = floorCode % 16;
         for (int f = 0; f < 4; f++) {
