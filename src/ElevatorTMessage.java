@@ -2,6 +2,7 @@ public class ElevatorTMessage {
     private final Elevator elevator;
     private final int elevatorId;
     private boolean working;
+    private boolean sleeping;
     private boolean isUp;
     private int floor;
     private int people;
@@ -69,4 +70,12 @@ public class ElevatorTMessage {
     public synchronized void setReachingDown(int reaching) { this.reachingDown = reaching; }
 
     public Integer[] getAbleFloor() { return this.ableFloor; }
+
+    public boolean isSleeping() {
+        return sleeping;
+    }
+
+    public void setSleeping(boolean sleeping) {
+        this.sleeping = sleeping;
+    }
 }

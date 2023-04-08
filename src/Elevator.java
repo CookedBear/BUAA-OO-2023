@@ -35,7 +35,9 @@ public class Elevator extends Thread {
             synchronized (publicManager) {
                 // OutputFormat.say(currentThread().getName() + " waiting!");
                 publicManager.setStopped(currentThread().getId(), true);
+                publicManager.setSleeping(currentThread().getId(), true);
                 publicManager.wait();
+                isUp = publicManager.setSleeping(currentThread().getId(), false);
                 // publicManager.setStopped(currentThread().getId(), false);
             }
             // OutputFormat.say(currentThread().getName() + " started!");
@@ -74,12 +76,14 @@ public class Elevator extends Thread {
                         do {
                             publicManager.setStopped(currentThread().getId(), true);
                             // OutputFormat.say(currentThread().getName() + " Waiting!");
+                            publicManager.setSleeping(currentThread().getId(), true);
                             publicManager.wait();
                             // OutputFormat.say(currentThread().getName() + " Waking!");
                             // publicManager.setStopped(currentThread().getId(), false);
                         } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
                                  publicManager.getNotifyThreadId() != -1 &&
                                  !publicManager.getMaintain(currentThread().getId()));
+                        isUp = publicManager.setSleeping(currentThread().getId(), false);
                         if (publicManager.getNotifyThreadId() == -1 &&
                                 !publicManager.hasRequest(currentThread().getId()) &&
                                 currentRequest.isEmpty() &&

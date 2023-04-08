@@ -146,7 +146,10 @@ public class Manager {
                     } else if (list[i] != list[i - 1]) {
                         stops++; } }
                 if (b) { continue; }
-                if (etm.getIsUp()) {
+                if (etm.isSleeping()) {
+                    totalTime = Math.abs(rd.getFrom() - etm.getFl()) * etm.getMvTm();
+                    etm.setIsUp((rd.getFrom() == etm.getFl()) ? rd.isUp() : (rd.getFrom() > etm.getFl()));
+                } else if (etm.getIsUp()) {
                     if (etm.getFl() < from || (etm.getFl() <= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break;
@@ -162,14 +165,21 @@ public class Manager {
                 list = etm.getDownList();
                 boolean b = false;
                 int stops = 0;
+                if (rd.getId() == 25 || rd.getId() == 16 || rd.getId() == 24 || rd.getId() == 36 || rd.getId() == 123 || rd.getId() == 22 || rd.getId() == 126) {
+//                    System.out.println(rd.getId()+" and "+etm.getElevatorId()+":  "+ Arrays.toString(list));
+                }
                 for (int i = from; i > to; i--) {
                     int max = etm.getMaxPeople();
+
                     if (list[i] >= max) {
                         b = true;
                         break; } else if (list[i] != list[i + 1]) {
                         stops++; } }
                 if (b) { continue; }
-                if (!etm.getIsUp()) {
+                if (etm.isSleeping()) {
+                    totalTime = Math.abs(rd.getFrom() - etm.getFl()) * etm.getMvTm();
+                    etm.setIsUp((rd.getFrom() == etm.getFl()) ? rd.isUp() : (rd.getFrom() > etm.getFl()));
+                } else if (!etm.getIsUp()) {
                     if (etm.getFl() > from || (etm.getFl() >= from && !etm.getWorking())) {
                         threadId = etm.getElevator().getId();
                         break;
@@ -183,6 +193,10 @@ public class Manager {
                     dis = totalTime; } } }
         if (threadId == -2) { return threadId; }
         g(rd, to, from, threadId);
+        if (rd.getId() == 25 || rd.getId() == 16 || rd.getId() == 24 || rd.getId() == 36 || rd.getId() == 123 || rd.getId() == 22 || rd.getId() == 126) {
+//            OutputFormat.say(rd.getId()+" and "+ elevatorInformation.get(threadId).getElevatorId()+":  "+ Arrays.toString( elevatorInformation.get(threadId).getDownList()));
+//            OutputFormat.say(rd.getId()+" chose " + elevatorInformation.get(threadId).getElevatorId());
+        }
         return threadId; }
 
     public void g(RequestData rd, int to, int from, long threadId) {
@@ -336,6 +350,17 @@ public class Manager {
     public synchronized void addRequestCount() { requestCount++; }
 
     public synchronized void addFinishCount() { finishedCount++; }
+
+    public synchronized boolean isSleeping(long threadId) { return elevatorInformation.get(threadId).isSleeping(); }
+
+    public synchronized boolean setSleeping(long thread, boolean sleeping) {
+        elevatorInformation.get(thread).setSleeping(sleeping);
+        if (!sleeping) {
+            return elevatorInformation.get(thread).getIsUp();   // 启动前修改方向
+        } else {
+            return false;
+        }
+    }
 }
 
 /*
