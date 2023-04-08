@@ -12,7 +12,7 @@ public class Elevator extends Thread {
     private int currentFloor;
     private ArrayList<RequestData> currentRequest;
     private boolean isUp;
-    private long time = 0;
+    private long time;
     private Integer[] ableFloor;
 
     Elevator(int id,int currentFloor,int maxPeople, int moveTime, Manager manager, int floorCode) {
@@ -25,6 +25,7 @@ public class Elevator extends Thread {
         this.moveTime = moveTime;
         this.maxPeople = maxPeople;
         this.ableFloor = decodeFloors(floorCode);
+        this.time = System.currentTimeMillis();
     }
 
     @Override
@@ -119,10 +120,12 @@ public class Elevator extends Thread {
     private void climbOneFloor() {
         publicManager.setStopped(currentThread().getId(), false);
         try {
-            if ((moveTime + time - System.currentTimeMillis()) < gapTime + moveTime) {
+            long currentTime = System.currentTimeMillis();
+            long tempTime = moveTime + time - currentTime + 1;
+            if (tempTime >= gapTime + moveTime || tempTime < 0) {
                 Thread.sleep(moveTime);
             } else {
-                Thread.sleep(moveTime + time - System.currentTimeMillis());
+                Thread.sleep(tempTime);
             }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -244,11 +247,11 @@ public class Elevator extends Thread {
         // no one need to out = inIng
         if (inIng) {
             while (publicManager.getIn(currentFloor) >= 2) {
-                Thread.sleep(465);
+                Thread.sleep(415);
             }
         } else {
             while (publicManager.getWorking(currentFloor) >= 4) {
-                Thread.sleep(465);
+                Thread.sleep(415);
             }
         }
         OutputFormat.open(currentFloor, elevatorId);
