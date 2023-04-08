@@ -56,7 +56,9 @@ public class AlGraph {
         addNode(-2, getF(fin));
         // showAL();
         visited = new int[100];
+        OutputFormat.say("Start traverse");
         dfsTraverse(-1, -2);
+        OutputFormat.say("Finish traverse");
         // ans.clear();
         delNode(-1);
         delNode(-2);
@@ -64,6 +66,9 @@ public class AlGraph {
 
     // 深度优先遍历
     public void dfsTraverse(int start, int fin) {
+        if (routes.size() >= 7 && ans.size() != 0) {
+            return;
+        }
         int startIdx = 0;
         for (int i = 0; i < nodeList.size(); i++) {
             if (nodeList.get(i).getElevatorId() == start) {
@@ -129,6 +134,7 @@ public class AlGraph {
         }
         Collections.sort(answers);
         for (int i = answers.size() - 1; i >= 0; i--) {
+            // System.out.printf("%d - %d\n", answers.get(0).getOverTimes(), answers.get(i).getOverTimes());
             if (answers.get(i).getOverTimes() > answers.get(0).getOverTimes() + 2 &&
                 answers.size() >= 5) {
                 answers.remove(i);

@@ -263,7 +263,7 @@ public class Elevator extends Thread {
         // TimableOutput.println(String.format("OPEN-%d-%s",currentFloor, elevatorId));
         long t2 = System.currentTimeMillis();
         try {
-            Thread.sleep(gapTime + 2 * openTime - t2 + t0);
+            Thread.sleep(2 * openTime);
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
