@@ -21,9 +21,9 @@ public class Manager {
 
     public synchronized void putRequest(RequestData rd) {
         // OutputFormat.say("xxx");
-        OutputFormat.say("Calculat thread for" + rd.getId());
+        //OutputFormat.say("Calculat thread for" + rd.getId());
         notifyThreadId = getThreadId(rd);
-        OutputFormat.say("Thread is " + notifyThreadId);
+        //OutputFormat.say("Thread is " + notifyThreadId);
         maintainThreadId = -1;
         /*
             notifyAll here, and re-wait the waiting elevators by notifyThreadId
@@ -88,9 +88,9 @@ public class Manager {
     }
 
     private synchronized Long getThreadId(RequestData rd) {
-        OutputFormat.say("Start dfs");
+        //OutputFormat.say("Start dfs");
         eleGraph.startDfs(rd.getFrom(), rd.getTo());
-        OutputFormat.say("Finish dfs");
+        //OutputFormat.say("Finish dfs");
         ArrayList<Answer> routes = eleGraph.printAns(rd.getFrom(), rd.getTo());
         // System.out.println("route size = " + routes.size());
         if (routes.get(0).getOverTimes() == 0) {         // contain single-lines
@@ -102,18 +102,18 @@ public class Manager {
             while (!routes.isEmpty() && routes.get(0).getOverTimes() == 0) {
                 routes.remove(0);
             }
-        // single-line failed
+            // single-line failed
         }                                   // need to change elevator
         int[] usedFloor = new int[12];
         for (Answer route : routes) {
             if (route.getGetDownStation() == rd.getFrom()) {
                 continue;
             }
-            OutputFormat.say("try to get down at" + route.getGetDownStation());
+            //OutputFormat.say("try to get down at" + route.getGetDownStation());
             if (usedFloor[route.getGetDownStation()] == 0) {
                 usedFloor[route.getGetDownStation()] = 1;
                 rd.setTo(route.getGetDownStation());
-                OutputFormat.say("Set to as: " + route.getGetDownStation());
+                //OutputFormat.say("Set to as: " + route.getGetDownStation());
                 Long threadId = getThreadIdSingle(rd);
                 if (threadId != -2) {                   // try to use this route
                     return threadId;
