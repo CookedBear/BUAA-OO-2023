@@ -283,11 +283,6 @@ public class Elevator extends Thread {
         publicManager.setStopped(currentThread().getId(), false);   // CLOSE 前标记为开始移动 (停止分配)
         // OutputFormat.say("set false");
         currentRequest.addAll(inRequestList);
-        ArrayList<RequestData> rdList = publicManager.getAbleRequest(
-                currentFloor, isUp, currentThread().getId(),
-                currentRequest.size());
-        inRequestList.addAll(rdList);
-        currentRequest.addAll(rdList);
         for (RequestData rd : outRequestList) {  // print request out-consider the reAdding requests
             rd.requestOutTemp(elevatorId, currentFloor);
             if (!rd.isFinal()) {               // wait to reAdd directly to REQUESTLIST
@@ -308,6 +303,7 @@ public class Elevator extends Thread {
         } else {
             publicManager.addWorking(currentFloor, false);
         }
+        inRequestList.clear();
         return System.currentTimeMillis();
     }
 
