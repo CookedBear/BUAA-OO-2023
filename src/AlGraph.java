@@ -136,8 +136,7 @@ public class AlGraph {
         for (int i = answers.size() - 1; i >= 0; i--) {
             // System.out.printf("%d - %d\n", answers.get(0).getOverTimes(),
             // answers.get(i).getOverTimes());
-            if (answers.get(i).getOverTimes() > answers.get(0).getOverTimes() + 2 &&
-                answers.size() >= 5) {
+            if (answers.get(i).getOverTimes() > answers.get(0).getOverTimes()) {
                 answers.remove(i);
             }
         }
