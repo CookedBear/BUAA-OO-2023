@@ -33,14 +33,8 @@ public class Elevator extends Thread {
 
         try {
             synchronized (publicManager) {
-                // OutputFormat.say(currentThread().getName() + " waiting!");
-                publicManager.setStopped(currentThread().getId(), true);
-                publicManager.setSleeping(currentThread().getId(), true);
                 publicManager.wait();
-                isUp = publicManager.setSleeping(currentThread().getId(), false);
-                // publicManager.setStopped(currentThread().getId(), false);
-            }
-            // OutputFormat.say(currentThread().getName() + " started!");
+                isUp = publicManager.setSleeping(currentThread().getId(), false); }
             if (checkMaintain()) {
                 OutputFormat.able(elevatorId);
                 // OutputFormat.say("Elevator "+ elevatorId + " maintained1!");
@@ -77,6 +71,7 @@ public class Elevator extends Thread {
                             publicManager.setStopped(currentThread().getId(), true);
                             // OutputFormat.say(currentThread().getName() + " Waiting!");
                             publicManager.setSleeping(currentThread().getId(), true);
+                            publicManager.flushSaturateList((long) -1);
                             publicManager.wait();
                             // OutputFormat.say(currentThread().getName() + " Waking!");
                             // publicManager.setStopped(currentThread().getId(), false);
@@ -101,8 +96,7 @@ public class Elevator extends Thread {
                 if (checkMaintain()) {
                     OutputFormat.able(elevatorId);
                     // OutputFormat.say("Elevator "+ elevatorId + " maintained2!");
-                    return;
-                }
+                    return; }
                 // move one floor
                 climbOneFloor();
                 if (checkMaintain()) {
@@ -145,14 +139,33 @@ public class Elevator extends Thread {
     }
 
     private void turn() {
+        if (currentFloor == topFloor && isUp) {   // top floor: force
+            isUp = false;
+            publicManager.getElevatorInformation().get(
+                    currentThread().getId()).setReachingUp(bottomFloor);
+            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
+            publicManager.flushSaturateList(currentThread().getId());
+            return;
+        }
+        if (currentFloor == bottomFloor && !isUp) {   // base floor: force
+
+            isUp = true;
+            publicManager.getElevatorInformation().get(
+                    currentThread().getId()).setReachingDown(topFloor);
+            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
+            publicManager.flushSaturateList(currentThread().getId());
+            return;
+        }
 
         if (currentFloor ==
             publicManager.getElevatorInformation().
             get(currentThread().getId()).getRcUp() &&
             isUp) {                // reach top, turning down
-            publicManager.getElevatorInformation().get(
-                    currentThread().getId()).setReachingUp(bottomFloor);
-            isUp = false;
+            if (currentFloor != 1) {
+                publicManager.getElevatorInformation().get(
+                        currentThread().getId()).setReachingUp(bottomFloor);
+                isUp = false;
+            }
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
             return;
@@ -161,26 +174,17 @@ public class Elevator extends Thread {
                    get(currentThread().getId()).
                            getRcDn() &&
                    !isUp) {     // reach bottom, turning up
-            publicManager.getElevatorInformation().get(
-                    currentThread().getId()).setReachingDown(topFloor);
-            isUp = true;
+            if (currentFloor != 11) {
+                publicManager.getElevatorInformation().get(
+                        currentThread().getId()).setReachingDown(topFloor);
+                isUp = true;
+            }
             publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
             publicManager.flushSaturateList(currentThread().getId());
             return;
         }
 
-        if (currentFloor == topFloor && isUp) {   // top floor: force
-            isUp = false;
-            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
-            publicManager.flushSaturateList(currentThread().getId());
-            return;
-        }
-        if (currentFloor == bottomFloor && !isUp) {   // base floor: force
 
-            isUp = true;
-            publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
-            publicManager.flushSaturateList(currentThread().getId());
-        }
 
         publicManager.renewEtmData(currentThread().getId(), currentFloor, isUp);
     }
@@ -197,20 +201,22 @@ public class Elevator extends Thread {
         boolean hasOutRequest = !outRequestList.isEmpty();
 
         ArrayList<RequestData> inRequestList =
-            publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId());
+            publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId(),
+                    currentRequest.size());
         boolean hasInRequest = !inRequestList.isEmpty();
 
         if (hasInRequest || hasOutRequest) {        // need to OPEN
             // OutputFormat.say("has out:");
             time = openClosed(outRequestList, inRequestList,!hasOutRequest); // OPEN + CLOSE
         }
-        inRequestList = publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId());
+        inRequestList = publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId(),
+                currentRequest.size());
         while (!inRequestList.isEmpty()) {
             outRequestList = getOutRequest();
             hasOutRequest = !outRequestList.isEmpty();
             time = openClosed(outRequestList, inRequestList,!hasOutRequest); // OPEN + CLOSE
             inRequestList = publicManager.getAbleRequest(
-                    currentFloor, isUp, currentThread().getId());
+                    currentFloor, isUp, currentThread().getId(), currentRequest.size());
         }
     }
 
@@ -277,7 +283,8 @@ public class Elevator extends Thread {
         publicManager.setStopped(currentThread().getId(), false);   // CLOSE 前标记为开始移动 (停止分配)
         // OutputFormat.say("set false");
         inRequestList.addAll(
-                publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId()));
+                publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId(),
+                        inRequestList.size() + currentRequest.size()));
         for (RequestData rd : outRequestList) {  // print request out-consider the reAdding requests
             rd.requestOutTemp(elevatorId, currentFloor);
             if (!rd.isFinal()) {               // wait to reAdd directly to REQUESTLIST

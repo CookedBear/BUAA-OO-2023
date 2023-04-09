@@ -21,6 +21,7 @@ public class ElevatorTMessage {
         this.elevator = elevator;
         this.elevatorId = elevatorId;
         this.working = false;
+        this.sleeping = true;
         this.isUp = true;
         this.floor = floor;
         this.people = 0;

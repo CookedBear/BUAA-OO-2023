@@ -26,6 +26,11 @@ public class Producer extends Thread {
                 // OutputFormat.say("RD init!");
                 manager.addRequestCount();
                 manager.putRequest(rd);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             } else if (request instanceof ElevatorRequest) {
 
                 int elevatorId = ((ElevatorRequest) request).getElevatorId();
@@ -36,21 +41,28 @@ public class Producer extends Thread {
                 // OutputFormat.say("Add a new elevator: "+elevatorId);
                 Elevator elevator = new Elevator(elevatorId, floor, maxPeople,
                                                  movingTime, manager, floorCode);
-                manager.setElevatorInformation(elevatorId, elevator);
                 elevator.start();
+                manager.setElevatorInformation(elevatorId, elevator);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
             } else if (request instanceof MaintainRequest) {
 
                 int elevatorId = ((MaintainRequest) request).getElevatorId();
                 // OutputFormat.say("Remove old elevator: " + elevatorId);
                 manager.setAccepted();
                 manager.pushMaintain(elevatorId);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
             // OutputFormat.say("One sentence!");
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
         }
         manager.setEof(true);
         if (manager.getAccepted() == 0 ||
