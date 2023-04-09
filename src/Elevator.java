@@ -282,9 +282,12 @@ public class Elevator extends Thread {
         }
         publicManager.setStopped(currentThread().getId(), false);   // CLOSE 前标记为开始移动 (停止分配)
         // OutputFormat.say("set false");
-        inRequestList.addAll(
-                publicManager.getAbleRequest(currentFloor, isUp, currentThread().getId(),
-                        inRequestList.size() + currentRequest.size()));
+        currentRequest.addAll(inRequestList);
+        ArrayList<RequestData> rdList = publicManager.getAbleRequest(
+                currentFloor, isUp, currentThread().getId(),
+                currentRequest.size());
+        inRequestList.addAll(rdList);
+        currentRequest.addAll(rdList);
         for (RequestData rd : outRequestList) {  // print request out-consider the reAdding requests
             rd.requestOutTemp(elevatorId, currentFloor);
             if (!rd.isFinal()) {               // wait to reAdd directly to REQUESTLIST
@@ -298,7 +301,6 @@ public class Elevator extends Thread {
         for (RequestData rd : inRequestList) {  // print request in data
             rd.requestIn(elevatorId);
         }
-        currentRequest.addAll(inRequestList);   // add in the request on-board
         OutputFormat.close(currentFloor, elevatorId);
         // TimableOutput.println(String.format("CLOSE-%d-%s",currentFloor, elevatorId));
         if (inIng) {
