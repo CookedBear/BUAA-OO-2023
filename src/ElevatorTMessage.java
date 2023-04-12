@@ -11,6 +11,7 @@ public class ElevatorTMessage {
     private int reachingDown;
     private double movingTime;
     private boolean maintain = false;
+    private boolean notify = false;
 
     private int[] upList = new int[13];
     private int[] downList = new int[13]; // [in,out)
@@ -64,6 +65,10 @@ public class ElevatorTMessage {
     public synchronized void setMaintain(boolean maintain) { this.maintain = maintain; }
 
     public synchronized boolean getMaintain() { return this.maintain; }
+
+    public synchronized void setNotify(boolean notify) { this.notify = notify; }
+
+    public synchronized boolean getNotify() { return this.notify; }
 
     // public void setReaching(int reaching) { this.reaching = reaching; }
     public synchronized void setReachingUp(int reaching) { this.reachingUp = reaching; }

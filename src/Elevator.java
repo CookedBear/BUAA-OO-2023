@@ -75,10 +75,11 @@ public class Elevator extends Thread {
                             publicManager.wait();
                             // OutputFormat.say(currentThread().getName() + " Waking!");
                             // publicManager.setStopped(currentThread().getId(), false);
-                        } while (publicManager.getNotifyThreadId() != currentThread().getId() &&
+                        } while (!publicManager.getNotify(currentThread().getId()) &&
                                  publicManager.getNotifyThreadId() != -1 &&
                                  !publicManager.getMaintain(currentThread().getId()));
                         isUp = publicManager.setSleeping(currentThread().getId(), false);
+                        publicManager.setNotify(currentThread().getId(), false);
                         if (publicManager.getNotifyThreadId() == -1 &&
                                 !publicManager.hasRequest(currentThread().getId()) &&
                                 currentRequest.isEmpty() &&

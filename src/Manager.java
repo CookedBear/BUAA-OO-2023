@@ -23,6 +23,9 @@ public class Manager {
         // OutputFormat.say("xxx");
         //OutputFormat.say("Calculat thread for" + rd.getId());
         notifyThreadId = getThreadId(rd);
+        if (notifyThreadId > 0) {
+            setNotify(notifyThreadId, true);
+        }
         //OutputFormat.say("Thread is " + notifyThreadId);
         maintainThreadId = -1;
         /*
@@ -50,6 +53,9 @@ public class Manager {
             RequestData rd = saturateList.get(i);
             // this.putRequest(rd);
             notifyThreadId = getThreadId(rd);
+            if (notifyThreadId > 0) {
+                setNotify(notifyThreadId, true);
+            }
             maintainThreadId = -1;
             if (notifyThreadId != -2) {                        // can find the suitable elevator now
                 REQUESTLIST.add(rd);
@@ -280,6 +286,16 @@ public class Manager {
     public synchronized boolean getMaintain(long threadId) {
         ElevatorTMessage etm = elevatorInformation.get(threadId);
         return etm.getMaintain();
+    }
+
+    public synchronized boolean getNotify(long threadId) {
+        ElevatorTMessage etm = elevatorInformation.get(threadId);
+        return etm.getNotify();
+    }
+
+    public synchronized void setNotify(long threadId, boolean status) {
+        ElevatorTMessage etm = elevatorInformation.get(threadId);
+        etm.setNotify(status);
     }
 
     public synchronized long getMaintainThreadId() { return this.maintainThreadId; }
