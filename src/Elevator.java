@@ -103,8 +103,7 @@ public class Elevator extends Thread {
                 if (checkMaintain()) {
                     OutputFormat.able(elevatorId);
                     // OutputFormat.say("Elevator "+ elevatorId + " maintained2!");
-                    return;
-                }
+                    return; }
                 // do we need turn?
                 turn();
                 // check people out-and-in
