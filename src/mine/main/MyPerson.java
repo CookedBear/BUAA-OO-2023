@@ -3,9 +3,7 @@ package mine.main;
 import com.oocourse.spec1.main.Person;
 import mine.exceptions.MyEqualRelationException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class MyPerson implements Person {
     private final int id;
@@ -14,41 +12,19 @@ public class MyPerson implements Person {
     private final HashMap<Integer, Person> acquaintance = new HashMap<>();
     private final HashMap<Integer, Integer> value = new HashMap<>();
 
-    MyPerson(int id, String name, int age) {
+    public MyPerson(int id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
     }
 
-    /*@ invariant acquaintance!= null && value != null && acquaintance.length == value.length &&
-      @  (\forall int i,j; 0 <= i && i < j && j < acquaintance.length;
-      @   !acquaintance[i].equals(acquaintance[j]));*/
+    public int getId() { return this.id; }
 
-    //@ ensures \result == id;
-    public /*@ pure @*/ int getId() { return this.id; }
+    public String getName() { return this.name; }
 
-    //@ ensures \result.equals(name);
-    public /*@ pure @*/ String getName() { return this.name; }
+    public int getAge() { return this.age; }
 
-    //@ ensures \result == age;
-    public /*@ pure @*/ int getAge() { return this.age; }
-
-    /*@ also
-      @ public normal_behavior
-      @ requires obj != null && obj instanceof Person;
-      @ assignable \nothing;
-      @ ensures \result == (((Person) obj).getId() == id) && (((Person) obj).getName().equals(name)) &&
-      @                    (((Person) obj).getAge() == age) &&
-      @                    (\forall int i; 0 <= i && i < ((Person) obj).getAcquaintance().length; acquaintance[i].equals(((Person) obj).getAcquaintance().get(i))) &&
-      @                    (\forall int i; 0 <= i && i < ((Person) obj).getAcquaintance().length; value[i] == (((Person) obj).queryValue(((Person) obj).getAcquaintance().get(i)))) &&
-      @                    (((Person) obj).getAcquaintance().length == acquaintance.length);
-      @ also
-      @ public normal_behavior
-      @ requires obj == null || !(obj instanceof Person);
-      @ assignable \nothing;
-      @ ensures \result == false;
-      @*/
-    public /*@ pure @*/ boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (!(obj instanceof Person)) {
             return false;
         } else {
@@ -56,12 +32,7 @@ public class MyPerson implements Person {
         }
     }
 
-    /*@ public normal_behavior
-      @ assignable \nothing;
-      @ ensures \result == (\exists int i; 0 <= i && i < acquaintance.length;
-      @                     acquaintance[i].equals(person) || person.equals(this);
-      @*/
-    public /*@ pure @*/ boolean isLinked(Person person) {
+    public boolean isLinked(Person person) {
         if (person.equals(this)) {
             return true;
         } else {
@@ -69,19 +40,7 @@ public class MyPerson implements Person {
         }
     }
 
-    /*@ public normal_behavior
-      @ requires (\exists int i; 0 <= i && i < acquaintance.length;
-      @          acquaintance[i].equals(person));
-      @ assignable \nothing;
-      @ ensures (\exists int i; 0 <= i && i < acquaintance.length;
-      @         acquaintance[i].equals(person) && \result == value[i]);
-      @ also
-      @ public normal_behavior
-      @ requires (\forall int i; 0 <= i && i < acquaintance.length;
-      @          acquaintance[i].getId() != person.getId());
-      @ ensures \result == 0;
-      @*/
-    public /*@ pure @*/ int queryValue(Person person) {
+    public int queryValue(Person person) {
         int values = 0;
         for (Person p : acquaintance.values()) {
             if (person.equals(p)) {

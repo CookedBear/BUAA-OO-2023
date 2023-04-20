@@ -15,6 +15,11 @@ public class MyRelationNotFoundException extends RelationNotFoundException {
     }
 
     public void print() {
-        System.out.printf("rnf-%d, id1-%d, id2-%d\n");
+        System.out.printf("rnf-%d, %d-%d, %d-%d\n",
+                ExceptionCounter.getCount("rnf"),
+                personId1,
+                ExceptionCounter.getCause("rnf", personId1),
+                personId2,
+                ExceptionCounter.getCause("rnf", personId2));
     }
 }

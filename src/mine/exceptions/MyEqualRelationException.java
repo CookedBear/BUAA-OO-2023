@@ -20,9 +20,19 @@ public class MyEqualRelationException extends EqualRelationException {
     }
 
     public void print() {
-        System.out.printf("er-%d, id1-%d, id2-%d\n",
+        System.out.printf("er-%d, %d-%d, %d-%d\n",
                 ExceptionCounter.getCount("er"),
+                personId1,
                 ExceptionCounter.getCause("er", personId1),
+                personId2,
                 ExceptionCounter.getCause("er", personId2));
+    }
+
+    public int getTimes(boolean isFirst) {
+        if (isFirst) {
+            return ExceptionCounter.getCause("er", personId1);
+        } else {
+            return ExceptionCounter.getCause("er", personId2);
+        }
     }
 }

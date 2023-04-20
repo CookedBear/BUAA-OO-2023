@@ -3,7 +3,7 @@ package mine.exceptions;
 import java.util.HashMap;
 
 public class ExceptionCounter {
-    private static final int causesTypes = 4;
+    private static final int CAUSES_TYPES = 4;
     private static int pinfCount = 0;
     private static int epiCount = 0;
     private static int rnfCount = 0;

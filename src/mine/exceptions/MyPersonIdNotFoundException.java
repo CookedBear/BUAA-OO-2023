@@ -4,6 +4,7 @@ import com.oocourse.spec1.exceptions.PersonIdNotFoundException;
 
 public class MyPersonIdNotFoundException extends PersonIdNotFoundException {
     private final int personId;
+
     public MyPersonIdNotFoundException(int id) {
         this.personId = id;
         ExceptionCounter.adjustCount("pinf");
@@ -11,8 +12,9 @@ public class MyPersonIdNotFoundException extends PersonIdNotFoundException {
     }
 
     public void print() {
-        System.out.printf("pinf-%d, id-%d\n",
+        System.out.printf("pinf-%d, %d-%d\n",
                 ExceptionCounter.getCount("pinf"),
+                personId,
                 ExceptionCounter.getCause("pinf", personId));
     }
 }

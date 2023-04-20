@@ -15,48 +15,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MyNetwork implements Network {
-    private HashMap<Integer, Person> people = new HashMap<>();
+    private final HashMap<Integer, Person> people = new HashMap<>();
+    private Union unionMap = new Union();
 
-    /*@ invariant people != null && (\forall int i,j; 0 <= i && i < j && j < people.length; !people[i].equals(people[j]));*/
     // people 集合时刻不为空，且不重复
 
     public MyNetwork() { }
 
-    //@ ensures \result == (\exists int i; 0 <= i && i < people.length; people[i].getId() == id);
-    public /*@ pure @*/ boolean contains(int id) { return people.containsKey(id); }
+    public boolean contains(int id) { return people.containsKey(id); }
 
-
-
-    /*@ public normal_behavior
-      @ requires contains(id);
-      @ ensures (\exists int i; 0 <= i && i < people.length; people[i].getId() == id &&
-      @         \result == people[i]);
-      @ also
-      @ public normal_behavior
-      @ requires !contains(id);
-      @ ensures \result == null;
-      @*/
-    public /*@ pure @*/ Person getPerson(int id) {
+    public Person getPerson(int id) {
         return people.getOrDefault(id, null);
     }
 
-    /*@ public normal_behavior
-      @ requires !(\exists int i; 0 <= i && i < people.length; people[i].equals(person));
-      @ assignable people[*];
-      @ ensures people.length == \old(people.length) + 1;
-      @ ensures (\forall int i; 0 <= i && i < \old(people.length); \not_modified(\old(people[i])));
-      @ ensures (\exists int i; 0 <= i && i < people.length; people[i].equals(person));
-      @ also
-      @ public exceptional_behavior
-      @ signals (EqualPersonIdException e) (\exists int i; 0 <= i && i < people.length;
-      @                                     people[i].equals(person));
-      @*/
     public void addPerson(/*@ non_null @*/Person person) throws EqualPersonIdException {
         if (people.containsKey(person.getId())) {
             throw new MyEqualPersonIdException(person.getId());
-        } else {
-            people.put(person.getId(), person);
         }
+        people.put(person.getId(), person);
+        unionMap.addUnion(person.getId(), person.getId());
     }
 
     /*@ public normal_behavior
@@ -100,6 +77,7 @@ public class MyNetwork implements Network {
 
         ((MyPerson) p1).addRelation((MyPerson) p2, value);
         ((MyPerson) p2).addRelation((MyPerson) p1, value);
+        unionMap.union(p1.getId(), p2.getId());
     }
 
     /*@ public normal_behavior
@@ -118,45 +96,29 @@ public class MyNetwork implements Network {
             throw new MyPersonIdNotFoundException(id1);
         } else if (!people.containsKey(id2)) {
             throw new MyPersonIdNotFoundException(id2);
-        } else if (!people.get(id1).isLinked(people.get(id2))){
+        } else if (!people.get(id1).isLinked(people.get(id2))) {
             throw new MyRelationNotFoundException(id1, id2);
         }
         return people.get(id1).queryValue(people.get(id2));
     }
 
-
-    /*@ public normal_behavior
-      @ requires contains(id1) && contains(id2);
-      @ ensures \result == (\exists Person[] array; array.length >= 2;
-      @                     array[0].equals(getPerson(id1)) &&
-      @                     array[array.length - 1].equals(getPerson(id2)) &&
-      @                      (\forall int i; 0 <= i && i < array.length - 1;
-      @                      array[i].isLinked(array[i + 1]) == true));
-      @ also
-      @ public exceptional_behavior
-      @ signals (PersonIdNotFoundException e) !contains(id1);
-      @ signals (PersonIdNotFoundException e) contains(id1) && !contains(id2);
-      @*/
-    public /*@ pure @*/ boolean isCircle(int id1, int id2) throws PersonIdNotFoundException {
+    public boolean isCircle(int id1, int id2) throws PersonIdNotFoundException {
         if (!people.containsKey(id1)) {
             throw new MyPersonIdNotFoundException(id1);
         } else if (!people.containsKey(id2)) {
             throw new MyPersonIdNotFoundException(id2);
         }
-        // 并查集寻找 id1 到 id2 的路径，无需保存路径
-
-        return false;
+        // 并查集寻找 id1 到 id2 的连通性，无需保存路径
+        // System.out.printf("isCircle: %d to %d, find is: %d - %d\n", id1, id2,
+        // unionMap.find(id1),unionMap.find(id2));
+        return (unionMap.find(id1) == unionMap.find(id2));
     }
 
-    /*@ ensures \result ==
-      @         (\sum int i; 0 <= i && i < people.length &&
-      @         (\forall int j; 0 <= j && j < i; !isCircle(people[i].getId(), people[j].getId()));
-      @         1);
-      @*/
-    public /*@ pure @*/ int queryBlockSum() {
+    public int queryBlockSum() {
         ArrayList<Integer> peoples = new ArrayList<>(people.keySet());
         int count = 0;
         for (int i = 0; i < peoples.size(); i++) {
+            boolean able = true;
             for (int j = 0; j < i; j++) {
                 boolean flag = false;
                 try {
@@ -164,24 +126,19 @@ public class MyNetwork implements Network {
                 } catch (PersonIdNotFoundException e) {
                     e.print();
                 }
-                if (flag) {
-                    count++;
+                if (!flag) {
+                    able = false;
+                    break;
                 }
+            }
+            if (able) {
+                count++;
             }
         }
         return count;
     }
 
-    /*@ ensures \result ==
-      @         (\sum int i; 0 <= i && i < people.length;
-      @             (\sum int j; i < j && j < people.length;
-      @                 (\sum int k; j < k && k < people.length
-      @                     && getPerson(people[i].getId()).isLinked(getPerson(people[j].getId()))
-      @                     && getPerson(people[j].getId()).isLinked(getPerson(people[k].getId()))
-      @                     && getPerson(people[k].getId()).isLinked(getPerson(people[i].getId()));
-      @                     1)));
-      @*/
-    public /*@ pure @*/ int queryTripleSum() {
+    public int queryTripleSum() {
         ArrayList<Person> peoples = new ArrayList<>(people.values());
         int count = 0;
         for (int i = 0; i < peoples.size(); i++) {
@@ -206,9 +163,56 @@ public class MyNetwork implements Network {
     public boolean queryTripleSumOKTest(HashMap<Integer, HashMap<Integer, Integer>> beforeData,
                                         HashMap<Integer, HashMap<Integer, Integer>> afterData,
                                         int result) {
+        int age = 114514;
+        for (int peopleId : beforeData.keySet()) {
+            try {
+                addPerson(new MyPerson(peopleId, "BUAA-OO is best class!", age));
+            } catch (Exception e) {
+                return false;
+            }
+        }
 
+        for (int peopleId : beforeData.keySet()) {
+            for (int p2Id : beforeData.get(peopleId).keySet()) {
+                int value = beforeData.get(peopleId).get(p2Id);
+                try {
+                    addRelation(peopleId, p2Id, value);
+                } catch (Exception e) {
+                    assert e instanceof MyEqualRelationException;
+                    if (((MyEqualRelationException) e).getTimes(true) > 2 ||
+                        ((MyEqualRelationException) e).getTimes(false) > 2) {
+                        return false;
+                    }
+                }
+            }
+        }
 
-        return false;
+        int ans = queryTripleSum();
+
+        if (ans != result) {
+            return false;
+        }
+
+        HashMap<Integer, HashMap<Integer, Integer>> ansMap = traverseData();
+
+        return ansMap.equals(afterData);
+    }
+
+    public HashMap<Integer, HashMap<Integer, Integer>> traverseData() {
+        // generate structure as testData
+        HashMap<Integer, HashMap<Integer, Integer>> returnMap = new HashMap<>();
+
+        for (int peopleId : people.keySet()) {
+            HashMap<Integer, Integer> nowMap = new HashMap<>();
+            HashMap<Integer, Integer> values = ((MyPerson) people.get(peopleId)).getValue();
+            HashMap<Integer, Person>  acquaintance = ((MyPerson) people.
+                    get(peopleId)).getAcquaintance();
+            for (int pid : acquaintance.keySet()) {
+                nowMap.put(pid, values.get(pid));
+            }
+            returnMap.put(peopleId, nowMap);
+        }
+        return returnMap;
     }
 
 }
