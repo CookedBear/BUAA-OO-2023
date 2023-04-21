@@ -16,7 +16,8 @@ import java.util.HashMap;
 
 public class MyNetwork implements Network {
     private final HashMap<Integer, Person> people = new HashMap<>();
-    private Union unionMap = new Union();
+    private int triCount = 0;
+    private final Union unionMap = new Union();
 
     // people 集合时刻不为空，且不重复
 
@@ -36,33 +37,6 @@ public class MyNetwork implements Network {
         unionMap.addUnion(person.getId(), person.getId());
     }
 
-    /*@ public normal_behavior
-      @ requires contains(id1) && contains(id2) && !getPerson(id1).isLinked(getPerson(id2));
-      @ assignable people[*];
-      @ ensures people.length == \old(people.length);
-      @ ensures (\forall int i; 0 <= i && i < \old(people.length); \not_modified(\old(people[i])));
-      @ ensures (\forall int i; 0 <= i && i < people.length && \old(people[i].getId()) != id1 &&
-      @     \old(people[i].getId()) != id2; \not_assigned(people[i]));
-      @ ensures getPerson(id1).isLinked(getPerson(id2)) && getPerson(id2).isLinked(getPerson(id1));
-      @ ensures getPerson(id1).queryValue(getPerson(id2)) == value;
-      @ ensures getPerson(id2).queryValue(getPerson(id1)) == value;
-      @ ensures (\forall int i; 0 <= i && i < \old(getPerson(id1).acquaintance.length);
-      @         not_assigned(getPerson(id1).acquaintance[i],getPerson(id1).value[i]));
-      @ ensures (\forall int i; 0 <= i && i < \old(getPerson(id2).acquaintance.length);
-      @         not_assigned(getPerson(id2).acquaintance[i],getPerson(id2).value[i]));
-      @ ensures getPerson(id1).value.length == getPerson(id1).acquaintance.length;
-      @ ensures getPerson(id2).value.length == getPerson(id2).acquaintance.length;
-      @ ensures \old(getPerson(id1).value.length) == getPerson(id1).acquaintance.length - 1;
-      @ ensures \old(getPerson(id2).value.length) == getPerson(id2).acquaintance.length - 1;
-      @ also
-      @ public exceptional_behavior
-      @ assignable \nothing;
-      @ requires !contains(id1) || !contains(id2) || getPerson(id1).isLinked(getPerson(id2));
-      @ signals (PersonIdNotFoundException e) !contains(id1);
-      @ signals (PersonIdNotFoundException e) contains(id1) && !contains(id2);
-      @ signals (EqualRelationException e) contains(id1) && contains(id2) &&
-      @         getPerson(id1).isLinked(getPerson(id2));
-      @*/
     public void addRelation(int id1, int id2, int value) throws
             PersonIdNotFoundException, EqualRelationException {
         if (!people.containsKey(id1)) {
@@ -75,22 +49,14 @@ public class MyNetwork implements Network {
         Person p1 = people.get(id1);
         Person p2 = people.get(id2);
 
+        dynamicTri(id1, id2);
+
         ((MyPerson) p1).addRelation((MyPerson) p2, value);
         ((MyPerson) p2).addRelation((MyPerson) p1, value);
         unionMap.union(p1.getId(), p2.getId());
     }
 
-    /*@ public normal_behavior
-      @ requires contains(id1) && contains(id2) && getPerson(id1).isLinked(getPerson(id2));
-      @ ensures \result == getPerson(id1).queryValue(getPerson(id2));
-      @ also
-      @ public exceptional_behavior
-      @ signals (PersonIdNotFoundException e) !contains(id1);
-      @ signals (PersonIdNotFoundException e) contains(id1) && !contains(id2);
-      @ signals (RelationNotFoundException e) contains(id1) && contains(id2) &&
-      @         !getPerson(id1).isLinked(getPerson(id2));
-      @*/
-    public /*@ pure @*/ int queryValue(int id1, int id2) throws
+    public int queryValue(int id1, int id2) throws
             PersonIdNotFoundException, RelationNotFoundException {
         if (!people.containsKey(id1)) {
             throw new MyPersonIdNotFoundException(id1);
@@ -139,66 +105,60 @@ public class MyNetwork implements Network {
     }
 
     public int queryTripleSum() {
-        ArrayList<Person> peoples = new ArrayList<>(people.values());
-        int count = 0;
-        for (int i = 0; i < peoples.size(); i++) {
-            for (int j = (i + 1); j < peoples.size(); j++) {
-                if (!peoples.get(i).isLinked(peoples.get(j))) {
-                    continue;
-                }
-                for (int k = (j + 1); k < peoples.size(); k++) {
-                    if (!peoples.get(j).isLinked(peoples.get(k))) {
-                        continue;
-                    }
-                    if (peoples.get(i).isLinked(peoples.get(k))) {
-                        count++;
-                    }
-                }
-            }
-        }
-
-        return count;
+        //        ArrayList<Person> peoples = new ArrayList<>(people.values());
+        //        int count = 0;
+        //        for (int i = 0; i < peoples.size(); i++) {
+        //            for (int j = (i + 1); j < peoples.size(); j++) {
+        //                if (!peoples.get(i).isLinked(peoples.get(j))) {
+        //                    continue;
+        //                }
+        //                for (int k = (j + 1); k < peoples.size(); k++) {
+        //                    if (!peoples.get(j).isLinked(peoples.get(k))) {
+        //                        continue;
+        //                    }
+        //                    if (peoples.get(i).isLinked(peoples.get(k))) {
+        //                        count++;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //
+        //        return count;
+        return triCount;
     }
 
     public boolean queryTripleSumOKTest(HashMap<Integer, HashMap<Integer, Integer>> beforeData,
                                         HashMap<Integer, HashMap<Integer, Integer>> afterData,
                                         int result) {
-        int age = 114514;
-        for (int peopleId : beforeData.keySet()) {
-            try {
-                addPerson(new MyPerson(peopleId, "BUAA-OO is best class!", age));
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        for (int peopleId : beforeData.keySet()) {
-            for (int p2Id : beforeData.get(peopleId).keySet()) {
-                int value = beforeData.get(peopleId).get(p2Id);
-                try {
-                    addRelation(peopleId, p2Id, value);
-                } catch (Exception e) {
-                    assert e instanceof MyEqualRelationException;
-                    if (((MyEqualRelationException) e).getTimes(true) > 2 ||
-                        ((MyEqualRelationException) e).getTimes(false) > 2) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        int ans = queryTripleSum();
-
-        if (ans != result) {
+        try {
+            generateNetWork(beforeData);
+        } catch (Exception e) {
             return false;
         }
 
-        HashMap<Integer, HashMap<Integer, Integer>> ansMap = traverseData();
+        if (queryTripleSum() != result) {
+            return false;
+        }
+
+        HashMap<Integer, HashMap<Integer, Integer>> ansMap = traverse2Map();
 
         return ansMap.equals(afterData);
     }
 
-    public HashMap<Integer, HashMap<Integer, Integer>> traverseData() {
+    public void dynamicTri(int id1, int id2) {
+        MyPerson p1 = (MyPerson) ((((MyPerson) people.get(id1)).getAcquaintance().size() <=
+                                   ((MyPerson) people.get(id2)).getAcquaintance().size()) ?
+                                   people.get(id1) : people.get(id2));
+        Person p2 = (p1.getId() == id2) ? people.get(id1) : people.get(id2);
+        HashMap<Integer, Person> nodes = p1.getAcquaintance();
+        for (Person tempP : nodes.values()) {
+            if (tempP.isLinked(p2)) {
+                triCount++;
+            }
+        }
+    }
+
+    public HashMap<Integer, HashMap<Integer, Integer>> traverse2Map() {
         // generate structure as testData
         HashMap<Integer, HashMap<Integer, Integer>> returnMap = new HashMap<>();
 
@@ -215,4 +175,26 @@ public class MyNetwork implements Network {
         return returnMap;
     }
 
+    public void generateNetWork(HashMap<Integer, HashMap<Integer, Integer>> data) throws
+            MyEqualRelationException, EqualPersonIdException {
+        int age = 114514;
+        for (int peopleId : data.keySet()) {
+            addPerson(new MyPerson(peopleId, "BUAA-OO is best class!", age));
+        }
+
+        for (int p1Id : data.keySet()) {
+            for (int p2Id : data.get(p1Id).keySet()) {
+                int value = data.get(p1Id).get(p2Id);
+                try {
+                    addRelation(p1Id, p2Id, value);
+                } catch (Exception e) {
+                    assert e instanceof MyEqualRelationException;
+                    if (((MyEqualRelationException) e).getTimes(true) > 2 ||
+                        ((MyEqualRelationException) e).getTimes(false) > 2) {
+                        throw new MyEqualRelationException(p1Id, p2Id);
+                    }
+                }
+            }
+        }
+    }
 }
