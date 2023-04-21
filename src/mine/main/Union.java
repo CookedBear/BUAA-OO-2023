@@ -8,7 +8,7 @@ public class Union {
     public void union(int p, int q) { // reNewRelation
         int proot = find(p);
         int qroot = find(q);
-        System.out.printf("put relation: %d - %d\n", proot, qroot);
+        // System.out.printf("put relation: %d - %d\n", proot, qroot);
         relation.put(proot, qroot);
     }
 
