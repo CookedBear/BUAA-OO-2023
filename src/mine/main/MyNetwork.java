@@ -176,7 +176,7 @@ public class MyNetwork implements Network {
     }
 
     public void generateNetWork(HashMap<Integer, HashMap<Integer, Integer>> data) throws
-            MyEqualRelationException, EqualPersonIdException {
+            EqualPersonIdException {
         int age = 114514;
         for (int peopleId : data.keySet()) {
             addPerson(new MyPerson(peopleId, "BUAA-OO is best class!", age));
@@ -187,12 +187,8 @@ public class MyNetwork implements Network {
                 int value = data.get(p1Id).get(p2Id);
                 try {
                     addRelation(p1Id, p2Id, value);
-                } catch (Exception e) {
-                    assert e instanceof MyEqualRelationException;
-                    if (((MyEqualRelationException) e).getTimes(true) > 2 ||
-                        ((MyEqualRelationException) e).getTimes(false) > 2) {
-                        throw new MyEqualRelationException(p1Id, p2Id);
-                    }
+                } catch (Exception ignored) {
+
                 }
             }
         }
