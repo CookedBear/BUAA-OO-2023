@@ -8,7 +8,6 @@ public class Union {
     public void union(int p, int q) { // reNewRelation
         int proot = find(p);
         int qroot = find(q);
-        // System.out.printf("put relation: %d - %d\n", proot, qroot);
         relation.put(proot, qroot);
     }
 
@@ -20,7 +19,5 @@ public class Union {
         return relation.get(pid);
     }
 
-    public void addUnion(int pid1, int pid2) {  // addNode
-        relation.put(pid1, pid2);
-    }
+    public void addUnion(int pid1, int pid2) {  relation.put(pid1, pid2); }
 }

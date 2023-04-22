@@ -17,9 +17,6 @@ import java.util.HashMap;
 public class MyNetwork implements Network {
     private final HashMap<Integer, Person> people = new HashMap<>();
     private int triCount = 0;
-    // private static long circleTime = 0;
-    // private static long addtime = 0;
-    // private static long qbsTime = 0;
     private final Union unionMap = new Union();
 
     // people 集合时刻不为空，且不重复
@@ -30,7 +27,7 @@ public class MyNetwork implements Network {
 
     public Person getPerson(int id) { return people.getOrDefault(id, null); }
 
-    public void addPerson(/*@ non_null @*/Person person) throws EqualPersonIdException {
+    public void addPerson(Person person) throws EqualPersonIdException {
         if (people.containsKey(person.getId())) {
             throw new MyEqualPersonIdException(person.getId());
         }
@@ -40,7 +37,7 @@ public class MyNetwork implements Network {
 
     public void addRelation(int id1, int id2, int value) throws
             PersonIdNotFoundException, EqualRelationException {
-        // long t0 = System.nanoTime();
+
         if (!people.containsKey(id1)) {
             throw new MyPersonIdNotFoundException(id1);
         } else if (!people.containsKey(id2)) {
@@ -56,13 +53,11 @@ public class MyNetwork implements Network {
         ((MyPerson) p1).addRelation((MyPerson) p2, value);
         ((MyPerson) p2).addRelation((MyPerson) p1, value);
         unionMap.union(p1.getId(), p2.getId());
-        // long t1 = System.nanoTime();
-        // addtime += (t1 - t0);
-        // System.out.println("CircleTime: "+circleTime);
     }
 
     public int queryValue(int id1, int id2) throws
             PersonIdNotFoundException, RelationNotFoundException {
+
         if (!people.containsKey(id1)) {
             throw new MyPersonIdNotFoundException(id1);
         } else if (!people.containsKey(id2)) {
@@ -74,57 +69,29 @@ public class MyNetwork implements Network {
     }
 
     public boolean isCircle(int id1, int id2) throws PersonIdNotFoundException {
-        // long t0 = System.nanoTime();
+
         if (!people.containsKey(id1)) {
             throw new MyPersonIdNotFoundException(id1);
         } else if (!people.containsKey(id2)) {
             throw new MyPersonIdNotFoundException(id2);
         }
-        // 并查集寻找 id1 到 id2 的连通性，无需保存路径
-        // System.out.printf("isCircle: %d to %d, find is: %d - %d\n", id1, id2,
-        // unionMap.find(id1),unionMap.find(id2));
-        // long t1 = System.nanoTime();
-        // circleTime += (t1 - t0);
 
         return (unionMap.find(id1) == unionMap.find(id2));
     }
 
     public int queryBlockSum() {
-        // long t0 = System.nanoTime();
+
         ArrayList<Integer> peoples = new ArrayList<>(people.keySet());
         HashMap<Integer, Integer> blockMap = new HashMap<>();
 
         for (Integer integer : peoples) {
             blockMap.put(unionMap.find(integer), 114514);
         }
-        // long t1 = System.nanoTime();
-        // qbsTime += (t1 - t0);
-        // System.out.println("qbsTime: "+qbsTime);
+
         return blockMap.size();
     }
 
-    public int queryTripleSum() {
-        //        ArrayList<Person> peoples = new ArrayList<>(people.values());
-        //        int count = 0;
-        //        for (int i = 0; i < peoples.size(); i++) {
-        //            for (int j = (i + 1); j < peoples.size(); j++) {
-        //                if (!peoples.get(i).isLinked(peoples.get(j))) {
-        //                    continue;
-        //                }
-        //                for (int k = (j + 1); k < peoples.size(); k++) {
-        //                    if (!peoples.get(j).isLinked(peoples.get(k))) {
-        //                        continue;
-        //                    }
-        //                    if (peoples.get(i).isLinked(peoples.get(k))) {
-        //                        count++;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //
-        //        return count;
-        return triCount;
-    }
+    public int queryTripleSum() { return triCount; }
 
     public boolean queryTripleSumOKTest(HashMap<Integer, HashMap<Integer, Integer>> beforeData,
                                         HashMap<Integer, HashMap<Integer, Integer>> afterData,
