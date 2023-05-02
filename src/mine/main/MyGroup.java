@@ -14,9 +14,13 @@ public class MyGroup implements Group {
     private boolean cachedValueSum = true;
     private boolean cachedAgeVar = true;
 
-    public MyGroup(int id) { this.id = id; }
+    public MyGroup(int id) {
+        this.id = id;
+    }
 
-    public int getId() { return this.id; }
+    public int getId() {
+        return this.id;
+    }
 
     public boolean equals(Object obj) {
         if (obj instanceof MyGroup) {
@@ -32,7 +36,9 @@ public class MyGroup implements Group {
         flush();
     }
 
-    public boolean hasPerson(Person person) { return people.containsKey(person.getId()); }
+    public boolean hasPerson(Person person) {
+        return people.containsKey(person.getId());
+    }
 
     public int getValueSum() {
         if (!cachedValueSum) {
@@ -72,13 +78,22 @@ public class MyGroup implements Group {
         }
     }
 
-    public void delPerson(Person person) { people.remove(person.getId()); }
+    public void delPerson(Person person) {
+        people.remove(person.getId());
+        ageSum -= person.getAge();
+    }
 
-    public int getSize() { return this.people.size(); }
+    public int getSize() {
+        return this.people.size();
+    }
 
-    public boolean containsPerson(int id) { return people.containsKey(id); }
+    public boolean containsPerson(int id) {
+        return people.containsKey(id);
+    }
 
-    public HashMap<Integer, Person> getPeople() { return this.people; }
+    public HashMap<Integer, Person> getPeople() {
+        return this.people;
+    }
 
     public void flush() {
         cachedValueSum = false;

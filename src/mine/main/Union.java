@@ -12,7 +12,7 @@ public class Union {
         int proot = find(p);
         int qroot = find(q);
         relation.put(Math.min(proot, qroot),
-                     Math.max(proot, qroot));
+                Math.max(proot, qroot));
     }
 
     public int find(int pid) {     // getRelation + reNew
@@ -23,9 +23,13 @@ public class Union {
         return relation.get(pid);
     }
 
-    public void addUnion(int pid1, int pid2) {  relation.put(pid1, pid2); }
+    public void addUnion(int pid1, int pid2) {
+        relation.put(pid1, pid2);
+    }
 
-    public void setVisited(int size) { visited = new int[size]; }
+    public void setVisited(int size) {
+        visited = new int[size];
+    }
 
     public void rebuildPart(int nowId, int targetId, HashMap<Integer, Person> people) {
         relation.put(nowId, targetId);

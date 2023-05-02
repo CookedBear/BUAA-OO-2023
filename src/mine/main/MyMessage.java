@@ -39,17 +39,29 @@ public class MyMessage implements Message {
         this.group = messageGroup;
     }
 
-    public /*@ pure @*/ int getType() { return this.type; }
+    public /*@ pure @*/ int getType() {
+        return this.type;
+    }
 
-    public /*@ pure @*/ int getId() { return this.id; }
+    public /*@ pure @*/ int getId() {
+        return this.id;
+    }
 
-    public /*@ pure @*/ int getSocialValue() { return this.socialValue; }
+    public /*@ pure @*/ int getSocialValue() {
+        return this.socialValue;
+    }
 
-    public /*@ pure @*/ Person getPerson1() { return this.person1; }
+    public /*@ pure @*/ Person getPerson1() {
+        return this.person1;
+    }
 
-    public /*@ pure @*/ Person getPerson2() { return this.person2; }
+    public /*@ pure @*/ Person getPerson2() {
+        return this.person2;
+    }
 
-    public /*@ pure @*/ Group getGroup() { return this.group; }
+    public /*@ pure @*/ Group getGroup() {
+        return this.group;
+    }
 
     public /*@ pure @*/ boolean equals(Object obj) {
         if (obj instanceof Message) {

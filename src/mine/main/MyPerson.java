@@ -32,11 +32,17 @@ public class MyPerson implements Person {
         this.coupleId = 0;
     }
 
-    public int getId() { return this.id; }
+    public int getId() {
+        return this.id;
+    }
 
-    public String getName() { return this.name; }
+    public String getName() {
+        return this.name;
+    }
 
-    public int getAge() { return this.age; }
+    public int getAge() {
+        return this.age;
+    }
 
     public boolean equals(Object obj) {
         if (!(obj instanceof Person)) {
@@ -68,13 +74,21 @@ public class MyPerson implements Person {
      * @param o the object to be compared.
      */
     @Override
-    public int compareTo(Person o) { return this.id - o.getId(); }
+    public int compareTo(Person o) {
+        return this.id - o.getId();
+    }
 
-    public void addSocialValue(int num) { this.socialValue += num; }
+    public void addSocialValue(int num) {
+        this.socialValue += num;
+    }
 
-    public int getSocialValue() { return this.socialValue; }
+    public int getSocialValue() {
+        return this.socialValue;
+    }
 
-    public List<Message> getMessages() { return new ArrayList<>(this.messages); }
+    public List<Message> getMessages() {
+        return new ArrayList<>(this.messages);
+    }
 
     public List<Message> getReceivedMessages() {
         int size = Math.min(messages.size(), 5);
@@ -102,14 +116,22 @@ public class MyPerson implements Person {
         }
     }
 
-    public HashMap<Integer, Person> getAcquaintance() { return this.acquaintance; }
+    public HashMap<Integer, Person> getAcquaintance() {
+        return this.acquaintance;
+    }
 
-    public HashMap<Integer, Integer> getValue() { return this.value; }
+    public HashMap<Integer, Integer> getValue() {
+        return this.value;
+    }
 
     // cached
-    public int getValueSum() { return valueSum; }
+    public int getValueSum() {
+        return valueSum;
+    }
 
-    public void addMessage(Message m) { this.messages.addFirst(m); }
+    public void addMessage(Message m) {
+        this.messages.addFirst(m);
+    }
 
     // cached
     public int getCouple() {
