@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 public class ExceptionCounter {
     private static final int CAUSES_TYPES = 9;
-    private static final String[] CAUSES_NAMES = {"epi", "er", "pinf", "rnf", "anf", "emi", "egi", "ginf", "minf"};
+    private static final String[] CAUSES_NAMES = {"epi", "er", "pinf", "rnf",
+                                                  "anf", "emi", "egi", "ginf", "minf"};
 
     private static final HashMap<String, HashMap<Integer, Integer>> CAUSES = new HashMap<>();
     private static final HashMap<String, Integer> COUNTS = new HashMap<>();

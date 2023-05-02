@@ -16,7 +16,7 @@ public class MyPerson implements Person {
     private final HashMap<Integer, Person> acquaintance = new HashMap<>();
     private final HashMap<Integer, Integer> value = new HashMap<>();
     private int socialValue;
-    private int valueSum;
+    private int valueSum; // cached
     private int coupleId;
     private boolean cachedCoupleId = false;
     private int bestValue = -1;
@@ -69,27 +69,12 @@ public class MyPerson implements Person {
     @Override
     public int compareTo(Person o) { return this.id - o.getId(); }
 
-    /*@ public normal_behavior
-      @ assignable socialValue;
-      @ ensures socialValue == \old(socialValue) + num;
-      @*/
     public void addSocialValue(int num) { this.socialValue += num; }
 
-    //@ ensures \result == socialValue;
     public int getSocialValue() { return this.socialValue; }
 
-    /*@ ensures (\result.size() == messages.length) &&
-  @           (\forall int i; 0 <= i && i < messages.length;
-  @             messages[i] == \result.get(i));
-  @*/
     public List<Message> getMessages() { return new ArrayList<>(this.messages); }
 
-    /*@ public normal_behavior
-      @ assignable \nothing;
-      @ ensures (\forall int i; 0 <= i && i < messages.length && i <= 4;
-      @           \result.contains(messages[i]) && \result.get(i) == messages[i]);
-      @ ensures \result.size() == ((messages.length < 5)? messages.length: 5);
-      @*/
     public List<Message> getReceivedMessages() {
         int size = Math.min(messages.size(), 5);
         ArrayList<Message> returnList = new ArrayList<>();
@@ -109,12 +94,10 @@ public class MyPerson implements Person {
         value.put(p2.id, values);
         valueSum += values;
         if (cachedCoupleId) {
-            if (values > bestValue) {
+            if (values > bestValue || (values == bestValue && p2.id < coupleId)) {
                 coupleId = p2.getId();
                 bestValue = values;
             }
-        } else {
-            coupleId = getCouple();
         }
     }
 
@@ -134,7 +117,7 @@ public class MyPerson implements Person {
             bestValue = -1;
             for (Person p2 : acquaintance.values()) {
                 int values = value.get(p2.getId());
-                if (values > bestValue) {
+                if (values > bestValue || (values == bestValue && p2.getId() < coupleId)) {
                     coupleId = p2.getId();
                     bestValue = values;
                 }

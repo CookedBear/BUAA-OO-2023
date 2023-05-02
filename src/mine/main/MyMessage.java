@@ -19,13 +19,6 @@ public class MyMessage implements Message {
     private final Person person2;
     private final Group group;
 
-    /*@ ensures type == 0;
-      @ ensures group == null;
-      @ ensures id == messageId;
-      @ ensures socialValue == messageSocialValue;
-      @ ensures person1 == messagePerson1;
-      @ ensures person2 == messagePerson2;
-      @*/
     public MyMessage(int messageId, int messageSocialValue,
                      Person messagePerson1, Person messagePerson2) {
         this.id = messageId;
@@ -36,13 +29,6 @@ public class MyMessage implements Message {
         this.group = null;
     }
 
-    /*@ ensures type == 1;
-      @ ensures person2 == null;
-      @ ensures id == messageId;
-      @ ensures socialValue == messageSocialValue;
-      @ ensures person1 == messagePerson1;
-      @ ensures group == messageGroup;
-      @*/
     public MyMessage(int messageId, int messageSocialValue,
                      Person messagePerson1, Group messageGroup) {
         this.id = messageId;
@@ -53,39 +39,18 @@ public class MyMessage implements Message {
         this.group = messageGroup;
     }
 
-    //@ ensures \result == type;
     public /*@ pure @*/ int getType() { return this.type; }
 
-    //@ ensures \result == id;
     public /*@ pure @*/ int getId() { return this.id; }
 
-    //@ ensures \result == socialValue;
     public /*@ pure @*/ int getSocialValue() { return this.socialValue; }
 
-    //@ ensures \result == person1;
     public /*@ pure @*/ Person getPerson1() { return this.person1; }
 
-    /*@ requires person2 != null;
-      @ ensures \result == person2;
-      @*/
     public /*@ pure @*/ Person getPerson2() { return this.person2; }
 
-    /*@ requires group != null;
-      @ ensures \result == group;
-      @*/
     public /*@ pure @*/ Group getGroup() { return this.group; }
 
-    /*@ also
-      @ public normal_behavior
-      @ requires obj != null && obj instanceof Message;
-      @ assignable \nothing;
-      @ ensures \result == (((Message) obj).getId() == id);
-      @ also
-      @ public normal_behavior
-      @ requires obj == null || !(obj instanceof Message);
-      @ assignable \nothing;
-      @ ensures \result == false;
-      @*/
     public /*@ pure @*/ boolean equals(Object obj) {
         if (obj instanceof Message) {
             return (((Message) obj).getId() == this.id);
