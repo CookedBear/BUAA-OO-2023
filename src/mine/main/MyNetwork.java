@@ -42,11 +42,16 @@ public class MyNetwork implements Network {
 
     // people 集合时刻不为空，且不重复
 
-    public MyNetwork() { }
+    public MyNetwork() {
+    }
 
-    public boolean contains(int id) { return people.containsKey(id); }
+    public boolean contains(int id) {
+        return people.containsKey(id);
+    }
 
-    public Person getPerson(int id) { return people.getOrDefault(id, null); }
+    public Person getPerson(int id) {
+        return people.getOrDefault(id, null);
+    }
 
     public void addPerson(Person person) throws EqualPersonIdException {
         if (people.containsKey(person.getId())) {
@@ -81,7 +86,7 @@ public class MyNetwork implements Network {
             ((MyGroup) groups.get(groupId)).flushCachedValueSum();
         }
         unionMap.union(Math.min(p1.getId(), p2.getId()),
-                       Math.max(p1.getId(), p2.getId()));
+                Math.max(p1.getId(), p2.getId()));
     }
 
     public int queryValue(int id1, int id2) throws
@@ -120,7 +125,9 @@ public class MyNetwork implements Network {
         return blockMap.size();
     }
 
-    public int queryTripleSum() { return triCount; }
+    public int queryTripleSum() {
+        return triCount;
+    }
 
     public boolean queryTripleSumOkTest(HashMap<Integer, HashMap<Integer, Integer>> beforeData,
                                         HashMap<Integer, HashMap<Integer, Integer>> afterData,
@@ -164,7 +171,7 @@ public class MyNetwork implements Network {
         for (int peopleId : people.keySet()) {
             HashMap<Integer, Integer> nowMap = new HashMap<>();
             HashMap<Integer, Integer> values = ((MyPerson) people.get(peopleId)).getValue();
-            HashMap<Integer, Person>  acquaintance = ((MyPerson) people.
+            HashMap<Integer, Person> acquaintance = ((MyPerson) people.
                     get(peopleId)).getAcquaintance();
             for (int pid : acquaintance.keySet()) {
                 nowMap.put(pid, values.get(pid));
@@ -201,7 +208,9 @@ public class MyNetwork implements Network {
         groups.put(group.getId(), group);
     }
 
-    public Group getGroup(int id) { return groups.getOrDefault(id, null); }
+    public Group getGroup(int id) {
+        return groups.getOrDefault(id, null);
+    }
 
     public void addToGroup(int id1, int id2) throws GroupIdNotFoundException,
             PersonIdNotFoundException, EqualPersonIdException {
@@ -256,7 +265,9 @@ public class MyNetwork implements Network {
         group.delPerson(people.get(id1));
     }
 
-    public boolean containsMessage(int id) { return messages.containsKey(id); }
+    public boolean containsMessage(int id) {
+        return messages.containsKey(id);
+    }
 
     public void addMessage(Message message) throws
             EqualMessageIdException, EqualPersonIdException {
@@ -264,13 +275,15 @@ public class MyNetwork implements Network {
             throw new MyEqualMessageIdException(message.getId());
         }
         if (message.getType() == 0 &&
-            message.getPerson1().getId() == message.getPerson2().getId()) {
+                message.getPerson1().getId() == message.getPerson2().getId()) {
             throw new MyEqualPersonIdException(message.getId());
         }
         messages.put(message.getId(), message);
     }
 
-    public Message getMessage(int id) { return messages.getOrDefault(id, null); }
+    public Message getMessage(int id) {
+        return messages.getOrDefault(id, null);
+    }
 
     public void sendMessage(int id) throws
             RelationNotFoundException, MessageIdNotFoundException, PersonIdNotFoundException {
@@ -280,7 +293,7 @@ public class MyNetwork implements Network {
         Message message = messages.get(id);
         if (message.getType() == 0 && !message.getPerson1().isLinked(message.getPerson2())) {
             throw new MyRelationNotFoundException(message.getPerson1().getId(),
-                                                  message.getPerson2().getId());
+                    message.getPerson2().getId());
         }
         if (message.getType() == 1 && !message.getGroup().hasPerson(message.getPerson1())) {
             throw new MyPersonIdNotFoundException(message.getPerson1().getId());
@@ -390,8 +403,12 @@ public class MyNetwork implements Network {
         try {
             generateNetWork(beforeData);
         } catch (Exception e) {
-            if (!beforeData.equals(afterData)) {
-            return -1; } }
+            return (beforeData.equals(afterData)) ? 0 : -1; }
+        if (!beforeData.containsKey(id1) ||
+                !beforeData.containsKey(id2) ||
+                id1 == id2 ||
+                !beforeData.get(id1).containsKey(id2)) {
+            return (beforeData.equals(afterData)) ? 0 : -1; }
 
         if (beforeData.size() != afterData.size()) {
             return 1; }
@@ -403,7 +420,8 @@ public class MyNetwork implements Network {
                 HashMap<Integer, Integer> beforePerson = beforeData.get(beforeId);
                 HashMap<Integer, Integer> afterPerson = afterData.get(beforeId);
                 if (!beforePerson.equals(afterPerson)) {
-                    return 3; } } }
+                    return 3; } }
+        }
         HashMap<Integer, Integer> ap1acq = afterData.get(id1);
         HashMap<Integer, Integer> ap2acq = afterData.get(id2);
         HashMap<Integer, Integer> bp1acq = beforeData.get(id1);
@@ -437,7 +455,8 @@ public class MyNetwork implements Network {
             if (ap1acq.size() + 1 != bp1acq.size()) {
                 return 16; }
             if (ap2acq.size() + 1 != bp2acq.size()) {
-                return 17; } }
+                return 17; }
+        }
         return 0;
     }
 }
