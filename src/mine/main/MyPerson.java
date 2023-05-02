@@ -21,6 +21,7 @@ public class MyPerson implements Person {
     private boolean cachedCoupleId = false;
     private int bestValue = -1;
     private final LinkedList<Message> messages = new LinkedList<>();
+    private ArrayList<Integer> groupList = new ArrayList<>();
 
     public MyPerson(int id, String name, int age) {
         this.id = id;
@@ -139,5 +140,13 @@ public class MyPerson implements Person {
 
         value.remove(id);
         acquaintance.remove(id);
+    }
+
+    public void addInGroup(int groupId) {
+        groupList.add(groupId);
+    }
+
+    public ArrayList<Integer> getGroupList() {
+        return groupList;
     }
 }

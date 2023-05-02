@@ -9,10 +9,9 @@ public class MyGroup implements Group {
     private final int id;
     private final HashMap<Integer, Person> people = new HashMap<>();
     private int valueSum = 0;
-    private int ageMean = 0;
+    private int ageSum = 0;
     private int ageVar = 0;
     private boolean cachedValueSum = true;
-    private boolean cachedAgeMean = true;
     private boolean cachedAgeVar = true;
 
     public MyGroup(int id) { this.id = id; }
@@ -29,6 +28,7 @@ public class MyGroup implements Group {
 
     public void addPerson(Person person) {
         people.put(person.getId(), person);
+        ageSum += person.getAge();
         flush();
     }
 
@@ -51,15 +51,7 @@ public class MyGroup implements Group {
         if (people.isEmpty()) {
             return 0;
         } else {
-            if (!cachedAgeMean) {
-                int ageSum = 0;
-                for (Person person : people.values()) {
-                    ageSum += (person.getAge());
-                }
-                cachedAgeMean = true;
-                ageMean = ageSum / people.size();
-            }
-            return ageMean;
+            return ageSum / people.size();
         }
     }
 
@@ -90,7 +82,6 @@ public class MyGroup implements Group {
 
     public void flush() {
         cachedValueSum = false;
-        cachedAgeMean = false;
         cachedAgeVar = false;
     }
 

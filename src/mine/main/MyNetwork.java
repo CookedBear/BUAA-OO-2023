@@ -73,10 +73,12 @@ public class MyNetwork implements Network {
 
         ((MyPerson) p1).addRelation((MyPerson) p2, value);
         ((MyPerson) p2).addRelation((MyPerson) p1, value);
-        for (Group group : groups.values()) {
-            if (group.hasPerson(p1) || group.hasPerson(p2)) {
-                ((MyGroup) group).flushCachedValueSum();
-            }
+
+        for (int groupId : ((MyPerson) p1).getGroupList()) {
+            ((MyGroup) groups.get(groupId)).flushCachedValueSum();
+        }
+        for (int groupId : ((MyPerson) p2).getGroupList()) {
+            ((MyGroup) groups.get(groupId)).flushCachedValueSum();
         }
         unionMap.union(Math.min(p1.getId(), p2.getId()),
                        Math.max(p1.getId(), p2.getId()));
@@ -219,6 +221,7 @@ public class MyNetwork implements Network {
             // bie-bie
         } else {
             group.addPerson(person);
+            ((MyPerson) person).addInGroup(id2);
         }
 
 
@@ -361,11 +364,6 @@ public class MyNetwork implements Network {
         if (person1.queryValue(person2) + value > 0) {
             ((MyPerson) person1).addValue(id2, value);
             ((MyPerson) person2).addValue(id1, value);
-            for (Group group : groups.values()) {
-                if (group.hasPerson(person1) || group.hasPerson(person2)) {
-                    ((MyGroup) group).flushCachedValueSum();
-                }
-            }
         } else {
             // relation broken cause: person/group cache failure, tri changed, union map rebuild
             ((MyPerson) person1).delRelation(id2);
@@ -378,10 +376,11 @@ public class MyNetwork implements Network {
             unionMap.setVisited(people.size());
             unionMap.rebuildPart(id2, id2, people);
         }
-        for (Group group : groups.values()) {
-            if (group.hasPerson(person1) || group.hasPerson(person2)) {
-                ((MyGroup) group).flush();
-            }
+        for (int groupId : ((MyPerson) person1).getGroupList()) {
+            ((MyGroup) groups.get(groupId)).flushCachedValueSum();
+        }
+        for (int groupId : ((MyPerson) person2).getGroupList()) {
+            ((MyGroup) groups.get(groupId)).flushCachedValueSum();
         }
     }
 
@@ -391,12 +390,8 @@ public class MyNetwork implements Network {
         try {
             generateNetWork(beforeData);
         } catch (Exception e) {
-            return -1; }
-        if (!beforeData.containsKey(id1) ||
-            !beforeData.containsKey(id2) ||
-            id1 == id2 ||
-            !beforeData.get(id1).containsKey(id2)) {
-            return (beforeData.equals(afterData)) ? 0 : -1; }
+            if (!beforeData.equals(afterData)) {
+            return -1; } }
 
         if (beforeData.size() != afterData.size()) {
             return 1; }
