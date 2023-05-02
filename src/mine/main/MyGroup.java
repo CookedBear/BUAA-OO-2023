@@ -81,6 +81,7 @@ public class MyGroup implements Group {
     public void delPerson(Person person) {
         people.remove(person.getId());
         ageSum -= person.getAge();
+        flush();
     }
 
     public int getSize() {

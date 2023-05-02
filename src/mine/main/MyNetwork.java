@@ -404,10 +404,8 @@ public class MyNetwork implements Network {
             generateNetWork(beforeData);
         } catch (Exception e) {
             return (beforeData.equals(afterData)) ? 0 : -1; }
-        if (!beforeData.containsKey(id1) ||
-                !beforeData.containsKey(id2) ||
-                id1 == id2 ||
-                !beforeData.get(id1).containsKey(id2)) {
+        if (!beforeData.containsKey(id1) || !beforeData.containsKey(id2) ||
+            id1 == id2 || !beforeData.get(id1).containsKey(id2)) {
             return (beforeData.equals(afterData)) ? 0 : -1; }
 
         if (beforeData.size() != afterData.size()) {
@@ -417,11 +415,8 @@ public class MyNetwork implements Network {
                 return 2; } }
         for (int beforeId : beforeData.keySet()) {
             if (beforeId != id1 && beforeId != id2) {
-                HashMap<Integer, Integer> beforePerson = beforeData.get(beforeId);
-                HashMap<Integer, Integer> afterPerson = afterData.get(beforeId);
-                if (!beforePerson.equals(afterPerson)) {
-                    return 3; } }
-        }
+                if (!beforeData.get(beforeId).equals(afterData.get(beforeId))) {
+                    return 3; } } }
         HashMap<Integer, Integer> ap1acq = afterData.get(id1);
         HashMap<Integer, Integer> ap2acq = afterData.get(id2);
         HashMap<Integer, Integer> bp1acq = beforeData.get(id1);
@@ -456,7 +451,12 @@ public class MyNetwork implements Network {
                 return 16; }
             if (ap2acq.size() + 1 != bp2acq.size()) {
                 return 17; }
-        }
+            bp1acq.remove(id2);
+            bp2acq.remove(id1);
+            if (!ap1acq.equals(bp1acq)) {
+                return 20; }
+            if (!ap2acq.equals(bp2acq)) {
+                return 21; } }
         return 0;
     }
 }
