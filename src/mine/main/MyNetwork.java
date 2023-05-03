@@ -276,7 +276,7 @@ public class MyNetwork implements Network {
         }
         if (message.getType() == 0 &&
                 message.getPerson1().getId() == message.getPerson2().getId()) {
-            throw new MyEqualPersonIdException(message.getId());
+            throw new MyEqualPersonIdException(message.getPerson1().getId());
         }
         messages.put(message.getId(), message);
     }
