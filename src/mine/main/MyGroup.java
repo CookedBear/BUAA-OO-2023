@@ -8,7 +8,6 @@ import java.util.HashMap;
 public class MyGroup implements Group {
     private final int id;
     private final HashMap<Integer, Person> people = new HashMap<>();
-    private int valueSum = 0;
     private int ageSum = 0;
     private int ageVar = 0;
     private boolean cachedValueSum = true;
@@ -41,14 +40,13 @@ public class MyGroup implements Group {
     }
 
     public int getValueSum() {
-        if (!cachedValueSum) {
-            int valueSum = 0;
-            for (Person person : people.values()) {
-                valueSum += (((MyPerson) person).getValueSum());
+        int valueSum = 0;
+        for (Person p1 : people.values()) {
+            for (Person p2 : people.values()) {
+                if (p1.isLinked(p2)) {
+                    valueSum += p1.queryValue(p2);
+                }
             }
-            cachedValueSum = true;
-            this.valueSum = valueSum;
-            // System.out.println("not cached!");
         }
         return valueSum;
     }
@@ -72,7 +70,7 @@ public class MyGroup implements Group {
                     ageVar += ((person.getAge() - ageMean) * (person.getAge() - ageMean));
                 }
                 cachedAgeVar = true;
-                this.ageVar = ageVar;
+                this.ageVar = ageVar / people.size();
             }
             return ageVar;
         }
