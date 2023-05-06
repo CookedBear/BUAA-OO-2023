@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class Union {
     private final HashMap<Integer, Integer> relation = new HashMap<>();
-    private int[] visited;
+    private HashMap<Integer, Integer> visited;
 
     public void union(int p, int q) { // reNewRelation
         int proot = find(p);
@@ -28,14 +28,14 @@ public class Union {
     }
 
     public void setVisited(int size) {
-        visited = new int[size];
+        visited = new HashMap<>();
     }
 
     public void rebuildPart(int nowId, int targetId, HashMap<Integer, Person> people) {
         relation.put(nowId, targetId);
-        visited[nowId - 1] = 1;
+        visited.put(nowId, 1);
         for (int midId : ((MyPerson) people.get(nowId)).getAcquaintance().keySet()) {
-            if (visited[midId - 1] != 1) {
+            if (!visited.containsKey(midId)) {
                 rebuildPart(midId, targetId, people);
             }
         }
