@@ -12,6 +12,7 @@ public class MyGroup implements Group {
     private int ageVar = 0;
     private boolean cachedValueSum = true;
     private boolean cachedAgeVar = true;
+    private HashMap<Arc, Integer> arcPools;
 
     public MyGroup(int id) {
         this.id = id;
@@ -41,11 +42,16 @@ public class MyGroup implements Group {
 
     public int getValueSum() {
         int valueSum = 0;
-        for (Person p1 : people.values()) {
-            for (Person p2 : people.values()) {
-                if (p1.isLinked(p2)) {
-                    valueSum += p1.queryValue(p2);
-                }
+        //        for (Person p1 : people.values()) {
+        //            for (Person p2 : people.values()) {
+        //                if (p1.isLinked(p2)) {
+        //                    valueSum += p1.queryValue(p2);
+        //                }
+        //            }
+        //        }
+        for (Arc arc : arcPools.keySet()) {
+            if (people.containsKey(arc.getPerson1()) && people.containsKey(arc.getPerson2())) {
+                valueSum += (2 * arcPools.get(arc));
             }
         }
         return valueSum;
@@ -101,5 +107,9 @@ public class MyGroup implements Group {
 
     public void flushCachedValueSum() {
         cachedValueSum = false;
+    }
+
+    public void loadArcPools(HashMap<Arc, Integer> arcPools) {
+        this.arcPools = arcPools;
     }
 }

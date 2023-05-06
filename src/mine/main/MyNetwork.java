@@ -36,6 +36,7 @@ public class MyNetwork implements Network {
     private final HashMap<Integer, Message> messages = new HashMap<>();
 
     private final HashMap<Integer, Integer> couples = new HashMap<>();
+    private final HashMap<Arc, Integer> arcPools = new HashMap<>();
 
     private int triCount = 0;
     private final Union unionMap = new Union();
@@ -78,6 +79,7 @@ public class MyNetwork implements Network {
 
         ((MyPerson) p1).addRelation((MyPerson) p2, value);
         ((MyPerson) p2).addRelation((MyPerson) p1, value);
+        arcPools.put(new Arc(id1, id2, value), value);
 
         for (int groupId : ((MyPerson) p1).getGroupList()) {
             ((MyGroup) groups.get(groupId)).flushCachedValueSum();
@@ -117,11 +119,9 @@ public class MyNetwork implements Network {
 
         ArrayList<Integer> peoples = new ArrayList<>(people.keySet());
         HashMap<Integer, Integer> blockMap = new HashMap<>();
-
         for (Integer integer : peoples) {
             blockMap.put(unionMap.find(integer), 114514);
         }
-
         return blockMap.size();
     }
 
@@ -206,6 +206,7 @@ public class MyNetwork implements Network {
             throw new MyEqualGroupIdException(group.getId());
         }
         groups.put(group.getId(), group);
+        ((MyGroup) group).loadArcPools(arcPools);
     }
 
     public Group getGroup(int id) {
@@ -377,6 +378,8 @@ public class MyNetwork implements Network {
         if (person1.queryValue(person2) + value > 0) {
             ((MyPerson) person1).addValue(id2, value);
             ((MyPerson) person2).addValue(id1, value);
+            int valueOld = arcPools.get(new Arc(id1, id2, 1));
+            arcPools.put(new Arc(id1, id2, value + valueOld), valueOld + value);
         } else {
             // relation broken cause: person/group cache failure, tri changed, union map rebuild
             ((MyPerson) person1).delRelation(id2);
@@ -388,6 +391,7 @@ public class MyNetwork implements Network {
             unionMap.rebuildPart(id1, id1, people);
             unionMap.setVisited(people.size());
             unionMap.rebuildPart(id2, id2, people);
+            arcPools.remove(new Arc(id1, id2, 1));
         }
         for (int groupId : ((MyPerson) person1).getGroupList()) {
             ((MyGroup) groups.get(groupId)).flushCachedValueSum();
