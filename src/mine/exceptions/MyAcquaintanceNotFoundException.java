@@ -1,6 +1,6 @@
 package mine.exceptions;
 
-import com.oocourse.spec2.exceptions.AcquaintanceNotFoundException;
+import com.oocourse.spec3.exceptions.AcquaintanceNotFoundException;
 
 public class MyAcquaintanceNotFoundException extends AcquaintanceNotFoundException {
     private final int id;

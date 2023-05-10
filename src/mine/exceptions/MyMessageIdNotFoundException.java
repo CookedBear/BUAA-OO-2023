@@ -1,6 +1,6 @@
 package mine.exceptions;
 
-import com.oocourse.spec2.exceptions.MessageIdNotFoundException;
+import com.oocourse.spec3.exceptions.MessageIdNotFoundException;
 
 public class MyMessageIdNotFoundException extends MessageIdNotFoundException {
     private final int id;

@@ -1,6 +1,6 @@
 package mine.exceptions;
 
-import com.oocourse.spec2.exceptions.RelationNotFoundException;
+import com.oocourse.spec3.exceptions.RelationNotFoundException;
 
 public class MyRelationNotFoundException extends RelationNotFoundException {
     private final int personId1;

@@ -1,7 +1,9 @@
 package mine.main;
 
-import com.oocourse.spec2.main.Group;
-import com.oocourse.spec2.main.Person;
+import com.oocourse.spec3.main.Group;
+import com.oocourse.spec3.main.Person;
+import com.oocourse.spec3.main.RedEnvelopeMessage;
+import mine.tool.Arc;
 
 import java.util.HashMap;
 
@@ -14,13 +16,9 @@ public class MyGroup implements Group {
     private boolean cachedAgeVar = true;
     private HashMap<Arc, Integer> arcPools;
 
-    public MyGroup(int id) {
-        this.id = id;
-    }
+    public MyGroup(int id) { this.id = id; }
 
-    public int getId() {
-        return this.id;
-    }
+    public int getId() { return this.id; }
 
     public boolean equals(Object obj) {
         if (obj instanceof MyGroup) {
@@ -88,28 +86,27 @@ public class MyGroup implements Group {
         flush();
     }
 
-    public int getSize() {
-        return this.people.size();
-    }
+    public int getSize() { return this.people.size(); }
 
-    public boolean containsPerson(int id) {
-        return people.containsKey(id);
-    }
+    public boolean containsPerson(int id) { return people.containsKey(id); }
 
-    public HashMap<Integer, Person> getPeople() {
-        return this.people;
-    }
+    public HashMap<Integer, Person> getPeople() { return this.people; }
 
     public void flush() {
         cachedValueSum = false;
         cachedAgeVar = false;
     }
 
-    public void flushCachedValueSum() {
-        cachedValueSum = false;
-    }
+    public void flushCachedValueSum() { cachedValueSum = false; }
 
-    public void loadArcPools(HashMap<Arc, Integer> arcPools) {
-        this.arcPools = arcPools;
+    public void loadArcPools(HashMap<Arc, Integer> arcPools) { this.arcPools = arcPools; }
+
+    public void sendR(int senderId, RedEnvelopeMessage red) {
+        int piece = red.getMoney() / people.size();
+        Person sender = people.get(senderId);
+        sender.addMoney(- piece * people.size());
+        for (Person receiver : people.values()) {
+            receiver.addMoney(piece);
+        }
     }
 }

@@ -1,6 +1,7 @@
-package mine.main;
+package mine.tool;
 
-import com.oocourse.spec2.main.Person;
+import com.oocourse.spec3.main.Person;
+import mine.main.MyPerson;
 
 import java.util.HashMap;
 

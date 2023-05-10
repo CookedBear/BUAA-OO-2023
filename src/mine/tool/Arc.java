@@ -1,4 +1,4 @@
-package mine.main;
+package mine.tool;
 
 import java.util.Objects;
 
@@ -13,9 +13,7 @@ public class Arc {
         this.value = value;
     }
 
-    public void updValue(int value) {
-        this.value = value;
-    }
+    public void updValue(int value) { this.value = value; }
 
     public int getPerson1() { return this.person1; }
 
@@ -36,7 +34,5 @@ public class Arc {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(person1, person2);
-    }
+    public int hashCode() { return Objects.hash(person1, person2); }
 }

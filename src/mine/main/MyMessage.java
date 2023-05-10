@@ -1,8 +1,8 @@
 package mine.main;
 
-import com.oocourse.spec2.main.Group;
-import com.oocourse.spec2.main.Message;
-import com.oocourse.spec2.main.Person;
+import com.oocourse.spec3.main.Group;
+import com.oocourse.spec3.main.Message;
+import com.oocourse.spec3.main.Person;
 
 public class MyMessage implements Message {
     /*@ public instance model int id;
@@ -37,6 +37,15 @@ public class MyMessage implements Message {
         this.person1 = messagePerson1;
         this.person2 = null;
         this.group = messageGroup;
+    }
+
+    public MyMessage(int messageId) {
+        this.id = messageId;
+        this.type = 0;
+        this.socialValue = 0;
+        this.person1 = null;
+        this.person2 = null;
+        this.group = null;
     }
 
     public /*@ pure @*/ int getType() {

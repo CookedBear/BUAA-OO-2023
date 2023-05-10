@@ -1,7 +1,8 @@
 package mine.main;
 
-import com.oocourse.spec2.main.Message;
-import com.oocourse.spec2.main.Person;
+import com.oocourse.spec3.main.Message;
+import com.oocourse.spec3.main.NoticeMessage;
+import com.oocourse.spec3.main.Person;
 import mine.exceptions.MyEqualRelationException;
 
 import java.util.ArrayList;
@@ -15,34 +16,30 @@ public class MyPerson implements Person {
     private final int age;
     private final HashMap<Integer, Person> acquaintance = new HashMap<>();
     private final HashMap<Integer, Integer> value = new HashMap<>();
+    private int money;
     private int socialValue;
     private int valueSum; // cached
     private int coupleId;
     private boolean cachedCoupleId = false;
     private int bestValue = -1;
     private final LinkedList<Message> messages = new LinkedList<>();
-    private ArrayList<Integer> groupList = new ArrayList<>();
+    private final ArrayList<Integer> groupList = new ArrayList<>();
 
     public MyPerson(int id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.socialValue = 0;
+        this.money = 0;
         this.valueSum = 0;
         this.coupleId = 0;
     }
 
-    public int getId() {
-        return this.id;
-    }
+    public int getId() { return this.id; }
 
-    public String getName() {
-        return this.name;
-    }
+    public String getName() { return this.name; }
 
-    public int getAge() {
-        return this.age;
-    }
+    public int getAge() { return this.age; }
 
     public boolean equals(Object obj) {
         if (!(obj instanceof Person)) {
@@ -74,21 +71,13 @@ public class MyPerson implements Person {
      * @param o the object to be compared.
      */
     @Override
-    public int compareTo(Person o) {
-        return this.id - o.getId();
-    }
+    public int compareTo(Person o) { return this.id - o.getId(); }
 
-    public void addSocialValue(int num) {
-        this.socialValue += num;
-    }
+    public void addSocialValue(int num) { this.socialValue += num; }
 
-    public int getSocialValue() {
-        return this.socialValue;
-    }
+    public int getSocialValue() { return this.socialValue; }
 
-    public List<Message> getMessages() {
-        return new ArrayList<>(this.messages);
-    }
+    public List<Message> getMessages() { return new ArrayList<>(this.messages); }
 
     public List<Message> getReceivedMessages() {
         int size = Math.min(messages.size(), 5);
@@ -99,6 +88,10 @@ public class MyPerson implements Person {
         return returnList;
         // 可以缓存 returnList 以加速访问
     }
+
+    public void addMoney(int num) { this.money += num; }
+
+    public int getMoney() { return this.money; }
 
     public void addRelation(MyPerson p2, int values) throws MyEqualRelationException {
         if (acquaintance.containsKey(p2.id)) {
@@ -116,22 +109,14 @@ public class MyPerson implements Person {
         }
     }
 
-    public HashMap<Integer, Person> getAcquaintance() {
-        return this.acquaintance;
-    }
+    public HashMap<Integer, Person> getAcquaintance() { return this.acquaintance; }
 
-    public HashMap<Integer, Integer> getValue() {
-        return this.value;
-    }
+    public HashMap<Integer, Integer> getValue() { return this.value; }
 
     // cached
-    public int getValueSum() {
-        return valueSum;
-    }
+    public int getValueSum() { return valueSum; }
 
-    public void addMessage(Message m) {
-        this.messages.addFirst(m);
-    }
+    public void addMessage(Message m) { this.messages.addFirst(m); }
 
     // cached
     public int getCouple() {
@@ -164,11 +149,9 @@ public class MyPerson implements Person {
         acquaintance.remove(id);
     }
 
-    public void addInGroup(int groupId) {
-        groupList.add(groupId);
-    }
+    public void addInGroup(int groupId) { groupList.add(groupId); }
 
-    public ArrayList<Integer> getGroupList() {
-        return groupList;
-    }
+    public ArrayList<Integer> getGroupList() { return groupList; }
+
+    public void clearNotices() { messages.removeIf(msg -> msg instanceof NoticeMessage); }
 }

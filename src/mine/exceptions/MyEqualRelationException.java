@@ -1,6 +1,6 @@
 package mine.exceptions;
 
-import com.oocourse.spec2.exceptions.EqualRelationException;
+import com.oocourse.spec3.exceptions.EqualRelationException;
 
 public class MyEqualRelationException extends EqualRelationException {
     private final int personId1;
