@@ -623,7 +623,7 @@ public class MyNetwork implements Network {
         } // 1
         for (int emojiId : afterEmojis.keySet()) {
             if (!beforeEmojis.containsKey(emojiId) ||
-                    !beforeEmojis.get(emojiId).equals(afterEmojis.get(emojiId))) {
+                !beforeEmojis.get(emojiId).equals(afterEmojis.get(emojiId))) {
                 return 2;
             }
         } // 2
@@ -634,8 +634,8 @@ public class MyNetwork implements Network {
         } // 3
         for (int messageId : beforeMessages.keySet()) {
             if (beforeMessages.get(messageId) != null &&  // EmojiMessage
-                    afterEmojis.containsKey(beforeMessages.get(messageId)) && // containsEmoji
-                    !afterMessages.get(messageId).equals(beforeMessages.get(messageId))) {
+                afterEmojis.containsKey(beforeMessages.get(messageId)) && // containsEmoji
+                !afterMessages.get(messageId).equals(beforeMessages.get(messageId))) {
                 // !equals (id==, emojiId!=)
                 return 5;
             }
@@ -648,8 +648,8 @@ public class MyNetwork implements Network {
         } // 6
         for (int messageId : beforeMessages.keySet()) {
             if (beforeMessages.get(messageId) != null && // is EmojiMessage
-                    beforeMessages.get(messageId) < limit && // need del
-                    afterMessages.containsKey(messageId)) {  // not del
+                beforeEmojis.get(beforeMessages.get(messageId)) < limit && // need del
+                afterMessages.containsKey(messageId)) {  // not del
                 return 7;
             }
         } // 7
