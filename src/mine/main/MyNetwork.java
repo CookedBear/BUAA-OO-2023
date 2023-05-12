@@ -50,11 +50,8 @@ public class MyNetwork implements Network {
     private final HashMap<Integer, Integer> couples = new HashMap<>();
     private final HashMap<Arc, Integer> arcPools = new HashMap<>();
     private final HashMap<Integer, HashMap<Edge, Integer>> modifiedPools = new HashMap<>();
-
     private int triCount = 0;
     private final Union unionMap = new Union();
-
-    // people 集合时刻不为空，且不重复
 
     public MyNetwork() { }
 
@@ -237,85 +234,6 @@ public class MyNetwork implements Network {
 
     public Message getMessage(int id) { return messages.getOrDefault(id, null); }
 
-    /*@ public normal_behavior
-          @ requires containsMessage(id) && getMessage(id).getType() == 0 &&
-          @          getMessage(id).getPerson1().isLinked(getMessage(id).getPerson2()) &&
-          @          getMessage(id).getPerson1() != getMessage(id).getPerson2();
-          @ type == 0 私聊
-          @ assignable messages[*], emojiHeatList[*];
-          @ assignable getMessage(id).getPerson1().socialValue, getMessage(id).getPerson1().money;
-          @ assignable getMessage(id).getPerson2().messages, getMessage(id).getPerson2().socialValue, getMessage(id).getPerson2().money;
-          @ ensures !containsMessage(id) && messages.length == \old(messages.length) - 1 &&
-          @         (\forall int i; 0 <= i && i < \old(messages.length) && \old(messages[i].getId()) != id;
-          @         (\exists int j; 0 <= j && j < messages.length; messages[j].equals(\old(messages[i]))));
-          @ 少一条消息，其余消息不变
-          @ ensures \old(getMessage(id)).getPerson1().getSocialValue() ==
-          @         \old(getMessage(id).getPerson1().getSocialValue()) + \old(getMessage(id)).getSocialValue() &&
-          @         \old(getMessage(id)).getPerson2().getSocialValue() ==
-          @         \old(getMessage(id).getPerson2().getSocialValue()) + \old(getMessage(id)).getSocialValue();
-          @ socialValue 增加
-          @ ensures (\old(getMessage(id)) instanceof RedEnvelopeMessage) ==>
-          @         (\old(getMessage(id)).getPerson1().getMoney() ==
-          @         \old(getMessage(id).getPerson1().getMoney()) - ((RedEnvelopeMessage)\old(getMessage(id))).getMoney() &&
-          @         \old(getMessage(id)).getPerson2().getMoney() ==
-          @         \old(getMessage(id).getPerson2().getMoney()) + ((RedEnvelopeMessage)\old(getMessage(id))).getMoney());
-          @ 红包就从 1 转给 2
-          @ ensures (!(\old(getMessage(id)) instanceof RedEnvelopeMessage)) ==> (\not_assigned(people[*].money));
-          @ 其他消息钱不变
-          @ ensures (\old(getMessage(id)) instanceof EmojiMessage) ==>
-          @         (\exists int i; 0 <= i && i < emojiIdList.length && emojiIdList[i] == ((EmojiMessage)\old(getMessage(id))).getEmojiId();
-          @         emojiHeatList[i] == \old(emojiHeatList[i]) + 1);
-          @ 表情消息给 emoji 的 heat + 1 (value + 1)
-          @ ensures (!(\old(getMessage(id)) instanceof EmojiMessage)) ==> \not_assigned(emojiHeatList);
-          @ 其他消息 heat 不变
-          @ ensures (\forall int i; 0 <= i && i < \old(getMessage(id).getPerson2().getMessages().size());
-          @          \old(getMessage(id)).getPerson2().getMessages().get(i+1) == \old(getMessage(id).getPerson2().getMessages().get(i)));
-          @ 所有消息向后移动
-          @ ensures \old(getMessage(id)).getPerson2().getMessages().get(0).equals(\old(getMessage(id)));
-          @ 新消息头插消息队列
-          @ ensures \old(getMessage(id)).getPerson2().getMessages().size() == \old(getMessage(id).getPerson2().getMessages().size()) + 1;
-          @ size 变动
-          @ also
-          @ public normal_behavior
-          @ requires containsMessage(id) && getMessage(id).getType() == 1 &&
-          @           getMessage(id).getGroup().hasPerson(getMessage(id).getPerson1());
-          @ type == 1 群发
-          @ assignable people[*].socialValue, people[*].money, messages, emojiHeatList;
-          @ ensures !containsMessage(id) && messages.length == \old(messages.length) - 1 &&
-          @         (\forall int i; 0 <= i && i < \old(messages.length) && \old(messages[i].getId()) != id;
-          @         (\exists int j; 0 <= j && j < messages.length; messages[j].equals(\old(messages[i]))));
-          @ ensures (\forall Person p; \old(getMessage(id)).getGroup().hasPerson(p); p.getSocialValue() ==
-          @         \old(p.getSocialValue()) + \old(getMessage(id)).getSocialValue());
-          @ ensures (\forall int i; 0 <= i && i < people.length && !\old(getMessage(id)).getGroup().hasPerson(people[i]);
-          @          \old(people[i].getSocialValue()) == people[i].getSocialValue());
-          @ socialValue 的更改
-          @ ensures (\old(getMessage(id)) instanceof RedEnvelopeMessage) ==>
-          @          (\exists int i; i == ((RedEnvelopeMessage)\old(getMessage(id))).getMoney()/\old(getMessage(id)).getGroup().getSize();
-          @           \old(getMessage(id)).getPerson1().getMoney() ==
-          @           \old(getMessage(id).getPerson1().getMoney()) - i*(\old(getMessage(id)).getGroup().getSize() - 1) &&
-          @           (\forall Person p; \old(getMessage(id)).getGroup().hasPerson(p) && p != \old(getMessage(id)).getPerson1();
-          @           p.getMoney() == \old(p.getMoney()) + i));
-          @ 组内其余人钱增加 money / group
-          @ ensures (\old(getMessage(id)) instanceof RedEnvelopeMessage) ==>
-          @          (\forall int i; 0 <= i && i < people.length && !\old(getMessage(id)).getGroup().hasPerson(people[i]);
-          @           \old(people[i].getMoney()) == people[i].getMoney());
-          @ 组外人钱不变
-          @ ensures (!(\old(getMessage(id)) instanceof RedEnvelopeMessage)) ==> (\not_assigned(people[*].money));
-          @ 非红包不变钱
-          @ ensures (\old(getMessage(id)) instanceof EmojiMessage) ==>
-          @         (\exists int i; 0 <= i && i < emojiIdList.length && emojiIdList[i] == ((EmojiMessage)\old(getMessage(id))).getEmojiId();
-          @          emojiHeatList[i] == \old(emojiHeatList[i]) + 1);
-          @ 表情信息对应的 emoji 的 heat + 1
-          @ ensures (!(\old(getMessage(id)) instanceof EmojiMessage)) ==> \not_assigned(emojiHeatList);
-          @ 非 emoji 不动 heat
-          @ also
-          @ public exceptional_behavior
-          @ signals (MessageIdNotFoundException e) !containsMessage(id);
-          @ signals (RelationNotFoundException e) containsMessage(id) && getMessage(id).getType() == 0 &&
-          @          !(getMessage(id).getPerson1().isLinked(getMessage(id).getPerson2()));
-          @ signals (PersonIdNotFoundException e) containsMessage(id) && getMessage(id).getType() == 1 &&
-          @          !(getMessage(id).getGroup().hasPerson(getMessage(id).getPerson1()));
-          @*/
     public void sendMessage(int id) throws
             RelationNotFoundException, MessageIdNotFoundException, PersonIdNotFoundException {
         if (!messages.containsKey(id)) { throw new MyMessageIdNotFoundException(id); }
@@ -479,40 +397,6 @@ public class MyNetwork implements Network {
         ((MyPerson) people.get(personId)).clearNotices();
     }
 
-    /*@ public normal_behavior
-  @ requires contains(id) && (\exists Person[] path;
-  @         path.length >= 4;
-  @         path[0].equals(getPerson(id)) &&
-  @         path[path.length - 1].equals(getPerson(id)) &&
-  @         (\forall int i; 1 <= i && i < path.length; path[i - 1].isLinked(path[i])) &&
-  @         (\forall int i, j; 1 <= i && i < j && j < path.length; !path[i].equals(path[j])));
-  @ path 是一个环，节点不允许多次访问，首尾均是自己，长度 >= 4
-  @ ensures (\exists Person[] pathM;
-  @         pathM.length >= 4 &&
-  @         pathM[0].equals(getPerson(id)) &&
-  @         pathM[pathM.length - 1].equals(getPerson(id)) &&
-  @         (\forall int i; 1 <= i && i < pathM.length; pathM[i - 1].isLinked(pathM[i])) &&
-  @         (\forall int i, j; 1 <= i && i < j && j < pathM.length; !pathM[i].equals(pathM[j]));
-  @         (\forall Person[] path;
-  @         path.length >= 4 &&
-  @         path[0].equals(getPerson(id)) &&
-  @         path[path.length - 1].equals(getPerson(id)) &&
-  @         (\forall int i; 1 <= i && i < path.length; path[i - 1].isLinked(path[i])) &&
-  @         (\forall int i, j; 1 <= i && i < j && j < path.length; !path[i].equals(path[j]));
-  @         (\sum int i; 1 <= i && i < path.length; path[i - 1].queryValue(path[i])) >=
-  @         (\sum int i; 1 <= i && i < pathM.length; pathM[i - 1].queryValue(pathM[i]))) &&
-  @         \result==(\sum int i; 1 <= i && i < pathM.length; pathM[i - 1].queryValue(pathM[i])));
-  @ 返回自己到自己的最短距离，至少经过两个其他的点
-  @ also
-  @ public exceptional_behavior
-  @ signals (PersonIdNotFoundException e) !contains(id);
-  @ signals (PathNotFoundException e) contains(id) && !(\exists Person[] path;
-  @         path.length >= 4;
-  @         path[0].equals(getPerson(id)) &&
-  @         path[path.length - 1].equals(getPerson(id)) &&
-  @         (\forall int i; 1 <= i && i < path.length; path[i - 1].isLinked(path[i])) &&
-  @         (\forall int i, j; 1 <= i && i < j && j < path.length; !path[i].equals(path[j])));
-  @*/
     public int queryLeastMoments(int id) throws PersonIdNotFoundException, PathNotFoundException {
         if (!people.containsKey(id)) { throw new MyPersonIdNotFoundException(id); }
         /* dijstra 求自己距离自己的最短路
@@ -521,24 +405,6 @@ public class MyNetwork implements Network {
          * 随后求替身到真身的 dijstra，堆优化后 O((m + n)logn)
          */
 
-        //        int replica = 114514;
-        //        while (modifiedPools.containsKey(replica)) {
-        //            replica++;
-        //        }
-        //        // get replicaId
-        //        modifiedPools.put(replica, new HashMap<>());
-        //        for (Edge edge : modifiedPools.get(id).keySet()) {
-        //            int to = edge.getId();
-        //            int distance = edge.getDistance();
-        //            modifiedPools.get(replica).put(new Edge(to, distance), distance);
-        //            // other nodes don't need to request replica, so there's no need to add the reverse edge
-        //        }
-        //        // make fake relation
-        //        int result = Dijkstra.makeDijkstra(replica, id, modifiedPools);
-        //        modifiedPools.remove(replica);
-        //        // restore the modifiedPool
-        //        if (result == -1) { throw new MyPathNotFoundException(id); }
-        //        return result;
         int result = -1;
 
         for (int friend : ((MyPerson) people.get(id)).getAcquaintance().keySet()) {
@@ -559,52 +425,8 @@ public class MyNetwork implements Network {
         return result;
     }
 
-    /*
-    ap 1 1 1
-    ap 2 2 2
-    ap 3 3 3
-    ap 4 4 4
-    ar 1 2 10
-    ar 2 3 20
-    ar 1 3 30
-    ar 2 4 10
-    qlm 4
-    */
-    /*@ public normal_behavior
-      @ assignable emojiIdList, emojiHeatList, messages;
-      @ 1 ensures (\forall int i; 0 <= i && i < \old(emojiIdList.length);
-      @          (\old(emojiHeatList[i] >= limit) ==>
-      @          (\exists int j; 0 <= j && j < emojiIdList.length; emojiIdList[j] == \old(emojiIdList[i]))));
-      @ 大于等于 limit 的 emoji 要留下，允许无序，先不管小于的！
-      @ 2 ensures (\forall int i; 0 <= i && i < emojiIdList.length;
-      @          (\exists int j; 0 <= j && j < \old(emojiIdList.length);
-      @          emojiIdList[i] == \old(emojiIdList[j]) && emojiHeatList[i] == \old(emojiHeatList[j])));
-      @ 每个留下来的 emoji 的 heat 不变
-      @ 3 ensures emojiIdList.length ==
-      @          (\num_of int i; 0 <= i && i < \old(emojiIdList.length); emojiHeatList[i] >= limit);
-      @ 只有大于等于 limit 的 emoji 才能留下
-      @ 4 ensures emojiIdList.length == emojiHeatList.length;
-      @ HashMap 长度一样
-      @ 5 ensures (\forall int i; 0 <= i && i < \old(messages.length);
-      @          (\old(messages[i]) instanceof EmojiMessage &&
-      @           containsEmojiId(\old(((EmojiMessage)messages[i]).getEmojiId()))  ==>
-      @           (\exists int j; 0 <= j && j < messages.length; messages[j].equals(\old(messages[i])))));
-      @ 自己 emoji 没被删的 EmojiMessage 不变，同样不管被删的和其它类型的(null的)
-      @ 6 ensures (\forall int i; 0 <= i && i < \old(messages.length);
-      @          (!(\old(messages[i]) instanceof EmojiMessage) ==>
-      @           (\exists int j; 0 <= j && j < messages.length; messages[j].equals(\old(messages[i])))));
-      @ 所有非 EmojiMessage 都不变
-      @ 7 ensures messages.length == (\num_of int i; 0 <= i && i <= \old(messages.length);
-      @          (\old(messages[i]) instanceof EmojiMessage) ==>
-      @           (containsEmojiId(\old(((EmojiMessage)messages[i]).getEmojiId()))));
-      @ 只有 emoji 没被删的 EmojiMessage 才能留下
-      @ 8 ensures \result == emojiIdList.length;
-      @ 返回剩余 emoji 的长度
-      @*/
     public int deleteColdEmojiOKTest(int limit, ArrayList<HashMap<Integer, Integer>> beforeData,
                                      ArrayList<HashMap<Integer, Integer>> afterData, int result) {
-        // System.out.println(beforeData);
-        // System.out.println(afterData);
 
         HashMap<Integer, Integer> beforeEmojis;
         HashMap<Integer, Integer> afterEmojis;
@@ -654,9 +476,7 @@ public class MyNetwork implements Network {
             }
         } // 7
         generateNetWork(beforeData);
-        if (result != deleteColdEmoji(limit)) {
-            return 8;
-        } // 8
+        if (result != deleteColdEmoji(limit)) { return 8; } // 8
         return 0;
     }
 }
