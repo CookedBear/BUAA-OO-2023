@@ -28,7 +28,7 @@ public class MyNoticeMessage implements NoticeMessage {
     public MyNoticeMessage(int messageId, String noticeString,
                            Person messagePerson1, Group messageGroup) {
         this.id = messageId;
-        this.type = 0;
+        this.type = 1;
         this.socialValue = noticeString.length();
         this.person1 = messagePerson1;
         this.person2 = null;

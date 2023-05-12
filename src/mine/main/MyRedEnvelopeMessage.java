@@ -28,7 +28,7 @@ public class MyRedEnvelopeMessage implements RedEnvelopeMessage {
     public MyRedEnvelopeMessage(int messageId, int luckyMoney,
                                 Person messagePerson1, Group messageGroup) {
         this.id = messageId;
-        this.type = 0;
+        this.type = 1;
         this.socialValue = luckyMoney * 5;
         this.person1 = messagePerson1;
         this.person2 = null;
