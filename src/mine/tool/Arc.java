@@ -2,7 +2,7 @@ package mine.tool;
 
 import java.util.Objects;
 
-public class Arc {
+public class Arc implements Comparable<Arc> {
     private final int person1;
     private final int person2;
     private int value;
@@ -35,4 +35,6 @@ public class Arc {
 
     @Override
     public int hashCode() { return Objects.hash(person1, person2); }
+
+    public int compareTo(Arc a) { return this.value - a.value; }
 }

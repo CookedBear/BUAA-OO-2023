@@ -83,8 +83,8 @@ public class MyNetwork implements Network {
         ((MyPerson) p1).addRelation((MyPerson) p2, value);
         ((MyPerson) p2).addRelation((MyPerson) p1, value);
         arcPools.put(new Arc(id1, id2, value), value);
-        modifiedPools.get(id1).put(new Edge(id2, value), value);
-        modifiedPools.get(id2).put(new Edge(id1, value), value);
+        modifiedPools.get(id1).put(new Edge(id2, value, id1), value);
+        modifiedPools.get(id2).put(new Edge(id1, value, id2), value);
 
         for (int groupId : ((MyPerson) p1).getGroupList()) {
             ((MyGroup) groups.get(groupId)).flushCachedValueSum();
@@ -328,10 +328,10 @@ public class MyNetwork implements Network {
             ((MyPerson) person2).addValue(id1, value);
             int valueOld = arcPools.get(new Arc(id1, id2, 1));
             arcPools.put(new Arc(id1, id2, value + valueOld), valueOld + value);
-            modifiedPools.get(id1).remove(new Edge(id2, valueOld));
-            modifiedPools.get(id1).put(new Edge(id2, value + valueOld), valueOld + value);
-            modifiedPools.get(id2).remove(new Edge(id1, valueOld));
-            modifiedPools.get(id2).put(new Edge(id1, value + valueOld), valueOld + value);
+            modifiedPools.get(id1).remove(new Edge(id2, valueOld, id1), id1);
+            modifiedPools.get(id1).put(new Edge(id2, value + valueOld, id1), valueOld + value);
+            modifiedPools.get(id2).remove(new Edge(id1, valueOld, id2), id2);
+            modifiedPools.get(id2).put(new Edge(id1, value + valueOld, id2), valueOld + value);
         } else {
             // relation broken cause: person/group cache failure, tri changed, union map rebuild
             ((MyPerson) person1).delRelation(id2);
@@ -345,8 +345,8 @@ public class MyNetwork implements Network {
             unionMap.rebuildPart(id2, id2, people);
             int valueOld = arcPools.get(new Arc(id1, id2, 1));
             arcPools.remove(new Arc(id1, id2, 1));
-            modifiedPools.get(id1).remove(new Edge(id2, valueOld));
-            modifiedPools.get(id2).remove(new Edge(id1, valueOld));
+            modifiedPools.get(id1).remove(new Edge(id2, valueOld, id1));
+            modifiedPools.get(id2).remove(new Edge(id1, valueOld, id2));
         }
         for (int groupId : ((MyPerson) person1).getGroupList()) {
             ((MyGroup) groups.get(groupId)).flushCachedValueSum();
@@ -405,19 +405,20 @@ public class MyNetwork implements Network {
          * 随后求替身到真身的 dijstra，堆优化后 O((m + n)logn)
          */
 
-        int result = -1;
+        int result;
+        result = Dijkstra.makeDijkstra(id, people, arcPools, modifiedPools);
 
-        for (int friend : ((MyPerson) people.get(id)).getAcquaintance().keySet()) {
-            int value = people.get(id).queryValue(people.get(friend));
-            modifiedPools.get(id).remove(new Edge(friend, value));
-            modifiedPools.get(friend).remove(new Edge(id, value));
-            int temp = Dijkstra.makeDijkstra(id, friend, modifiedPools);
-            if (temp != -1 && (result > temp + value || result == -1)) {
-                result = temp + value;
-            }
-            modifiedPools.get(id).put(new Edge(friend, value), value);
-            modifiedPools.get(friend).put(new Edge(id, value), value);
-        }
+        //        for (int friend : ((MyPerson) people.get(id)).getAcquaintance().keySet()) {
+        //            int value = people.get(id).queryValue(people.get(friend));
+        //            modifiedPools.get(id).remove(new Edge(friend, value));
+        //            modifiedPools.get(friend).remove(new Edge(id, value));
+        //            int temp = Dijkstra.makeDijkstra(id, friend, modifiedPools);
+        //            if (temp != -1 && (result > temp + value || result == -1)) {
+        //                result = temp + value;
+        //            }
+        //            modifiedPools.get(id).put(new Edge(friend, value), value);
+        //            modifiedPools.get(friend).put(new Edge(id, value), value);
+        //        }
 
         if (result == -1) {
             throw new MyPathNotFoundException(id);
@@ -480,3 +481,20 @@ public class MyNetwork implements Network {
         return 0;
     }
 }
+/*
+ap 1 1 1
+ap 2 2 2
+ap 3 3 3
+ap 4 4 4
+ap 5 5 5
+ap 6 6 6
+ar 1 3 1000
+ar 1 5 2
+ar 1 6 1
+ar 3 4 2
+ar 3 5 1
+ar 5 6 1000
+ar 2 5 2
+ar 6 2 1
+qlm 1
+ */

@@ -6,17 +6,20 @@ public class Edge implements Comparable<Edge> {
     private final int id;
     private final int distance;
     private boolean isFirst;
+    private final int from;
 
-    public Edge(int id, int distance) {
+    public Edge(int id, int distance, int from) {
         this.id = id;
         this.distance = distance;
         this.isFirst = false;
+        this.from = from;
     }
 
-    public Edge(int id, int distance, boolean isFirst) {
+    public Edge(int id, int distance, boolean isFirst, int from) {
         this.id = id;
         this.distance = distance;
         this.isFirst = isFirst;
+        this.from = from;
     }
 
     public int getId() { return this.id; }
@@ -24,6 +27,8 @@ public class Edge implements Comparable<Edge> {
     public int getDistance() { return this.distance; }
 
     public boolean getFirst() { return this.isFirst; }
+
+    public int getFrom() { return this.from; }
 
     public int compareTo(Edge o) { return this.distance - o.distance; }
 
