@@ -74,6 +74,9 @@ public class Dijkstra {
                 int p1 = arc.getPerson1();
                 int p2 = arc.getPerson2();
                 if (p1 != from && p2 != from) {
+                    if (!roots.containsKey(p1) || !roots.containsKey(p2)) {
+                        continue;
+                    }
                     if (!roots.get(p1).equals(roots.get(p2))) {
                         int temp = dist.get(p1) + dist.get(p2) + arc.getValue();
                         top = Math.min(temp, top);
@@ -109,7 +112,7 @@ public class Dijkstra {
         visited.put(pid, true);
         roots.put(pid, target);
         for (int acqId : people.keySet()) {
-            if (!visited.containsKey(acqId) && usedArc.containsKey(new Arc(sender, pid, 1))) {
+            if (!visited.containsKey(acqId) && usedArc.containsKey(new Arc(acqId, pid, 1))) {
                 dfsRoot(acqId, pid, target, visited, roots, people, usedArc);
             }
         }

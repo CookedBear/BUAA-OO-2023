@@ -328,9 +328,9 @@ public class MyNetwork implements Network {
             ((MyPerson) person2).addValue(id1, value);
             int valueOld = arcPools.get(new Arc(id1, id2, 1));
             arcPools.put(new Arc(id1, id2, value + valueOld), valueOld + value);
-            modifiedPools.get(id1).remove(new Edge(id2, valueOld, id1), id1);
+            modifiedPools.get(id1).remove(new Edge(id2, valueOld, id1));
             modifiedPools.get(id1).put(new Edge(id2, value + valueOld, id1), valueOld + value);
-            modifiedPools.get(id2).remove(new Edge(id1, valueOld, id2), id2);
+            modifiedPools.get(id2).remove(new Edge(id1, valueOld, id2));
             modifiedPools.get(id2).put(new Edge(id1, value + valueOld, id2), valueOld + value);
         } else {
             // relation broken cause: person/group cache failure, tri changed, union map rebuild
@@ -423,7 +423,7 @@ public class MyNetwork implements Network {
         if (result == -1) {
             throw new MyPathNotFoundException(id);
         }
-        return result;
+         return result;
     }
 
     public int deleteColdEmojiOKTest(int limit, ArrayList<HashMap<Integer, Integer>> beforeData,
@@ -497,4 +497,18 @@ ar 5 6 1000
 ar 2 5 2
 ar 6 2 1
 qlm 1
+
+ap 1 1 1
+ap 2 2 2
+ap 3 3 3
+ap 4 4 4
+ap 5 5 5
+ap 6 6 6
+ar 1 2 9
+ar 2 3 20
+ar 3 1 30
+ar 4 5 40
+ar 5 6 10
+ar 4 6 1
+qlm 4
  */
