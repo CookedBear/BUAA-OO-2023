@@ -324,9 +324,13 @@ public class MyNetwork implements Network {
         Person person2 = people.get(id2);
 
         if (person1.queryValue(person2) + value > 0) {
+            if (id1 == 11 && id2 == 76) {
+                System.out.println("here");
+            }
             ((MyPerson) person1).addValue(id2, value);
             ((MyPerson) person2).addValue(id1, value);
             int valueOld = arcPools.get(new Arc(id1, id2, 1));
+            arcPools.remove(new Arc(id1, id2, valueOld));
             arcPools.put(new Arc(id1, id2, value + valueOld), valueOld + value);
             modifiedPools.get(id1).remove(new Edge(id2, valueOld, id1));
             modifiedPools.get(id1).put(new Edge(id2, value + valueOld, id1), valueOld + value);

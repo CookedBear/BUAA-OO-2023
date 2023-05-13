@@ -68,6 +68,10 @@ public class Dijkstra {
         HashMap<Arc, Integer> usedArc = Kruskal.makeKruskal(people, tempArcPools);
         HashMap<Integer, Integer> roots = new HashMap<>();
         dfsForRoot(from, roots, people, usedArc);
+        if (from == 24) {
+            System.out.println("here");
+        }
+        int node = 0;
         int top = 2147483647;
         for (Arc arc : arcPools.keySet()) {
             if (!usedArc.containsKey(arc)) {
@@ -78,7 +82,7 @@ public class Dijkstra {
                         continue;
                     }
                     if (!roots.get(p1).equals(roots.get(p2))) {
-                        int temp = dist.get(p1) + dist.get(p2) + arc.getValue();
+                        int temp = dist.get(p1) + dist.get(p2) + arcPools.get(arc);
                         top = Math.min(temp, top);
                     }
                 } else {
@@ -87,10 +91,12 @@ public class Dijkstra {
                         p1 = (p2 == from) ? p1 : p2;
                         int temp = dist.get(p1) + arcPools.get(tempArc);
                         top = Math.min(temp, top);
+                        node = p1;
                     }
                 }
             }
         }
+        node = node * 1;
         return (top == 2147483647) ? -1 : top;
     }
 
