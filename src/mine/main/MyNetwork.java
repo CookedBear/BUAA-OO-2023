@@ -408,23 +408,10 @@ public class MyNetwork implements Network {
 
         int result;
         result = Dijkstra.makeDijkstra(id, people, arcPools, modifiedPools);
-
-        //        for (int friend : ((MyPerson) people.get(id)).getAcquaintance().keySet()) {
-        //            int value = people.get(id).queryValue(people.get(friend));
-        //            modifiedPools.get(id).remove(new Edge(friend, value));
-        //            modifiedPools.get(friend).remove(new Edge(id, value));
-        //            int temp = Dijkstra.makeDijkstra(id, friend, modifiedPools);
-        //            if (temp != -1 && (result > temp + value || result == -1)) {
-        //                result = temp + value;
-        //            }
-        //            modifiedPools.get(id).put(new Edge(friend, value), value);
-        //            modifiedPools.get(friend).put(new Edge(id, value), value);
-        //        }
-
         if (result == -1) {
             throw new MyPathNotFoundException(id);
         }
-         return result;
+        return result;
     }
 
     public int deleteColdEmojiOKTest(int limit, ArrayList<HashMap<Integer, Integer>> beforeData,
@@ -482,34 +469,4 @@ public class MyNetwork implements Network {
         return 0;
     }
 }
-/*
-ap 1 1 1
-ap 2 2 2
-ap 3 3 3
-ap 4 4 4
-ap 5 5 5
-ap 6 6 6
-ar 1 3 1000
-ar 1 5 2
-ar 1 6 1
-ar 3 4 2
-ar 3 5 1
-ar 5 6 1000
-ar 2 5 2
-ar 6 2 1
-qlm 1
 
-ap 1 1 1
-ap 2 2 2
-ap 3 3 3
-ap 4 4 4
-ap 5 5 5
-ap 6 6 6
-ar 1 2 9
-ar 2 3 20
-ar 3 1 30
-ar 4 5 40
-ar 5 6 10
-ar 4 6 1
-qlm 4
- */

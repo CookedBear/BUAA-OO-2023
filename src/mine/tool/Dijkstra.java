@@ -46,25 +46,20 @@ public class Dijkstra {
             int fro = now.getFrom();
             if (visited.containsKey(target) ||
                 dist.getOrDefault(target, 2147483647) < now.getDistance()) {
-                continue;
-            }
+                continue; }
             visited.put(target, 0);
             if (fro != target) {
                 Arc tempArc = new Arc(fro, target, 0);
                 int updValue = arcPools.get(tempArc);
                 tempArc.updValue(updValue);
-                tempArcPools.put(tempArc, updValue);
-            }
+                tempArcPools.put(tempArc, updValue); }
             for (Edge edge : modifiedPools.get(target).keySet()) {
                 int next = edge.getId();
                 int nextValue = edge.getDistance();
                 if (!visited.containsKey(next) &&
                     dist.getOrDefault(next, 2147483647) > nextValue + dist.get(target)) {
                     dist.put(next, nextValue + dist.get(target));
-                    queue.add(new Edge(next, dist.get(next), target));
-                }
-            }
-        }
+                    queue.add(new Edge(next, dist.get(next), target)); } } }
         HashMap<Arc, Integer> usedArc = Kruskal.makeKruskal(people, tempArcPools);
         HashMap<Integer, Integer> roots = new HashMap<>();
         dfsForRoot(from, roots, people, usedArc);
