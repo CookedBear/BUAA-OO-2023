@@ -68,9 +68,6 @@ public class Dijkstra {
         HashMap<Arc, Integer> usedArc = Kruskal.makeKruskal(people, tempArcPools);
         HashMap<Integer, Integer> roots = new HashMap<>();
         dfsForRoot(from, roots, people, usedArc);
-        if (from == 24) {
-            System.out.println("here");
-        }
         int node = 0;
         int top = 2147483647;
         for (Arc arc : arcPools.keySet()) {
