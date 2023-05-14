@@ -446,7 +446,8 @@ public class MyNetwork implements Network {
         for (int messageId : beforeMessages.keySet()) {
             if (beforeMessages.get(messageId) != null &&  // EmojiMessage
                 afterEmojis.containsKey(beforeMessages.get(messageId)) && // containsEmoji
-                !afterMessages.get(messageId).equals(beforeMessages.get(messageId))) {
+                (!afterMessages.containsKey(messageId) ||
+                !afterMessages.get(messageId).equals(beforeMessages.get(messageId)))) {
                 // !equals (id==, emojiId!=)
                 return 5;
             }
@@ -457,13 +458,20 @@ public class MyNetwork implements Network {
                 return 6;
             }
         } // 6
+        int messageCount = 0;
         for (int messageId : beforeMessages.keySet()) {
-            if (beforeMessages.get(messageId) != null && // is EmojiMessage
-                beforeEmojis.get(beforeMessages.get(messageId)) < limit && // need del
-                afterMessages.containsKey(messageId)) {  // not del
-                return 7;
+            if (beforeMessages.get(messageId) == null) {
+                messageCount++;
+            } else {
+                if (afterEmojis.containsKey(beforeMessages.get(messageId))) {
+                    messageCount++;
+                }
             }
-        } // 7
+        }
+        if (messageCount != afterMessages.size()) {
+            return 7;
+        }
+        // 7
         generateNetWork(beforeData);
         if (result != deleteColdEmoji(limit)) { return 8; } // 8
         return 0;
