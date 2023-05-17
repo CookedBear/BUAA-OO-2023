@@ -109,7 +109,7 @@ public class Dijkstra {
                                 HashMap<Arc, Integer> usedArc) {
         visited.put(pid, true);
         roots.put(pid, target);
-        for (int acqId : people.keySet()) {
+        for (int acqId : ((MyPerson) people.get(pid)).getAcquaintance().keySet()) {
             if (!visited.containsKey(acqId) && usedArc.containsKey(new Arc(acqId, pid, 1))) {
                 dfsRoot(acqId, pid, target, visited, roots, people, usedArc);
             }
