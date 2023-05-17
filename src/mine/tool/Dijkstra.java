@@ -60,7 +60,7 @@ public class Dijkstra {
                     dist.getOrDefault(next, 2147483647) > nextValue + dist.get(target)) {
                     dist.put(next, nextValue + dist.get(target));
                     queue.add(new Edge(next, dist.get(next), target)); } } }
-        HashMap<Arc, Integer> usedArc = Kruskal.makeKruskal(people, tempArcPools);
+        HashMap<Arc, Integer> usedArc = tempArcPools;
         HashMap<Integer, Integer> roots = new HashMap<>();
         dfsForRoot(from, roots, people, usedArc);
         int node = 0;
