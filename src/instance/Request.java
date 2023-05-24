@@ -25,6 +25,14 @@ public class Request {
         this.book = book;
     }
 
+    public Request(String date, String student, String book) {
+        this.student = student;
+        this.date = DateCal.getDate(date);
+        this.dateOutput = date;
+        this.action = 1;
+        this.book = book;
+    }
+
     public int getDate() { return date; }
 
     public String getDateOutput() { return dateOutput; }
