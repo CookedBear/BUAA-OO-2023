@@ -146,14 +146,12 @@ public class Main {
 
     private static void actionSmear(String studentName, String bookName) {
         Student student = STUDENT_POOL.get(studentName);
-        Book book = new Book(bookName);
-        student.smashBook(book);
+        student.smashBook(new Book(bookName));
     }
 
     private static void actionLost(String studentName, String bookName) {
         Student student = STUDENT_POOL.get(studentName);
-        Book book = new Book(bookName);
-        student.lostBook(book);
+        student.lostBook(new Book(bookName));
     }
 
     private static void actionReturn(String studentName, String bookName,
