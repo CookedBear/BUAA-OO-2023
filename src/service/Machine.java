@@ -41,11 +41,11 @@ public class Machine {
         if (state == 0) {
             PrintAction.returned(dateOutput, student, book, NAME);
         } else if (state == 1) {
-            PrintAction.punished(dateOutput, student, NAME);
+            PrintAction.punished(dateOutput, student, "borrowing and returning librarian");
             PrintAction.returned(dateOutput, student, book, NAME);
             Back.repair(dateOutput, book);
         } else if (state == 2) {
-            PrintAction.punished(dateOutput, student, NAME);
+            PrintAction.punished(dateOutput, student, "borrowing and returning librarian");
             PrintAction.returned(dateOutput, student, book, NAME);
         }
     }

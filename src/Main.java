@@ -20,7 +20,7 @@ public class Main {
     private static int lastingDate = 1;
 
     public static void main(String[] args) {
-        System.out.println("2023-02-" + String.format("%02d", 1));
+        // System.out.println("2023-02-" + String.format("%02d", 1));
 
         Scanner scanner = new Scanner(System.in);
         initBooks(scanner);
