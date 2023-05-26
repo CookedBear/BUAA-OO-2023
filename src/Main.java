@@ -84,7 +84,7 @@ public class Main {
                         actionSmear(student, book);
                         break;
                     case 3:
-                        actionLost(student, book);
+                        actionLost(student, book, dateOutput);
                         break;
                     case 4:
                         actionReturn(student, book, dateOutput);
@@ -149,9 +149,9 @@ public class Main {
         student.smashBook(new Book(bookName));
     }
 
-    private static void actionLost(String studentName, String bookName) {
+    private static void actionLost(String studentName, String bookName, String dateOutput) {
         Student student = STUDENT_POOL.get(studentName);
-        student.lostBook(new Book(bookName));
+        student.lostBook(new Book(bookName), dateOutput);
     }
 
     private static void actionReturn(String studentName, String bookName,

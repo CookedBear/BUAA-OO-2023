@@ -1,5 +1,7 @@
 package instance;
 
+import service.Rent;
+
 import java.util.HashMap;
 
 public class Student {
@@ -34,5 +36,9 @@ public class Student {
 
     public void smashBook(Book book) { bookState.put(book, 1); }
 
-    public void lostBook(Book book) { bookState.put(book, 2); }
+    public void lostBook(Book book, String dateOutput) {
+        bookState.remove(book);
+        if (book.getType() == 1) { hasTypeB = false; }
+        Rent.lostBook(this, book, dateOutput);
+    }
 }

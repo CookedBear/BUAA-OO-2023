@@ -46,4 +46,8 @@ public class Rent {
             PrintAction.returned(dateOutput, student, book, NAME);
         }
     }
+
+    public static void lostBook(Student student, Book book, String dateOutput) {
+        PrintAction.punished(dateOutput, student, NAME);
+    }
 }
