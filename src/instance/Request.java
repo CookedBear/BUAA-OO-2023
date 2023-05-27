@@ -2,6 +2,8 @@ package instance;
 
 import tool.DateCal;
 
+import java.util.Objects;
+
 public class Request {
     private final String student;
     private final int date;
@@ -43,4 +45,18 @@ public class Request {
 
     public String getBook() { return book; }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        Request request = (Request) o;
+        return action == request.action &&
+                Objects.equals(student, request.student) &&
+                Objects.equals(book, request.book);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(student, action, book);
+    }
 }

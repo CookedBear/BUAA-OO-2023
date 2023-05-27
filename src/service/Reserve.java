@@ -29,12 +29,8 @@ public class Reserve {
         if (!reserveCount.containsKey(student)) {
             reserveCount.put(student, 0);
         }
-        if (!RESERVE_BOOK_LIST.containsKey(book)) {
-            RESERVE_BOOK_LIST.put(book, new LinkedList<>());
-        }
-        LinkedList<Student> students = RESERVE_BOOK_LIST.get(book);
-        if (!students.contains(student) && reserveCount.get(student) < 3) {
-            students.add(student);
+
+        if (reserveCount.get(student) < 3) {
             reserveCount.put(student, reserveCount.get(student) + 1);
             Request request = new Request(dateOutput, student.getName(), book.getName());
             if (!REQUEST_LIST.contains(request)) {

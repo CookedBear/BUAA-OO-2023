@@ -47,7 +47,7 @@ public class Rent {
         }
     }
 
-    public static void lostBook(Student student, Book book, String dateOutput) {
+    public static void lostBook(Student student, String dateOutput) {
         PrintAction.punished(dateOutput, student, NAME);
     }
 }

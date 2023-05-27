@@ -39,6 +39,6 @@ public class Student {
     public void lostBook(Book book, String dateOutput) {
         bookState.remove(book);
         if (book.getType() == 1) { hasTypeB = false; }
-        Rent.lostBook(this, book, dateOutput);
+        Rent.lostBook(this, dateOutput);
     }
 }
