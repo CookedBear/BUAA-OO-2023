@@ -56,11 +56,19 @@ public class Reserve {
             PrintAction.rented(dateOutput, studentPool.get(request.getStudent()), book, NAME);
             studentPool.get(request.getStudent()).rentBook(book);
             if (book.getType() == 1) {
-                for (int j = i; j < REQUEST_LIST.size(); j++) {
-                    if (request.getStudent().equals(REQUEST_LIST.get(j).getStudent()) &&
-                        REQUEST_LIST.get(j).getBook().charAt(0) == 'B' &&
-                        !removedRequest.contains(REQUEST_LIST.get(j))) {
-                        removedRequest.add(REQUEST_LIST.get(j));
+                for (Request value : REQUEST_LIST) {
+                    if (request.getStudent().equals(value.getStudent()) &&
+                            value.getBook().charAt(0) == 'B' &&
+                            !removedRequest.contains(value)) {
+                        removedRequest.add(value);
+                    }
+                }
+            } else {
+                for (Request value : REQUEST_LIST) {
+                    if (request.getStudent().equals(value.getStudent()) &&
+                            value.getBook().equals(request.getBook()) &&
+                            !removedRequest.contains(value)) {
+                        removedRequest.add(value);
                     }
                 }
             }
