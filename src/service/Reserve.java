@@ -31,11 +31,12 @@ public class Reserve {
         }
 
         if (reserveCount.get(student) < 3) {
-            reserveCount.put(student, reserveCount.get(student) + 1);
+
             Request request = new Request(dateOutput, student.getName(), book.getName());
             if (!REQUEST_LIST.contains(request)) {
                 REQUEST_LIST.add(request);
                 PrintAction.ordered(dateOutput, student, book);
+                reserveCount.put(student, reserveCount.get(student) + 1);
             }
         }
     }
