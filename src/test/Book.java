@@ -1,3 +1,5 @@
+package test;
+
 public class Book {
     public int type;
     public String name;

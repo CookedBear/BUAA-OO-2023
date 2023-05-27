@@ -1,3 +1,7 @@
+package test;
+
+import test.Book;
+
 import java.util.HashMap;
 
 public class Student {
