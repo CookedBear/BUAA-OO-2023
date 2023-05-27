@@ -43,34 +43,34 @@ public class Reserve {
     public static void deliver(HashMap<Book, Integer> pool,
                                HashMap<String, Student> studentPool, String dateOutput) {
         // if students get B from 'deliver' or 'rent', need to flush
-        ArrayList<Request> removedRequest = new ArrayList<>();
-        for (int i = 0; i < REQUEST_LIST.size(); i++) {
-            Request request = REQUEST_LIST.get(i);
+        int idx = 0;
+        while (idx < REQUEST_LIST.size()) {
+            Request request = REQUEST_LIST.get(idx);
             Book book = new Book(request.getBook());
-            if (!pool.containsKey(book) || pool.get(book) == 0) { continue; }
+            if (!pool.containsKey(book) || pool.get(book) == 0) {
+                idx++;
+                continue;
+            }
             pool.put(book, pool.get(book) - 1);
             PrintAction.rented(dateOutput, studentPool.get(request.getStudent()), book, NAME);
             studentPool.get(request.getStudent()).rentBook(book);
-            if (book.getType() == 1) {
-                for (Request value : REQUEST_LIST) {
-                    if (request.getStudent().equals(value.getStudent()) &&
-                            value.getBook().charAt(0) == 'B' &&
-                            !removedRequest.contains(value)) {
-                        removedRequest.add(value);
-                    }
-                }
-            } else {
-                for (Request value : REQUEST_LIST) {
-                    if (request.getStudent().equals(value.getStudent()) &&
-                            value.getBook().equals(request.getBook()) &&
-                            !removedRequest.contains(value)) {
-                        removedRequest.add(value);
+            ArrayList<Integer> removedElements = new ArrayList<>();
+            int back = 0;
+            for (int i = 0; i < REQUEST_LIST.size(); i++) {
+                Request value = REQUEST_LIST.get(i);
+                if (request.getStudent().equals(value.getStudent())) {
+                    if ((book.getType() == 1 && value.getBook().charAt(0) == 'B') ||
+                        (book.getType() == 2 && value.getBook().equals(request.getBook()))) {
+                        removedElements.add(i);
                     }
                 }
             }
-        }
-        for (Request request : removedRequest) {
-            REQUEST_LIST.remove(request);
+            for (int iidx = removedElements.size() - 1; iidx >= 0; iidx--) {
+                int i = removedElements.get(iidx);
+                if (i < idx) { back++; }
+                REQUEST_LIST.remove(i);
+            }
+            idx -= back;
         }
     }
 
