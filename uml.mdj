@@ -370,7 +370,7 @@
 											"width": 561.58984375,
 											"height": 13,
 											"underline": true,
-											"text": "-actionReturn(studentName: String, BookName: String, date: int, dateOutput: String): void",
+											"text": "-actionReturn(studentName: String, BookName: String, dateOutput: String): void",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2867,7 +2867,7 @@
 											"font": "Arial;13;1",
 											"left": 653,
 											"top": 199,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "Student"
 										},
@@ -2902,7 +2902,7 @@
 									"font": "Arial;13;0",
 									"left": 648,
 									"top": 192,
-									"width": 284.96142578125,
+									"width": 310.5361328125,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGIUrible8dzTw="
@@ -2939,7 +2939,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 222,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "-name: String",
 											"horizontalAlignment": 0
@@ -2956,7 +2956,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 237,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "-hasTypeB: boolean",
 											"horizontalAlignment": 0
@@ -2973,7 +2973,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 252,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "-bookState: HashMap<Book,Integer>",
 											"horizontalAlignment": 0
@@ -2982,7 +2982,7 @@
 									"font": "Arial;13;0",
 									"left": 648,
 									"top": 217,
-									"width": 284.96142578125,
+									"width": 310.5361328125,
 									"height": 53
 								},
 								{
@@ -3007,7 +3007,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 275,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+Student(name: String)",
 											"horizontalAlignment": 0
@@ -3024,7 +3024,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 290,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+getName(): String",
 											"horizontalAlignment": 0
@@ -3041,7 +3041,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 305,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+isHasTypeB(): boolean",
 											"horizontalAlignment": 0
@@ -3058,7 +3058,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 320,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+hasBookC(book: Book): boolean",
 											"horizontalAlignment": 0
@@ -3075,7 +3075,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 335,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+rentBook(book: Book): void",
 											"horizontalAlignment": 0
@@ -3092,7 +3092,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 350,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+returnBook(book: Book): int",
 											"horizontalAlignment": 0
@@ -3109,7 +3109,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 365,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+smashBook(book: Book): void",
 											"horizontalAlignment": 0
@@ -3126,7 +3126,7 @@
 											"font": "Arial;13;0",
 											"left": 653,
 											"top": 380,
-											"width": 274.96142578125,
+											"width": 300.5361328125,
 											"height": 13,
 											"text": "+lostBook(book: Book, dateOutput: String): void",
 											"horizontalAlignment": 0
@@ -3135,7 +3135,7 @@
 									"font": "Arial;13;0",
 									"left": 648,
 									"top": 270,
-									"width": 284.96142578125,
+									"width": 310.5361328125,
 									"height": 128
 								},
 								{
@@ -3175,7 +3175,7 @@
 							"containerChangeable": true,
 							"left": 648,
 							"top": 192,
-							"width": 284.96142578125,
+							"width": 310.5361328125,
 							"height": 221,
 							"nameCompartment": {
 								"$ref": "AAAAAAGIUrible8cvh4="
@@ -4859,7 +4859,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 966,
+									"left": 979,
 									"top": 271,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -4880,7 +4880,7 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 966,
+									"left": 979,
 									"top": 256,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -4901,7 +4901,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 966,
+									"left": 979,
 									"top": 301,
 									"height": 13,
 									"alpha": -1.5707963267948966,
@@ -4922,7 +4922,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 957,
+									"left": 983,
 									"top": 271,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -4943,7 +4943,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 960,
+									"left": 986,
 									"top": 257,
 									"height": 13,
 									"alpha": 0.7853981633974483,
@@ -4964,7 +4964,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 953,
+									"left": 979,
 									"top": 298,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -5070,7 +5070,7 @@
 							"tail": {
 								"$ref": "AAAAAAGIUrible8bn9E="
 							},
-							"points": "932:292;1000:292",
+							"points": "958:292;1000:292",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGIUskL+PMBb7s="
@@ -5559,7 +5559,7 @@
 							"tail": {
 								"$ref": "AAAAAAGIUk/Bcuxkj2M="
 							},
-							"points": "1416:668;1128:668;1128:392;932:392",
+							"points": "1416:668;1128:668;1128:392;958:392",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGIUssbSPfHxsA="
@@ -5652,7 +5652,7 @@
 							"tail": {
 								"$ref": "AAAAAAGIUlNSwOziaOo="
 							},
-							"points": "1416:799;1128:799;1128:392;932:392",
+							"points": "1416:799;1128:799;1128:392;958:392",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGIUssl+/f8BTU="
@@ -5745,7 +5745,7 @@
 							"tail": {
 								"$ref": "AAAAAAGIUlPZ7O079FE="
 							},
-							"points": "1416:944;1128:944;1128:392;932:392",
+							"points": "1416:944;1128:944;1128:392;958:392",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGIUssx9PgxSkw="
@@ -5838,7 +5838,7 @@
 							"tail": {
 								"$ref": "AAAAAAGIUrible8bn9E="
 							},
-							"points": "932:376;1112:376;1112:784;1416:784",
+							"points": "958:376;1112:376;1112:784;1416:784",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGIVps7pStTp0o="
@@ -6363,15 +6363,6 @@
 									},
 									"name": "BookName",
 									"type": "String"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAGIUjO3quqT7Wo=",
-									"_parent": {
-										"$ref": "AAAAAAGIUjO3quqQoe8="
-									},
-									"name": "date",
-									"type": "int"
 								},
 								{
 									"_type": "UMLParameter",
