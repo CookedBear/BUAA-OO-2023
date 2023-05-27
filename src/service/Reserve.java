@@ -35,8 +35,8 @@ public class Reserve {
             Request request = new Request(dateOutput, student.getName(), book.getName());
             if (!REQUEST_LIST.contains(request)) {
                 REQUEST_LIST.add(request);
+                PrintAction.ordered(dateOutput, student, book);
             }
-            PrintAction.ordered(dateOutput, student, book);
         }
     }
 
