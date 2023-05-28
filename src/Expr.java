@@ -105,7 +105,7 @@ public class Expr implements Factor {
         //System.out.println(values);
         for (Values v : values) {
             if (v.getConstValue().compareTo(BigInteger.valueOf(0)) > 0) {
-                sb.append(v.toString());
+                sb.append(v);
             }
         }
         sb.append(iter.next().toString());

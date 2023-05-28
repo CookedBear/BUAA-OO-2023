@@ -5,6 +5,7 @@ public class Main {
         //System.out.println("Hello world!");
         Scanner input = new Scanner(System.in);
         String inputLine = input.nextLine();
+        long startTime = System.nanoTime();
         inputLine = inputLine.replaceAll("[ \t]", "");
 
         Lexer lexer = new Lexer(inputLine);
@@ -12,6 +13,8 @@ public class Main {
 
         Expr exprMain = parser.parseExpr();
         System.out.println(exprMain);
+        long overTime = System.nanoTime();      //获取结束时间
+        System.out.println("程序运行时间为："+(overTime-startTime)+"纳秒");
     }
 }
 
