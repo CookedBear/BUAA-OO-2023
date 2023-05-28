@@ -8,6 +8,7 @@ public class Request {
     public boolean timeSafe;
     public boolean processed = false;
 
+
     Request(int from, int to, int id, double time) {
         this.from = from;
         this.to = to;

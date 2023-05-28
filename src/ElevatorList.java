@@ -6,6 +6,10 @@ public class ElevatorList {
     public final int MAXPEOPLE = 6;
     public double ele = 0;
     public double time = 0;
+    public int moveTimes = 0;
+    public double moveUsedTime = 0;
+    public int doorTimes = 0;
+    public double doorUsedTime = 0;
 
     ElevatorList() {
         for (int i = 0; i < 6; i++) {
@@ -18,6 +22,10 @@ public class ElevatorList {
         int prevFloor = elevator.floor;
         int people = elevator.requests.size();
         boolean doorOpen = elevator.openDoor;
+        if (!requestList.containsKey(requestId)) {
+            System.out.println("Moving non-exist Request: " + requestId);
+            return true;
+        }
 
         if (prevFloor != floor) {
             System.out.println("Move without printing ARRIVE!");
@@ -75,16 +83,23 @@ public class ElevatorList {
 
         int prevFloor = elevator.floor;
         double doorTime = elevator.doortime;
+        if (floor < 1) {
+            System.out.println("Elevator " + elevatorId + " is made in hell!");
+        } else if (floor > 11) {
+            System.out.println("Elevator " + elevatorId + " is made in heaven!");
+        }
         switch (action) {
             case 3:
                 if (Math.abs(prevFloor - floor) > 1) {
                     System.out.println("Elevator " + elevatorId + " overmoved!");
-                } else if (time * 10000 - doorTime * 10000 < 4000) {
+                } else if (time * 10000 - doorTime * 10000 < 3999) {
                     System.out.println("Elevator " + elevatorId + " overspeed!");
                 } else {
                     elevator.floor = floor;                 // move successfully
+                    moveUsedTime += (time - doorTime);
                     elevator.doortime = time;
                     ele += 0.4;
+                    moveTimes++;
                 }
                 break;
             case 4:
@@ -107,12 +122,15 @@ public class ElevatorList {
                 } else if (prevFloor != floor) {
                     System.out.println("Move without printing ARRIVE!");
                     return true;
-                } else if (time - doorTime < 0.4) {
+                } else if (time * 10000 - doorTime * 10000 < 3999) {
                     System.out.println("Elevator " + elevatorId + " closed door too fast!");
                 } else {
                     elevator.openDoor = false;              // close successfully
+                    doorUsedTime += (time - doorTime);
                     elevator.doortime = time;
                     ele += 0.1;
+                    doorTimes++;
+
                 }
                 break;
             default:
