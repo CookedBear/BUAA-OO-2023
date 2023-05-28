@@ -26,7 +26,7 @@ public class Main {
 
     public static ArrayList<Integer> DATE_LIST = new ArrayList<>();
     public static HashMap<Book, Integer> BOOK_POOL = new HashMap<>();
-    public static HashMap<Book, Integer> BOOK_COUNT_POOL = new HashMap<>();
+    public static HashMap<Book, Integer> BOOK_COUNT_POOL = new HashMap<>(); // while running, the book count left in total(not lost)
     public static HashMap<Book, Integer> BOOK_OUTPUT_POOL = new HashMap<>();
     public static HashMap<String, Student> STUDENT_POOL = new HashMap<>();
     public static ArrayList<String> INS_POOL = new ArrayList<>();
@@ -46,7 +46,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        initArgs();
+        initArgs(args);
         initDate();
         initBooks();
         initStudents();
@@ -56,10 +56,16 @@ public class Main {
         if (!DEBUG) { dataPrint(); }
     }
 
-    public static void initArgs() {
+    public static void initArgs(String[] args) {
         BOOK_NUMBER = random.nextInt(6) + 3;
-        STUDENT_NUMBER = random.nextInt(5) + 3;
-        TOTAL_DATE = random.nextInt(10) * 5 + 5;
+        STUDENT_NUMBER = random.nextInt(3) + 3;
+        TOTAL_DATE = (int) (random.nextInt(10) * 2.5) + 5;
+        if (args.length > 0) {
+            if (args[0].equals("-manual")) {
+                INS_NUMBER = Integer.parseInt(args[1]);
+            }
+            TOTAL_DATE *= (int) (INS_NUMBER / 100);
+        }
         debugF(String.format("\nBOOK_NUMBER = %d\nSTUDENT_NUMBER = %d\nTOTAL_DATE = %d\nINS_NUMBER = 100\n",
                 BOOK_NUMBER, STUDENT_NUMBER, TOTAL_DATE),
                 DEBUG);
@@ -68,7 +74,7 @@ public class Main {
     public static void initDate() {
         for (int i = 0; i < INS_NUMBER; i++) {
             int date = random.nextInt(TOTAL_DATE) + 1;
-            DATE_LIST.add(date * 2);
+            DATE_LIST.add(date);
         }
         Collections.sort(DATE_LIST);
         debugF("Dates: " + DATE_LIST + "\n", DEBUG);
@@ -125,8 +131,8 @@ public class Main {
             Student student = randomStudent();
             int actions = random.nextInt(20);
             String action = (!student.hasBook() || actions <= 0) ? ACTIONS[0] :
-                            (!student.allSmash() && actions <= 7) ? ACTIONS[1] :
-                            (!student.allSmash() && actions <= 7) ? ACTIONS[2] :
+                            (!student.allSmash() && actions <= 4) ? ACTIONS[1] :
+                            (!student.allSmash() && actions <= 5) ? ACTIONS[2] :
                             ACTIONS[3];
             Book book = randomBook(action, student);
             if (action.equals(ACTIONS[2])) {
