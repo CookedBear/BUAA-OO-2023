@@ -39,7 +39,9 @@ public class Main {
 
     public static ArrayList<Integer> FAKEIDPOOL = new ArrayList<>();
     public static ArrayList<Integer> FAKEGROUPPOOL = new ArrayList<>();
+    public static ArrayList<Integer> FAKEEMOJIPOOL = new ArrayList<>();
     public static HashMap<Arc, Integer> ARCPOOL = new HashMap<>();
+    public static HashMap<Integer, Integer> EMOJIPOOL = new HashMap<>();
     public static ArrayList<String> OUTPUTS = new ArrayList<>();
     public static ArrayList<String> MROKOUTS = new ArrayList<>();
 
@@ -127,28 +129,40 @@ public class Main {
             }
             FAKEGROUPPOOL.add(id);
         }
+        for (int i = 0; i < INS_NUM / 100 + 1; i++) {
+            int id = random.nextInt(10000);
+            while (FAKEEMOJIPOOL.contains(id)) {
+                id = random.nextInt(10000);
+            }
+            FAKEEMOJIPOOL.add(id);
+        }
     }
 
     public static void generateCode(Random random) throws MyEqualRelationException, EqualPersonIdException {
-        if (true) {
-            for (int i = 0; i < INS_NUM; i++) {
-                if (i <= INS_NUM / 8) {
-                    addPerson(random);
-                } else if (i <= INS_NUM / 4) {
-                    addRelation(random);
-                } else if (i <= INS_NUM * 3 / 10 && GROUPPOOL.size() <= 50) {
-                    addGroup(random);
-                } else if (i <= INS_NUM * 2 / 5) {
-                    addToGroup(random);
-                } else if (i <= INS_NUM / 2) {
+        for (int i = 0; i < INS_NUM; i++) {
+            if (i <= Math.min(3, INS_NUM / 100)) {
+                storeEmojiId(random);
+            } else if (i <= INS_NUM / 70) {
+                addPerson(random);
+            } else if (i <= INS_NUM / 4) {
+                addRelation(random);
+            } else if (i <= INS_NUM * 3 / 10 && GROUPPOOL.size() <= 50) {
+                addGroup(random);
+            } else if (i <= INS_NUM * 2 / 5) {
+                addToGroup(random);
+            } else if (i <= INS_NUM / 2) {
+                int category = random.nextInt(4);
+                if (category == 0) {
                     addMessage(random);
+                } else if (category == 1) {
+                    addRedEnvelopeMessage(random);
+                } else if (category == 2) {
+                    addNoticeMessage(random);
                 } else {
-                    randomIns(random);
+                    addEmojiMessage(random);
                 }
-            }
-        } else {
-            for (int i = 0; i < INS_NUM; i++) {
-                modifyRelationOkTest(random);
+            } else {
+                randomIns(random);
             }
         }
     }
@@ -160,9 +174,9 @@ public class Main {
     * age(int)值在 [0,200] 中
     * */
     public static void addPerson(Random random) {
-        String name = String.valueOf(random.nextInt());
+        String name = String.valueOf(random.nextInt() / 10);
         while (NAMEPOOL.contains(name)) {
-            name = String.valueOf(random.nextInt());
+            name = String.valueOf(random.nextInt() / 10);
         }
         NAMEPOOL.add(name);
         int age = random.nextInt(201);
@@ -518,7 +532,7 @@ public class Main {
         if (type > 1) {
             MESSAGEPOOL.put(mid, new Message(mid, p1id, messageType, target));
         }
-        int socialValue = random.nextInt(100);
+        int socialValue = random.nextInt(2000) - 1000;
 
         OUTPUTS.add(String.format("am %d %d %d %d %d\n", mid, socialValue, messageType, p1id, target));
         debugF(DEBUG, String.format("addMessage mid= %d type= %s", mid, ty));
@@ -548,6 +562,211 @@ public class Main {
         }
         OUTPUTS.add(String.format("sm %d\n", messageId));
         debugF(DEBUG, String.format("sendMessage mid= %d type= %s", messageId, ty));
+    }
+
+    public static void queryReceivedMessage(Random random) {
+        int type = random.nextInt(2);
+        int personId = randomFakeId(random, (type != 0));
+        String ty = (type == 0) ? "normal" : "pinf";
+        OUTPUTS.add(String.format("qrm %d\n", personId));
+        debugF(DEBUG, String.format("queryReceivedMessage pid= %d type= %s", personId, ty));
+    }
+
+    public static void addRedEnvelopeMessage(Random random) {
+        int type = random.nextInt(7);
+        String ty;
+        int p1id;
+        int target;
+        int money = random.nextInt(201);
+        int messageType = 0;
+        if (type == 0 && !MESSAGEPOOL.isEmpty()) {
+            Message message = randomMessage(random);
+            p1id = message.person1Id;
+            messageType = message.type;
+            target = message.target;
+            ty = "emi";
+        } else if (type == 1) {
+            p1id = randomFakeId(random, true);
+            target = random.nextInt();
+            messageType = random.nextInt(2);
+            ty = "pinf";
+        } else {
+            p1id = randomPerson(random).id;
+            messageType = random.nextInt(2);
+            if (messageType == 0) {
+                target = randomPerson(random).id;
+                ty = "normal_p2p";
+            } else {
+                target = randomGroup(random).groupId;
+                ty = "normal_p2g";
+            }
+        }
+        int mid = MESSAGEID++;
+        if (type > 1) {
+            MESSAGEPOOL.put(mid, new Message(mid, p1id, messageType, target));
+        }
+
+        OUTPUTS.add(String.format("arem %d %d %d %d %d\n", mid, money, messageType, p1id, target));
+        debugF(DEBUG, String.format("addRedEnvelopeMessage mid= %d type= %s", mid, ty));
+    }
+
+    public static void addNoticeMessage(Random random) {
+        int type = random.nextInt(7);
+        String ty;
+        int p1id;
+        int target;
+        String notice = String.valueOf(random.nextInt());
+        int messageType = 0;
+        if (type == 0 && !MESSAGEPOOL.isEmpty()) {
+            Message message = randomMessage(random);
+            p1id = message.person1Id;
+            messageType = message.type;
+            target = message.target;
+            ty = "emi";
+        } else if (type == 1) {
+            p1id = randomFakeId(random, true);
+            target = random.nextInt();
+            messageType = random.nextInt(2);
+            ty = "pinf";
+        } else {
+            p1id = randomPerson(random).id;
+            messageType = random.nextInt(2);
+            if (messageType == 0) {
+                target = randomPerson(random).id;
+                ty = "normal_p2p";
+            } else {
+                target = randomGroup(random).groupId;
+                ty = "normal_p2g";
+            }
+        }
+        int mid = MESSAGEID++;
+        if (type > 1) {
+            MESSAGEPOOL.put(mid, new Message(mid, p1id, messageType, target));
+        }
+
+        OUTPUTS.add(String.format("anm %d %s %d %d %d\n", mid, notice, messageType, p1id, target));
+        debugF(DEBUG, String.format("addNoticeMessage mid= %d type= %s", mid, ty));
+    }
+
+    public static void addEmojiMessage(Random random) {
+        int type = random.nextInt(7);
+        String ty;
+        int p1id;
+        int target;
+        int emojiId = 0;
+        int messageType = 0;
+        if (type == 0 && !MESSAGEPOOL.isEmpty()) {
+            Message message = randomMessage(random);
+            p1id = message.person1Id;
+            messageType = message.type;
+            target = message.target;
+            ty = "emi";
+        } else if (type == 1) {
+            p1id = randomFakeId(random, true);
+            target = random.nextInt();
+            messageType = random.nextInt(2);
+            ty = "pinf";
+        } else if (type == 2) {
+            p1id = randomPerson(random).id;
+            ty = "einf";
+            emojiId = randomFakeEmojiId(random, true);
+            messageType = random.nextInt(2);
+            if (messageType == 0) {
+                target = randomPerson(random).id;
+            } else {
+                target = randomGroup(random).groupId;
+            }
+        } else {
+            p1id = randomPerson(random).id;
+            messageType = random.nextInt(2);
+            emojiId = randomEmojiId(random);
+            if (messageType == 0) {
+                target = randomPerson(random).id;
+                ty = "normal_p2p";
+            } else {
+                target = randomGroup(random).groupId;
+                ty = "normal_p2g";
+            }
+        }
+        int mid = MESSAGEID++;
+        if (type > 2) {
+            MESSAGEPOOL.put(mid, new Message(mid, p1id, messageType, target));
+        }
+
+        OUTPUTS.add(String.format("aem %d %s %d %d %d\n", mid, emojiId, messageType, p1id, target));
+        debugF(DEBUG, String.format("addEmojiMessage mid= %d eid= %d type= %s", mid, emojiId, ty));
+    }
+
+    public static void clearNotice(Random random) {
+        int type = random.nextInt(3);
+        int pid = randomFakeId(random, (type == 0));
+        String ty = (type == 0) ? "pinf" : "normal";
+
+        OUTPUTS.add(String.format("cn %d\n", pid));
+        debugF(DEBUG, String.format("clearNotice pid= %d type= %s", pid, ty));
+    }
+
+    public static void storeEmojiId(Random random) {
+        int type = random.nextInt(3);
+        int eid;
+        String ty;
+        if (type == 0 && !EMOJIPOOL.isEmpty()) {
+            ty = "eei";
+            eid = randomEmojiId(random);
+        } else {
+            ty = "normal";
+            eid = random.nextInt();
+            while (EMOJIPOOL.containsKey(eid)) {
+                eid = random.nextInt();
+            }
+            EMOJIPOOL.put(eid, 0);
+        }
+        OUTPUTS.add(String.format("sei %d\n", eid));
+        debugF(DEBUG, String.format("storeEmoji eid= %d type= %s", eid, ty));
+    }
+
+    public static void queryPopularity(Random random) {
+        int type = random.nextInt(4);
+        int eid;
+        String ty;
+        if (type == 0) {
+            eid = randomFakeEmojiId(random, true);
+            ty = "einf";
+        } else {
+            eid = randomEmojiId(random);
+            ty = "normal";
+        }
+        OUTPUTS.add(String.format("qp %d\n", eid));
+        debugF(DEBUG, String.format("queryPopularity eid= %d type= %s", eid, ty));
+    }
+
+    public static void queryMoney(Random random) {
+        int type = random.nextInt(3);
+        int pid = randomFakeId(random, (type == 0));
+        String ty = (type == 0) ? "pinf" : "normal";
+
+        OUTPUTS.add(String.format("qm %d\n", pid));
+        debugF(DEBUG, String.format("queryMoney pid= %d type= %s", pid, ty));
+    }
+
+    public static void deleteColdEmoji(Random random) {
+        double average = 0;
+        for (int heat : EMOJIPOOL.values()) {
+            average += heat;
+        }
+        average /= EMOJIPOOL.size();
+
+        OUTPUTS.add(String.format("dce %d\n", (int) average));
+        debugF(DEBUG, String.format("deleteColdEmoji limit= %d", (int) average));
+    }
+
+    public static void queryLeastMoment(Random random) {
+        int type = random.nextInt(3);
+        int pid = randomFakeId(random, (type == 0));
+        String ty = (type == 0) ? "pinf" : "normal";
+
+        OUTPUTS.add(String.format("qlm %d\n", pid));
+        debugF(DEBUG, String.format("queryLeastMoment pid= %d type= %s", pid, ty));
     }
 
     public static void modifyRelationOkTest(Random random) throws MyEqualRelationException, EqualPersonIdException {
@@ -671,6 +890,11 @@ public class Main {
         return MESSAGEPOOL.get(keys[random.nextInt(keys.length)]);
     }
 
+    public static int randomEmojiId(Random random) {
+        Integer[] keys = EMOJIPOOL.keySet().toArray(new Integer[0]);
+        return (keys[random.nextInt(keys.length)]);
+    }
+
     public static int randomFakeId(Random random, boolean fake) {
         if (fake) {
             return FAKEIDPOOL.get(random.nextInt(FAKEIDPOOL.size()));
@@ -687,60 +911,56 @@ public class Main {
         }
     }
 
+    public static int randomFakeEmojiId(Random random, boolean fake) {
+        if (fake) {
+            return FAKEEMOJIPOOL.get(random.nextInt(FAKEEMOJIPOOL.size()));
+        } else {
+            return randomEmojiId(random);
+        }
+    }
+
     public static void randomIns(Random random) {
-        int type = random.nextInt(17);
+        int type = random.nextInt(56);
         switch (type) {
-            case 0:
-                addPerson(random);
-                break;
-            case 1:
-                addRelation(random);
-                break;
-            case 2:
-                queryValue(random);
-                break;
-            case 3:
-                queryCircle(random);
-                break;
-            case 4:
-                queryBlockSum();
-                break;
-            case 5:
-                queryTriSum();
-                break;
-            case 6:
-                addGroup(random);
-                break;
-            case 7:
-                addToGroup(random);
-                break;
-            case 8:
-                delFromGroup(random);
-                break;
-            case 9:
-                queryGroupValueSum(random);
-                break;
-            case 10:
-                queryAgeVar(random);
-                break;
-            case 11:
-                queryBestAcquaintance(random);
-                break;
-            case 12:
-                queryCoupleSum();
-                break;
-            case 13:
-                modifyRelation(random);
-                break;
+            case 0: addPerson(random); break;
+            case 1:case 2: case 3:
+            case 4: addRelation(random); break;
+            case 5: queryValue(random); break;
+            case 6: queryCircle(random); break;
+            case 7: queryBlockSum(); break;
+            case 8: queryTriSum(); break;
+            case 9: addGroup(random); break;
+            case 10: case 11:
+            case 12: addToGroup(random); break;
+            case 13: delFromGroup(random); break;
             case 14:
-                querySocialValue(random);
-                break;
-            case 15:
-                addMessage(random);
-                break;
-            case 16:
-                sendMessage(random);
-                break;
+            case 15: queryGroupValueSum(random); break;
+            case 16: queryAgeVar(random); break;
+            case 17: queryBestAcquaintance(random); break;
+            case 18: case 19: case 20:
+            case 21: queryCoupleSum(); break;
+            case 22: case 23: case 24:
+            case 25: modifyRelation(random); break;
+            case 26: querySocialValue(random); break;
+            case 27: case 28:
+            case 29: addMessage(random); break;
+            case 30: case 31:
+            case 32: sendMessage(random); break;
+            case 33: case 34:
+            case 35: queryReceivedMessage(random); break;
+            case 36:
+            case 37: addRedEnvelopeMessage(random); break;
+            case 38:
+            case 39: addNoticeMessage(random); break;
+            case 40:
+            case 41: addEmojiMessage(random); break;
+            case 42:
+            case 43: clearNotice(random); break;
+            case 44: storeEmojiId(random); break;
+            case 45: queryPopularity(random); break;
+            case 46: queryMoney(random); break;
+            case 47: deleteColdEmoji(random); break;
+            default: queryLeastMoment(random); break;
         }
     }
 }
