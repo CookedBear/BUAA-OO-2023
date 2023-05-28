@@ -1,0 +1,3 @@
+- put the jars at root directory. Default is 8 jars, name as `1.jar` … Can be changed in the `run_all.bat`
+- run `run_all.bat` and wait other cmd windows closed.
+- Press any key to checkout the result of this turn.
