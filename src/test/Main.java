@@ -1,5 +1,8 @@
 package test;
 
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -11,7 +14,17 @@ import static mine.exceptions.ExceptionCounter.initCauses;
 
 public class Main {
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
+    static FileWriter fw;
+
+    static {
+        try {
+            fw = new FileWriter("./debug.txt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static int INS_NUM;
     public static boolean MROK_ABLE = false;
     public static boolean MROKTEST = false;
@@ -30,7 +43,7 @@ public class Main {
     public static ArrayList<String> OUTPUTS = new ArrayList<>();
     public static ArrayList<String> MROKOUTS = new ArrayList<>();
 
-    public static void main(String[] args) throws MyEqualRelationException, EqualPersonIdException {
+    public static void main(String[] args) throws MyEqualRelationException, EqualPersonIdException, IOException {
         Random random = new Random();
         modeSelect(args, random);
         fakePoolInit(random);
@@ -38,6 +51,7 @@ public class Main {
         generateCode(random);
 
         printout();
+        fw.close();
     }
 
     public static void modeSelect(String[] args, Random random) {
@@ -118,11 +132,11 @@ public class Main {
     public static void generateCode(Random random) throws MyEqualRelationException, EqualPersonIdException {
         if (true) {
             for (int i = 0; i < INS_NUM; i++) {
-                if (i <= INS_NUM / 10) {
+                if (i <= INS_NUM / 8) {
                     addPerson(random);
-                } else if (i <= INS_NUM / 5) {
+                } else if (i <= INS_NUM / 4) {
                     addRelation(random);
-                } else if (i <= INS_NUM * 3 / 10) {
+                } else if (i <= INS_NUM * 3 / 10 && GROUPPOOL.size() <= 50) {
                     addGroup(random);
                 } else if (i <= INS_NUM * 2 / 5) {
                     addToGroup(random);
@@ -266,7 +280,7 @@ public class Main {
 
         String ty = (type == 0) ? "normal" : "pinf";
 
-        OUTPUTS.add(String.format("qc %d %d\n", id1, id2));
+        OUTPUTS.add(String.format("qci %d %d\n", id1, id2));
         debugF(DEBUG, String.format("queryCircle type is: %s id1= %d id2 = %d", ty, id1, id2));
     }
 
@@ -518,6 +532,10 @@ public class Main {
             messageId = random.nextInt();
             ty = "minf";
         } else {
+            if (MESSAGEPOOL.isEmpty()) {
+                addMessage(random);
+                return;
+            }
             messageId = randomMessage(random).messageId;
             if (MESSAGEPOOL.get(messageId).sent) {
                 addMessage(random);
@@ -623,6 +641,11 @@ public class Main {
     }
 
     public static void debugF(boolean isTest, String word) {
+        try {
+            fw.write("Debugf: " + word + "\n");
+        } catch (Exception ignored) {
+
+        }
         if (isTest) {
             System.out.println("Debugf: " + word);
         }
