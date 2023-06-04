@@ -11465,6 +11465,15 @@
 										},
 										{
 											"_type": "UMLParameter",
+											"_id": "AAAAAAGIh3iXh+mtUto=",
+											"_parent": {
+												"$ref": "AAAAAAGIhyTgDbvUIMQ="
+											},
+											"name": "dateOutput",
+											"type": "String"
+										},
+										{
+											"_type": "UMLParameter",
 											"_id": "AAAAAAGIhyTgDbvWbQY=",
 											"_parent": {
 												"$ref": "AAAAAAGIhyTgDbvUIMQ="
@@ -11496,6 +11505,15 @@
 										},
 										{
 											"_type": "UMLParameter",
+											"_id": "AAAAAAGIh3jZ4um0x7Q=",
+											"_parent": {
+												"$ref": "AAAAAAGIhyUerrvj+XQ="
+											},
+											"name": "dateOutput",
+											"type": "String"
+										},
+										{
+											"_type": "UMLParameter",
 											"_id": "AAAAAAGIhyUerrvlCrU=",
 											"_parent": {
 												"$ref": "AAAAAAGIhyUerrvj+XQ="
@@ -11524,6 +11542,15 @@
 											"type": {
 												"$ref": "AAAAAAGIhfvfMbdD8YM="
 											}
+										},
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAGIh3jrkOm5GIg=",
+											"_parent": {
+												"$ref": "AAAAAAGIhyU3jrvxvxw="
+											},
+											"name": "dateOutput",
+											"type": "String"
 										},
 										{
 											"_type": "UMLParameter",
@@ -12015,7 +12042,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGIhynXfL1mADo="
 									},
-									"name": "rentBookC",
+									"name": "rentTypeC",
 									"isStatic": true,
 									"parameters": [
 										{
@@ -12094,7 +12121,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGIhynXfL1mADo="
 									},
-									"name": "returnBookC",
+									"name": "returnTypeC",
 									"isStatic": true,
 									"parameters": [
 										{
