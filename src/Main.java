@@ -225,6 +225,10 @@ public class Main {
     }
 
     private static boolean try2Add(Student student, Book book) {
+        if ((book.getType() == 1 && student.isHasTypeB()) ||
+            (book.getType() == 2 && student.hasBookC(book))) {
+            return false;
+        }
         for (Request request : TRANS_LIST) {
             Student res = request.getStudent();
             if (student.getName().equals(res.getName()) &&
