@@ -5,7 +5,7 @@ import tool.DateCal;
 import java.util.Objects;
 
 public class Request {
-    private final String student;
+    private final Student student;
     private final int date;
     private final String dateOutput;
     private final int action;
@@ -15,9 +15,9 @@ public class Request {
      * lost = 3
      * return = 4
      */
-    private final String book;
+    private final Book book;
 
-    public Request(String date, String student, String action, String book) {
+    public Request(String date, Student student, String action, Book book) {
         this.student = student;
         this.date = DateCal.getDate(date);
         this.dateOutput = date;
@@ -27,11 +27,11 @@ public class Request {
         this.book = book;
     }
 
-    public Request(String date, String student, String book) {
+    public Request(String date, Student student, Book book) {
         this.student = student;
         this.date = DateCal.getDate(date);
         this.dateOutput = date;
-        this.action = 1;
+        this.action = 0;
         this.book = book;
     }
 
@@ -41,9 +41,9 @@ public class Request {
 
     public int getAction() { return action; }
 
-    public String getStudent() { return student; }
+    public Student getStudent() { return student; }
 
-    public String getBook() { return book; }
+    public Book getBook() { return book; }
 
     @Override
     public boolean equals(Object o) {
@@ -56,7 +56,5 @@ public class Request {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(student, action, book);
-    }
+    public int hashCode() { return Objects.hash(student, action, book); }
 }

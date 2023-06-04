@@ -1,26 +1,32 @@
 package service;
 
 import instance.Book;
+import instance.Request;
 import instance.Student;
+import tool.DateCal;
 import tool.PrintAction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Rent {
     private static final String NAME = "borrowing and returning librarian";
 
-    public static void rentTypeB(HashMap<Book, Integer> rentFailedPool,
-                                 Student student, Book book, String dateOutput) {
+    public static void rentTypeB(HashMap<Book, Integer> rentFailed, Student student,
+                                 Book book, int date, ArrayList<Request> reserveList,
+                                 ArrayList<Request> buyList) {
         if (student.isHasTypeB()) {
-            if (rentFailedPool.containsKey(book)) {
-                rentFailedPool.put(book, rentFailedPool.get(book) + 1);
+            PrintAction.failed(DateCal.getDateOutput(date), student, book, NAME);
+            if (rentFailed.containsKey(book)) {
+                rentFailed.put(book, rentFailed.get(book) + 1);
             } else {
-                rentFailedPool.put(book, 1);
+                rentFailed.put(book, 1);
             }
         } else {
             student.rentBook(book);
-            Reserve.flushWith(student);
-            PrintAction.rented(dateOutput, student, book, NAME);
+            Arrange.flushWith(student, book, reserveList);
+            Arrange.flushWith(student, book, buyList);
+            PrintAction.rented(date, student, book, NAME);
         }
     }
 
@@ -40,7 +46,7 @@ public class Rent {
         } else if (state == 1) {
             PrintAction.punished(dateOutput, student, NAME);
             PrintAction.returned(dateOutput, student, book, NAME);
-            Back.repair(dateOutput, book);
+            Back.repair(dateOutput, book, student.getSchool());
         } else if (state == 2) {
             PrintAction.punished(dateOutput, student, NAME);
             PrintAction.returned(dateOutput, student, book, NAME);
