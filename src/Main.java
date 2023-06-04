@@ -163,7 +163,8 @@ public class Main {
             int f = 0;
             for (School s1 : SCHOOL_POOL) {
                 if (s1.hasAvailable(book)) {
-                    if (!try2Add(student, book)) { // 校际，但借过 B or 同本 C，跳过此次请求，避免送书过多
+                    if (!try2Add(student, book)) {
+                        // 校际，请求不合法（学生有B借B/校际给过B，C同理），跳过此次请求，避免送书过多
                         f = 1;
                         break;
                     }
@@ -173,7 +174,7 @@ public class Main {
                     break;
                 }
             }
-            if (f == 1) { break; }
+            if (f == 1) { continue; }
             // 请求未被校际借阅满足
             school.reserveBook(request);
         }
