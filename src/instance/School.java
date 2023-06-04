@@ -116,16 +116,17 @@ public class School {
         Student s1 = getStudent(request.getStudent());
         for (Book book1 : bookCount.keySet()) {
             if (book1.getName().equals(request.getBook().getName()) &&
-                bookCount.get(book1) > 0) {
+                    bookCount.get(book1) > 0) {
                 // reserve Book
                 reserve.reserve(s1, book1, request.getDate(), reserveList);
-            } else {
-                // buy Book
-                Request buyRe = new Request(request.getDateOutput(), s1, request.getBook());
-                buyList.add(buyRe);
-                reserve.reserve(s1, request.getBook(), request.getDate(), reserveList);
+                return;
             }
         }
+        // buy Book
+        Request buyRe = new Request(request.getDateOutput(), s1, request.getBook());
+        buyList.add(buyRe);
+        reserve.reserve(s1, request.getBook(), request.getDate(), reserveList);
+
     }
 
     public void transBack(Book book, int date) {
@@ -179,7 +180,7 @@ public class School {
         }
         for (Book book : boughtCount.keySet()) {
             if (boughtCount.get(book) < 3) { boughtCount.put(book, 3); }
-            Purchase.buyIn(book, bookCount.get(book), rentFailedPool, bookCount, name, date);
+            Purchase.buyIn(book, boughtCount.get(book), rentFailedPool, bookCount, name, date);
         }
 
         buyList.clear();
