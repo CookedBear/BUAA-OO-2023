@@ -17,6 +17,7 @@ public class Main {
     // 保存所有输入的列表
     private static final ArrayList<Request> RESERVE_LIST = new ArrayList<>();
     // 保存所有预定请求的列表
+    private static final HashMap<String, ArrayList<Request>> RESERVE = new HashMap<>();
     private static final ArrayList<Request> TRANS_LIST = new ArrayList<>();
     // 保存当日借出校际书目的列表: book -> student
     private static final ArrayList<Request> RETURN_LIST = new ArrayList<>();
@@ -47,6 +48,7 @@ public class Main {
                 School school1 = new School(schoolName);
                 initBooks(school1, bookCount);
                 SCHOOL_POOL.add(school1);
+                RESERVE.put(schoolName, new ArrayList<>());
             }
         }
     }
@@ -131,6 +133,7 @@ public class Main {
                 if (REQUEST_LIST.isEmpty()) { break; }
             }
             serverTransOut();
+            doReserve();
             transOutPrint();
             if (REQUEST_LIST.isEmpty()) { break; }
         }
@@ -179,9 +182,19 @@ public class Main {
             }
             if (f != 0) { continue; }
             // 请求未被校际借阅满足
-            school.reserveBook(request);
+            RESERVE.get(school.getName()).add(request);
         }
         RESERVE_LIST.clear();
+    }
+
+    private static void doReserve() {
+        for (School school : SCHOOL_POOL) {
+            ArrayList<Request> reqs = RESERVE.get(school.getName());
+            for (Request request : reqs) {
+                school.reserveBook(request);
+            }
+            RESERVE.put(school.getName(), new ArrayList<>());
+        }
     }
 
     private static void transOutPrint() {
