@@ -15,7 +15,7 @@ public class Request {
      * lost = 3
      * return = 4
      */
-    private final Book book;
+    private Book book;
 
     public Request(String date, Student student, String action, Book book) {
         this.student = student;
@@ -44,6 +44,8 @@ public class Request {
     public Student getStudent() { return student; }
 
     public Book getBook() { return book; }
+
+    public void setBook(Book book) { this.book = book; }
 
     @Override
     public boolean equals(Object o) {

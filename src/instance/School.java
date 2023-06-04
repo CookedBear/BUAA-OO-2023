@@ -81,6 +81,8 @@ public class School {
             student.lostBook(book, request.getDateOutput()); // 交给学生处理无学校的书籍
             return null;
         } else {
+            // 丢书的时候没有把 book 所属的学校改过来，导致返回后去了错误的学校删除书籍，RE
+            request.setBook(book);
             return request;
         }
     }
