@@ -54,7 +54,7 @@ public class Reserve {
             }
             pool.put(book, pool.get(book) - 1);
             PrintAction.rented(DateCal.getDate(dateOutput), request.getStudent(), book, NAME);
-            request.getStudent().rentBook(book);
+            request.getStudent().rentBook(book, dateOutput);
             ArrayList<Integer> removedElements = new ArrayList<>();
             int back = 0;
             for (int i = 0; i < reserveList.size(); i++) {

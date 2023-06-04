@@ -71,4 +71,9 @@ public class PrintAction {
         System.out.printf("[%s] %s-%s got transported by %s in %s\n",
                 dateOutput, book.getSchool(), book.getName(), serviceName, school);
     }
+
+    public static void stateTrans(String dateOutput, Book book, String state1, String state2) {
+        System.out.printf("(State) [%s] %s transfers from %s to %s\n",
+                dateOutput, book.getName(), state1, state2);
+    }
 }

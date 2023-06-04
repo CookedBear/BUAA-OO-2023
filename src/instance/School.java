@@ -71,7 +71,7 @@ public class School {
     public void actionSmear(Request request) {
         Student student = getStudent(request.getStudent());
         Book book = request.getBook();
-        student.smashBook(book); // 交给学生处理无学校的书籍
+        student.smashBook(book, request.getDateOutput()); // 交给学生处理无学校的书籍
     }
 
     public Request actionLost(Request request) {

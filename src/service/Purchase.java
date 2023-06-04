@@ -11,7 +11,7 @@ public class Purchase {
     private static final String NAME = "purchasing department";
 
     public static void rent(Student student, Book book, int date) {
-        student.rentBook(book);
+        student.rentBook(book, DateCal.getDateOutput(date));
         PrintAction.rented(date, student, book, NAME);
     }
 
