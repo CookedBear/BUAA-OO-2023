@@ -96,8 +96,8 @@ public class Main {
         // initRequest 中生成的 Book 都不含目标学校名，使用前需要进行更改// 现在含了，但是 shared 不一定对
         for (int requestDate = 1; requestDate <= 365; requestDate++) {
             serverTransIn();
-            serverGiveOut(requestDate);
             serverTransBack(requestDate);
+            serverGiveOut(requestDate);
 
             serverMaintain(requestDate, DateCal.getDateOutput(requestDate));
             while (true) {
