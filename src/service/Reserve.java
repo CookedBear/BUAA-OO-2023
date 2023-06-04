@@ -16,15 +16,15 @@ public class Reserve {
     private HashMap<Student, Integer> reserveCount;
     private int createDate;
 
-    public void reserve(Student student, Book book, int date, ArrayList<Request> reserveList) {
+    public boolean reserve(Student student, Book book, int date, ArrayList<Request> reserveList) {
         if (date != createDate) {
             reserveCount = new HashMap<>();
             createDate = date;
         }
         if (book.getType() == 1) {
-            if (student.isHasTypeB()) { return; }
+            if (student.isHasTypeB()) { return false; }
         } else {
-            if (student.hasBookC(book)) { return; }
+            if (student.hasBookC(book)) { return false; }
         }
         if (!reserveCount.containsKey(student)) { reserveCount.put(student, 0); }
 
@@ -35,7 +35,10 @@ public class Reserve {
                 PrintAction.ordered(DateCal.getDateOutput(date), student, book);
                 reserveCount.put(student, reserveCount.get(student) + 1);
             }
+        } else {
+            return false;
         }
+        return true;
     }
 
     public void deliver(HashMap<Book, Integer> pool, ArrayList<Request> reserveList,

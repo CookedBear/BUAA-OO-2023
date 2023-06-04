@@ -50,15 +50,15 @@ public class School {
                                 book, date, reserveList, buyList);
                     }
                 } else {
-                    for (Request request1 : requestList) {
-                        if (request.getStudent().getSchool().
-                                equals(request1.getStudent().getSchool()) &&
-                            request.getStudent().getName().
-                                equals(request1.getStudent().getName()) &&
-                            request.getBook().getName().equals(request1.getBook().getName())) {
-                            return; // 存在同一个人的同一本请求
-                        }
-                    }
+                    //for (Request request1 : requestList) {
+                    //    if (request.getStudent().getSchool().
+                    //            equals(request1.getStudent().getSchool()) &&
+                    //        request.getStudent().getName().
+                    //            equals(request1.getStudent().getName()) &&
+                    //        request.getBook().getName().equals(request1.getBook().getName())) {
+                    //        return; // 存在同一个人的同一本请求
+                    //    }
+                    //}
                     requestList.add(request); // 本地没有的书都直接返回，这时仍然没有学校
                 }
                 break;
@@ -128,8 +128,10 @@ public class School {
         }
         // buy Book
         Request buyRe = new Request(request.getDateOutput(), s1, request.getBook());
-        buyList.add(buyRe);
-        reserve.reserve(s1, request.getBook(), request.getDate(), reserveList);
+
+        if (reserve.reserve(s1, request.getBook(), request.getDate(), reserveList)) {
+            buyList.add(buyRe);
+        }
 
     }
 
@@ -182,10 +184,18 @@ public class School {
         for (Request request : buyList) {
             boughtCount.put(request.getBook(), boughtCount.getOrDefault(request.getBook(), 0) + 1);
         }
-        for (Book book : boughtCount.keySet()) {
-            if (boughtCount.get(book) < 3) { boughtCount.put(book, 3); }
-            Purchase.buyIn(book, boughtCount.get(book), rentFailedPool, bookCount, name, date);
+        for (Request request : buyList) {
+            if (boughtCount.get(request.getBook()) == 0) { continue; }
+            if (boughtCount.get(request.getBook()) < 3) { boughtCount.put(request.getBook(), 3); }
+            Purchase.buyIn(request.getBook(), boughtCount.get(request.getBook()),
+                    rentFailedPool, bookCount, name, date);
+            boughtCount.put(request.getBook(), 0);
         }
+        //        for (Book book : boughtCount.keySet()) { // 买书输出按照第一个请求的顺序输出
+        //            if (boughtCount.get(book) < 3) { boughtCount.put(book, 3); }
+        //            Purchase.buyIn(book, boughtCount.get(book), rentFailedPool,
+        //            bookCount, name, date);
+        //        }
 
         buyList.clear();
     }
@@ -198,7 +208,7 @@ public class School {
         rentFailedPool.clear();
     }
 
-    private Student getStudent(Student student) {
+    public Student getStudent(Student student) {
         String name1 = student.getName();
         if (!studentPool.containsKey(name1)) { studentPool.put(name1, student); }
 

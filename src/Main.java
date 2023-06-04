@@ -157,15 +157,18 @@ public class Main {
     private static void serverTransOut() {
         for (Request request : RESERVE_LIST) {
             Student student = request.getStudent();
+            student = getSchool(student.getSchool()).getStudent(student);
             Book book = request.getBook();
-            School school = getSchool(student.getSchool());
+
 
             int f = 0;
+            if (1 == try2Add(student, book)) { continue; }
+            School school = getSchool(student.getSchool());
+
             for (School s1 : SCHOOL_POOL) {
                 if (s1.hasAvailable(book)) {
-                    if (!try2Add(student, book)) {
+                    if ((f = try2Add(student, book)) != 0) { // f = 1: 手上有B，f = 2: 手上没、校际已有B
                         // 校际，请求不合法（学生有B借B/校际给过B，C同理），跳过此次请求，避免送书过多
-                        f = 1;
                         break;
                     }
                     TRANS_LIST.add(new Request(request.getDateOutput(),
@@ -174,7 +177,7 @@ public class Main {
                     break;
                 }
             }
-            if (f == 1) { continue; }
+            if (f != 0) { continue; }
             // 请求未被校际借阅满足
             school.reserveBook(request);
         }
@@ -225,10 +228,10 @@ public class Main {
         }
     }
 
-    private static boolean try2Add(Student student, Book book) {
+    private static int try2Add(Student student, Book book) {
         if ((book.getType() == 1 && student.isHasTypeB()) ||
             (book.getType() == 2 && student.hasBookC(book))) {
-            return false;
+            return 1;
         }
         for (Request request : TRANS_LIST) {
             Student res = request.getStudent();
@@ -236,10 +239,10 @@ public class Main {
                 student.getSchool().equals(res.getSchool()) &&
                 ((book.getType() == 1 && request.getBook().getType() == 1) ||
                  (book.getType() == 2 && request.getBook().getName().equals(book.getName())))) {
-                return false;
+                return 2;
             }
         }
-        return true;
+        return 0;
     }
 
     private static School getSchool(String name) {
