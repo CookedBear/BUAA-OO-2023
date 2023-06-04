@@ -83,6 +83,8 @@ public class School {
         } else {
             // 丢书的时候没有把 book 所属的学校改过来，导致返回后去了错误的学校删除书籍，RE
             request.setBook(book);
+            student.lostBook(book, request.getDateOutput());
+            // 把别的学校书丢了之后，没把学生的书删掉，同时没输出 punish
             return request;
         }
     }
