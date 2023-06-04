@@ -50,6 +50,7 @@ public class School {
                                 book, date, reserveList, buyList);
                     }
                 } else {
+                    // 处理一人同书多个请求的重复问题
                     //for (Request request1 : requestList) {
                     //    if (request.getStudent().getSchool().
                     //            equals(request1.getStudent().getSchool()) &&
