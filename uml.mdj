@@ -544,7 +544,7 @@
 											"width": 286.482421875,
 											"height": 13,
 											"underline": true,
-											"text": "+getDateOutput(date: int, Parameter1: String)",
+											"text": "+getDateOutput(date: int): String",
 											"horizontalAlignment": 0
 										}
 									],
@@ -1722,7 +1722,7 @@
 											"top": 708,
 											"width": 445.31982421875,
 											"height": 13,
-											"text": "+School(name: String)",
+											"text": "+School(name: String): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -9154,7 +9154,8 @@
 												"$ref": "AAAAAAGIhfNmkrS+GVU="
 											},
 											"name": "Parameter1",
-											"type": "String"
+											"type": "String",
+											"direction": "return"
 										}
 									]
 								}
@@ -10663,6 +10664,16 @@
 											},
 											"name": "name",
 											"type": "String"
+										},
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAGIizBHbmytXEg=",
+											"_parent": {
+												"$ref": "AAAAAAGIhlDHPrm3z8s="
+											},
+											"name": "Parameter1",
+											"type": "void",
+											"direction": "return"
 										}
 									]
 								},
