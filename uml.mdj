@@ -1358,7 +1358,7 @@
 											"top": 1337,
 											"width": 451.6103515625,
 											"height": 13,
-											"text": "+setBook(book: Book): int",
+											"text": "+setBook(book: Book): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -10446,7 +10446,7 @@
 												"$ref": "AAAAAAGIhgUqurkDBmk="
 											},
 											"name": "Parameter1",
-											"type": "int",
+											"type": "void",
 											"direction": "return"
 										}
 									]
