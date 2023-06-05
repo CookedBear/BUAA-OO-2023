@@ -1117,7 +1117,7 @@
 											"top": 1149,
 											"width": 451.6103515625,
 											"height": 13,
-											"text": "+student: Student",
+											"text": "-student: Student",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1134,7 +1134,7 @@
 											"top": 1164,
 											"width": 451.6103515625,
 											"height": 13,
-											"text": "+date: int",
+											"text": "-date: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1151,7 +1151,7 @@
 											"top": 1179,
 											"width": 451.6103515625,
 											"height": 13,
-											"text": "+dateOutput: String",
+											"text": "-dateOutput: String",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1168,7 +1168,7 @@
 											"top": 1194,
 											"width": 451.6103515625,
 											"height": 13,
-											"text": "+action: int",
+											"text": "-action: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1185,7 +1185,7 @@
 											"top": 1209,
 											"width": 451.6103515625,
 											"height": 13,
-											"text": "+book: Book",
+											"text": "-book: Book",
 											"horizontalAlignment": 0
 										}
 									],
@@ -1994,7 +1994,7 @@
 											"top": 948,
 											"width": 445.31982421875,
 											"height": 13,
-											"text": "+getBook(book: Student): Book",
+											"text": "+getBook(book: Book): Book",
 											"horizontalAlignment": 0
 										},
 										{
@@ -10131,6 +10131,7 @@
 										"$ref": "AAAAAAGIhgFHX7gfGM4="
 									},
 									"name": "student",
+									"visibility": "private",
 									"type": "Student"
 								},
 								{
@@ -10140,6 +10141,7 @@
 										"$ref": "AAAAAAGIhgFHX7gfGM4="
 									},
 									"name": "date",
+									"visibility": "private",
 									"type": "int"
 								},
 								{
@@ -10149,6 +10151,7 @@
 										"$ref": "AAAAAAGIhgFHX7gfGM4="
 									},
 									"name": "dateOutput",
+									"visibility": "private",
 									"type": "String"
 								},
 								{
@@ -10158,6 +10161,7 @@
 										"$ref": "AAAAAAGIhgFHX7gfGM4="
 									},
 									"name": "action",
+									"visibility": "private",
 									"type": "int"
 								},
 								{
@@ -10167,6 +10171,7 @@
 										"$ref": "AAAAAAGIhgFHX7gfGM4="
 									},
 									"name": "book",
+									"visibility": "private",
 									"type": {
 										"$ref": "AAAAAAGIhfvfMbdD8YM="
 									}
@@ -11169,7 +11174,9 @@
 												"$ref": "AAAAAAGIhx7jzLr1/+Q="
 											},
 											"name": "book",
-											"type": "Student"
+											"type": {
+												"$ref": "AAAAAAGIhfvfMbdD8YM="
+											}
 										},
 										{
 											"_type": "UMLParameter",
