@@ -30,25 +30,18 @@ public class Student {
         if (book.getType() == 1) {
             hasTypeB = true;
         }
-        PrintAction.stateTrans(dateOutput, book, "stored", "rented");
     }
 
     public int returnBook(Book book, String dateOutput) {
         int state = bookState.get(book);
         bookState.remove(book);
         if (book.getType() == 1) { hasTypeB = false; }
-        if (state == 0) {
-            PrintAction.stateTrans(dateOutput, book, "rented", "stored");
-        } else if (state == 1) {
-            PrintAction.stateTrans(dateOutput, book, "smashed", "stored");
-        }
         return state;
     }
 
     public void smashBook(Book book, String dateOutput) {
         Book newBook = getBook(book);
         bookState.put(newBook, 1); // 防止覆盖书籍的学校信息
-        PrintAction.stateTrans(dateOutput, book, "rented", "smashed");
     }
 
     public void lostBook(Book book, String dateOutput) {

@@ -16,12 +16,14 @@ public class PrintAction {
         System.out.printf("[%s] %s refused lending %s-%s to %s-%s\n",
                 dateOutput, serviceName, book.getSchool(), book.getName(), student.getSchool(),
                 student.getName());
+        stateTrans(dateOutput, book, "stored", "stored");
     }
 
     public static void rented(int date, Student student, Book book, String serviceName) {
         System.out.printf("[%s] %s lent %s-%s to %s-%s\n",
                 DateCal.getDateOutput(date), serviceName, book.getSchool(), book.getName(),
                 student.getSchool(), student.getName());
+        stateTrans(DateCal.getDateOutput(date), book, "stored", "rented");
         System.out.printf("[%s] %s-%s borrowed %s-%s from %s\n",
                 DateCal.getDateOutput(date), student.getSchool(), student.getName(),
                 book.getSchool(), book.getName(), serviceName);
@@ -43,6 +45,7 @@ public class PrintAction {
                 book.getSchool(), book.getName(), serviceName,
                 dateOutput, serviceName, book.getSchool(), book.getName(),
                 student.getSchool(), student.getName());
+        stateTrans(dateOutput, book, "rented", "stored");
     }
 
     public static void punished(String dateOutput, Student student, String serviceName) {
@@ -55,6 +58,7 @@ public class PrintAction {
     public static void repaired(String dateOutput, Book book, String serviceName, String school) {
         System.out.printf("[%s] %S-%s got repaired by %s in %s\n",
                 dateOutput, book.getSchool(), book.getName(), serviceName, school);
+        stateTrans(dateOutput, book, "stored", "stored");
     }
 
     public static void bought(String dateOutput, Book book, String serviceName) {
@@ -65,11 +69,13 @@ public class PrintAction {
     public static void transIn(String dateOutput, Book book, String serviceName, String school) {
         System.out.printf("[%s] %s-%s got received by %s in %s\n",
                 dateOutput, book.getSchool(), book.getName(), serviceName, school);
+        stateTrans(dateOutput, book, "stored", "stored");
     }
 
     public static void transOut(String dateOutput, Book book, String serviceName, String school) {
         System.out.printf("[%s] %s-%s got transported by %s in %s\n",
                 dateOutput, book.getSchool(), book.getName(), serviceName, school);
+        stateTrans(dateOutput, book, "stored", "stored");
     }
 
     public static void stateTrans(String dateOutput, Book book, String state1, String state2) {
