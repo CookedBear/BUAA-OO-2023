@@ -546,7 +546,7 @@
 											"width": 286.482421875,
 											"height": 13,
 											"underline": true,
-											"text": "+getDate(str: String, Parameter1: int)",
+											"text": "+getDate(str: String): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -9158,7 +9158,8 @@
 												"$ref": "AAAAAAGIhfK3vrSqaaU="
 											},
 											"name": "Parameter1",
-											"type": "int"
+											"type": "int",
+											"direction": "return"
 										}
 									]
 								},
@@ -14260,9 +14261,9 @@
 										"$ref": "AAAAAAGIj1Y8THthWOI="
 									},
 									"font": "Arial;13;0",
-									"left": 600,
+									"left": 597,
 									"top": 736,
-									"width": 87.43896484375,
+									"width": 92.06005859375,
 									"height": 13,
 									"alpha": 1.2793386148860892,
 									"distance": 10.44030650891055,
@@ -14354,9 +14355,9 @@
 										"$ref": "AAAAAAGIj2JWy3vp34Q="
 									},
 									"font": "Arial;13;0",
-									"left": 743,
+									"left": 739,
 									"top": 999,
-									"width": 104.76171875,
+									"width": 113.80712890625,
 									"height": 13,
 									"alpha": -1.8387065741646167,
 									"distance": 52.88667128870941,
@@ -14448,9 +14449,9 @@
 										"$ref": "AAAAAAGIj2OZc3wAOHw="
 									},
 									"font": "Arial;13;0",
-									"left": 592,
+									"left": 589,
 									"top": 763,
-									"width": 100.42626953125,
+									"width": 107.70068359375,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -14636,9 +14637,9 @@
 										"$ref": "AAAAAAGIj2RZE3wshz0="
 									},
 									"font": "Arial;13;0",
-									"left": 582,
+									"left": 577,
 									"top": 675,
-									"width": 120.64990234375,
+									"width": 131.37109375,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
