@@ -2014,7 +2014,7 @@
 											"top": 948,
 											"width": 445.31982421875,
 											"height": 13,
-											"text": "+getBook(book: Book): Book",
+											"text": "-getBook(book: Book): Book",
 											"horizontalAlignment": 0
 										},
 										{
@@ -10393,7 +10393,9 @@
 												"$ref": "AAAAAAGIhgTMG7jrbU4="
 											},
 											"name": "Parameter1",
-											"type": "Student",
+											"type": {
+												"$ref": "AAAAAAGIhyGxtrsqlaE="
+											},
 											"direction": "return"
 										}
 									]
@@ -11199,6 +11201,7 @@
 										"$ref": "AAAAAAGIhgZUM7k22U0="
 									},
 									"name": "getBook",
+									"visibility": "private",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
