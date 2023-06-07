@@ -13025,6 +13025,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "initSchool",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13046,6 +13047,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "initBooks",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13087,6 +13089,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "initRequests",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13108,6 +13111,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "runServer",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13129,6 +13133,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "serverMaintain",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13168,6 +13173,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "serverTransOut",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13189,6 +13195,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "doReserve",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13210,6 +13217,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "serverTransIn",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13231,6 +13239,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "serverTransBack",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13261,6 +13270,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "serverGiveOut",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13291,6 +13301,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "serverBuyIn",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13321,6 +13332,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "try2Add",
+							"visibility": "private",
 							"isStatic": true,
 							"parameters": [
 								{
@@ -13352,7 +13364,7 @@
 										"$ref": "AAAAAAGIh0ExWsHVQzc="
 									},
 									"name": "Parameter1",
-									"type": "void",
+									"type": "int",
 									"direction": "return"
 								}
 							]
@@ -13364,6 +13376,7 @@
 								"$ref": "AAAAAAGIhzUoc8ByxDM="
 							},
 							"name": "getSchool",
+							"visibility": "private",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
