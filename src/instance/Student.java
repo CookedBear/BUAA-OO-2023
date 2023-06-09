@@ -1,6 +1,7 @@
 package instance;
 
 import service.Rent;
+import tool.DateCal;
 import tool.PrintAction;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class Student {
     public boolean hasBookC(Book book) { return bookState.containsKey(book); }
 
     public void rentBook(Book book, String dateOutput) {
+        book.setRentDate(DateCal.getDate(dateOutput));
         bookState.put(book, 0);
         if (book.getType() == 1) {
             hasTypeB = true;
@@ -34,9 +36,18 @@ public class Student {
 
     public int returnBook(Book book, String dateOutput) {
         int state = bookState.get(book);
+        int rent = getBook(book).getRentDate();
+        boolean due = (DateCal.getDate(dateOutput) - rent >= 30 && getBook(book).getType() == 1) ||
+                (DateCal.getDate(dateOutput) - rent >= 60 && getBook(book).getType() == 2);
         bookState.remove(book);
         if (book.getType() == 1) { hasTypeB = false; }
-        return state;
+        if (state == 1) {
+            return 1;
+        } else if (due) {
+            return 3;
+        } else {
+            return 0;
+        }
     }
 
     public void smashBook(Book book, String dateOutput) {

@@ -55,6 +55,9 @@ public class Machine {
         } else if (state == 2) {
             PrintAction.punished(dateOutput, student, "borrowing and returning librarian");
             PrintAction.returned(dateOutput, student, book, NAME);
+        } else if (state == 3) {
+            PrintAction.punished(dateOutput, student, "borrowing and returning librarian");
+            PrintAction.returned(dateOutput, student, book, NAME);
         }
     }
 }

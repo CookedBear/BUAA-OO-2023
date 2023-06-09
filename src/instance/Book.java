@@ -7,6 +7,7 @@ public class Book {
     private final String name;
     private String school;
     private final boolean shared;
+    private int rentDate;
 
     public Book(String name) {
         this.name = name;
@@ -46,4 +47,8 @@ public class Book {
 
     @Override
     public int hashCode() { return Objects.hash(name); }
+
+    public void setRentDate(int date) { rentDate = date; }
+
+    public int getRentDate() { return rentDate; }
 }
