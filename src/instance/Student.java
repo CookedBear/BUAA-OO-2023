@@ -37,8 +37,8 @@ public class Student {
     public int returnBook(Book book, String dateOutput) {
         int state = bookState.get(book);
         int rent = getBook(book).getRentDate();
-        boolean due = (DateCal.getDate(dateOutput) - rent >= 30 && getBook(book).getType() == 1) ||
-                (DateCal.getDate(dateOutput) - rent >= 60 && getBook(book).getType() == 2);
+        boolean due = (DateCal.getDate(dateOutput) - rent > 30 && getBook(book).getType() == 1) ||
+                (DateCal.getDate(dateOutput) - rent > 60 && getBook(book).getType() == 2);
         bookState.remove(book);
         if (book.getType() == 1) { hasTypeB = false; }
         if (state == 1) {
