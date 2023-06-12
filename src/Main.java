@@ -100,6 +100,7 @@ public class Main {
             serverTransIn();
             serverTransBack(requestDate);
             serverGiveOut(requestDate);
+            orderNewBook();
 
             serverMaintain(requestDate, DateCal.getDateOutput(requestDate));
             while (true) {
@@ -267,6 +268,8 @@ public class Main {
         System.out.println("cannot find school in 'getSchool'!");
         return new School("BadName");
     }
+
+    public static void orderNewBook() {}
 }
 /*
 看看 lostBook 能不能真的把书丢掉
