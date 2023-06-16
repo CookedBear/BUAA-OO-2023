@@ -27,9 +27,10 @@ public class Student {
     public boolean hasBookC(Book book) { return bookState.containsKey(book); }
 
     public void rentBook(Book book, String dateOutput) {
-        book.setRentDate(DateCal.getDate(dateOutput));
-        bookState.put(book, 0);
-        if (book.getType() == 1) {
+        Book newB = new Book(book.getName(), book.getSchool(), book.isShared());
+        newB.setRentDate(DateCal.getDate(dateOutput));
+        bookState.put(newB, 0);
+        if (newB.getType() == 1) {
             hasTypeB = true;
         }
     }
